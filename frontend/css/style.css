@@ -1,0 +1,361 @@
+/**
+ * Elnaz Ashrafi - Official Website
+ * Dark Minimal Modern Design
+ * Inspired by evet-template
+ */
+
+/* ================================
+   CUSTOM ANIMATIONS
+   ================================ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================================
+   SMOOTH SCROLLING
+   ================================ */
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* ================================
+   CUSTOM SCROLLBAR
+   ================================ */
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0A0A0A;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* ================================
+   NAVIGATION
+   ================================ */
+
+#navbar {
+    background: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+#navbar.scrolled {
+    background: rgba(10, 10, 10, 0.95);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.nav-link {
+    position: relative;
+    padding-bottom: 2px;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: currentColor;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* ================================
+   BUTTONS
+   ================================ */
+
+.btn-primary {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+/* ================================
+   GALLERY FILTERS
+   ================================ */
+
+.filter-btn {
+    background: transparent;
+    border: 1px solid #333;
+    color: #999;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.filter-btn:hover {
+    background: #1A1A1A;
+    border-color: #555;
+    color: #fff;
+}
+
+.filter-btn.active {
+    background: #fff;
+    border-color: #fff;
+    color: #0A0A0A;
+}
+
+/* ================================
+   GALLERY ITEMS
+   ================================ */
+
+.gallery-item {
+    transition: all 0.3s ease;
+}
+
+.gallery-item.hidden {
+    display: none;
+    opacity: 0;
+    transform: scale(0.9);
+}
+
+/* ================================
+   EXHIBITION CARDS
+   ================================ */
+
+.exhibition-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.exhibition-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, #fff, #999);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.exhibition-card:hover::before {
+    opacity: 1;
+}
+
+/* ================================
+   SHOP CARDS
+   ================================ */
+
+.shop-card {
+    transition: all 0.3s ease;
+}
+
+.shop-card:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* ================================
+   FORMS
+   ================================ */
+
+input:focus,
+textarea:focus {
+    outline: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #666;
+}
+
+/* ================================
+   MODAL
+   ================================ */
+
+#inquiry-modal {
+    animation: fadeIn 0.3s ease;
+}
+
+#inquiry-modal .bg-dark-800 {
+    animation: slideUp 0.3s ease;
+}
+
+/* ================================
+   BACK TO TOP BUTTON
+   ================================ */
+
+#back-to-top {
+    transition: all 0.3s ease;
+}
+
+#back-to-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ================================
+   LOADING STATE
+   ================================ */
+
+.loading {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* ================================
+   SUCCESS/ERROR MESSAGES
+   ================================ */
+
+.message {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+    animation: slideDown 0.3s ease;
+}
+
+.message.success {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #10b981;
+}
+
+.message.error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+}
+
+/* ================================
+   RESPONSIVE UTILITIES
+   ================================ */
+
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+
+    #navbar .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    section {
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+    }
+}
+
+/* ================================
+   ACCESSIBILITY
+   ================================ */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Focus visible for keyboard navigation */
+:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ================================
+   SELECTION STYLING
+   ================================ */
+
+::selection {
+    background: #fff;
+    color: #0A0A0A;
+}
+
+::-moz-selection {
+    background: #fff;
+    color: #0A0A0A;
+}
+
+/* ================================
+   PRINT STYLES
+   ================================ */
+
+@media print {
+    #navbar,
+    #back-to-top,
+    #inquiry-modal,
+    footer {
+        display: none;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    section {
+        page-break-inside: avoid;
+    }
+}
