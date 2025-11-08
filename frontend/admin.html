@@ -61,6 +61,22 @@
                     <span class="icon">📰</span>
                     <span>Subscribers</span>
                 </a>
+                <a href="#" class="nav-item" data-section="ai-assistant">
+                    <span class="icon">🤖</span>
+                    <span>AI Assistant</span>
+                </a>
+                <a href="#" class="nav-item" data-section="cms">
+                    <span class="icon">📝</span>
+                    <span>Content Manager</span>
+                </a>
+                <a href="#" class="nav-item" data-section="seo">
+                    <span class="icon">🔍</span>
+                    <span>SEO Settings</span>
+                </a>
+                <a href="#" class="nav-item" data-section="analytics">
+                    <span class="icon">📈</span>
+                    <span>Analytics</span>
+                </a>
             </nav>
             <div class="sidebar-footer">
                 <button id="logoutBtn" class="btn btn-secondary">Logout</button>
@@ -209,6 +225,186 @@
                     </table>
                 </div>
             </section>
+
+            <!-- AI Assistant Section -->
+            <section id="ai-assistantSection" class="content-section">
+                <div class="ai-container">
+                    <div class="ai-chat-container">
+                        <div class="ai-header">
+                            <h3>🤖 AI Marketing & Content Assistant</h3>
+                            <p>Get AI-powered help with SEO, content, marketing, and customer communications</p>
+                        </div>
+                        <div class="ai-chat-messages" id="aiChatMessages">
+                            <div class="ai-message ai-message-system">
+                                <p>Hello! I'm your AI assistant. I can help you with:</p>
+                                <ul>
+                                    <li>SEO optimization suggestions</li>
+                                    <li>Content improvement ideas</li>
+                                    <li>Marketing insights and analytics</li>
+                                    <li>Email response drafting</li>
+                                    <li>General website management questions</li>
+                                </ul>
+                                <p>How can I assist you today?</p>
+                            </div>
+                        </div>
+                        <div class="ai-input-container">
+                            <textarea id="aiInput" placeholder="Ask me anything about your website, SEO, marketing, or content..." rows="3"></textarea>
+                            <div class="ai-quick-actions">
+                                <button class="btn-quick-action" data-prompt="Suggest SEO improvements for my homepage">SEO Help</button>
+                                <button class="btn-quick-action" data-prompt="Give me marketing insights based on my current analytics">Marketing Tips</button>
+                                <button class="btn-quick-action" data-prompt="Help me improve my about section content">Content Ideas</button>
+                            </div>
+                            <button id="aiSendBtn" class="btn btn-primary">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Content Management Section -->
+            <section id="cmsSection" class="content-section">
+                <div class="cms-container">
+                    <div class="cms-header">
+                        <h3>📝 Content Management System</h3>
+                        <button id="addContentBtn" class="btn btn-primary">Add New Content</button>
+                    </div>
+                    <div class="cms-sections">
+                        <div class="section-selector">
+                            <label for="cmsSectionFilter">Section:</label>
+                            <select id="cmsSectionFilter">
+                                <option value="">All Sections</option>
+                                <option value="hero">Hero Section</option>
+                                <option value="about">About Section</option>
+                                <option value="services">Services</option>
+                                <option value="portfolio">Portfolio</option>
+                                <option value="contact">Contact Info</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Section</th>
+                                    <th>Key</th>
+                                    <th>Type</th>
+                                    <th>Updated</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cmsTableBody">
+                                <tr>
+                                    <td colspan="6" class="loading">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEO Settings Section -->
+            <section id="seoSection" class="content-section">
+                <div class="seo-container">
+                    <div class="seo-header">
+                        <h3>🔍 SEO Settings</h3>
+                        <button id="addSeoBtn" class="btn btn-primary">Add Page SEO</button>
+                    </div>
+                    <div class="seo-cards">
+                        <div class="seo-card">
+                            <h4>Homepage SEO</h4>
+                            <div class="form-group">
+                                <label>Meta Title</label>
+                                <input type="text" id="seoHomeTitle" placeholder="Enter meta title (max 60 chars)">
+                            </div>
+                            <div class="form-group">
+                                <label>Meta Description</label>
+                                <textarea id="seoHomeDesc" placeholder="Enter meta description (max 160 chars)" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Keywords</label>
+                                <input type="text" id="seoHomeKeywords" placeholder="keyword1, keyword2, keyword3">
+                            </div>
+                            <button class="btn btn-primary" onclick="saveSEOSettings('home')">Save Homepage SEO</button>
+                            <button class="btn btn-secondary" onclick="getAISEOSuggestions('home')">Get AI Suggestions</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Page</th>
+                                    <th>Title</th>
+                                    <th>Description</th>
+                                    <th>Keywords</th>
+                                    <th>Updated</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="seoTableBody">
+                                <tr>
+                                    <td colspan="6" class="loading">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analyticsSection" class="content-section">
+                <div class="analytics-container">
+                    <h3>📈 Website Analytics & Insights</h3>
+                    <div class="analytics-period">
+                        <label for="analyticsPeriod">Period:</label>
+                        <select id="analyticsPeriod">
+                            <option value="7">Last 7 days</option>
+                            <option value="30" selected>Last 30 days</option>
+                            <option value="90">Last 90 days</option>
+                        </select>
+                        <button id="refreshAnalytics" class="btn btn-secondary">Refresh</button>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card analytics-stat">
+                            <div class="stat-icon">👁️</div>
+                            <div class="stat-details">
+                                <h3>Total Events</h3>
+                                <p class="stat-number" id="analyticsTotal">0</p>
+                                <span class="stat-label">tracked events</span>
+                            </div>
+                        </div>
+                        <div class="stat-card analytics-stat">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-details">
+                                <h3>Unique Visitors</h3>
+                                <p class="stat-number" id="analyticsVisitors">0</p>
+                                <span class="stat-label">unique IPs</span>
+                            </div>
+                        </div>
+                        <div class="stat-card analytics-stat">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-details">
+                                <h3>Top Event</h3>
+                                <p class="stat-text" id="analyticsTopEvent">-</p>
+                                <span class="stat-label">most frequent</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="analytics-charts">
+                        <div class="chart-container">
+                            <h4>Events by Type</h4>
+                            <div id="eventsByType" class="chart-list"></div>
+                        </div>
+                        <div class="chart-container">
+                            <h4>Events by Day (Last 7 Days)</h4>
+                            <div id="eventsByDay" class="chart-list"></div>
+                        </div>
+                    </div>
+                    <div class="ai-insights-section">
+                        <button id="getAIInsights" class="btn btn-primary">Get AI Marketing Insights</button>
+                        <div id="aiInsightsContent" class="ai-insights-content"></div>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -225,5 +421,6 @@
     </div>
 
     <script src="js/admin.js"></script>
+    <script src="js/admin_enhanced.js"></script>
 </body>
 </html>

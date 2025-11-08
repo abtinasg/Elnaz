@@ -8,6 +8,10 @@ from flask_cors import CORS
 import os
 from database import init_db
 from routes import contact_bp, shop_bp, newsletter_bp, admin_bp
+from routes.ai import ai_bp
+from routes.cms import cms_bp
+from routes.seo import seo_bp
+from routes.analytics import analytics_bp
 
 # Initialize Flask app
 app = Flask(__name__,
@@ -18,8 +22,8 @@ app = Flask(__name__,
 CORS(app, resources={
     r"/api/*": {
         "origins": "*",
-        "methods": ["GET", "POST", "PATCH", "DELETE"],
-        "allow_headers": ["Content-Type"]
+        "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"],
+        "allow_headers": ["Content-Type", "Authorization"]
     }
 })
 
@@ -35,6 +39,10 @@ app.register_blueprint(contact_bp)
 app.register_blueprint(shop_bp)
 app.register_blueprint(newsletter_bp)
 app.register_blueprint(admin_bp)
+app.register_blueprint(ai_bp)
+app.register_blueprint(cms_bp)
+app.register_blueprint(seo_bp)
+app.register_blueprint(analytics_bp)
 
 # Serve frontend
 @app.route('/')

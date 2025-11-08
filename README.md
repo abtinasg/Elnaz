@@ -14,6 +14,15 @@ A modern, minimalist, dark-themed portfolio website for contemporary artist Elna
 - **SQLite Database**: Lightweight database for data storage
 - **REST API**: Clean API endpoints for all features
 
+### ✨ NEW: AI-Powered Features
+- **🤖 AI Assistant**: OpenAI-powered chatbot for SEO, marketing, and content help
+- **📝 Content Management System**: Full CMS for dynamic site content
+- **🔍 SEO Management**: Per-page SEO settings with AI suggestions
+- **📈 Analytics Dashboard**: Track events and get AI-powered marketing insights
+- **💡 Smart Suggestions**: AI-driven content improvement and email responses
+
+See [AI_FEATURES.md](AI_FEATURES.md) for detailed documentation.
+
 ## 🛠️ Tech Stack
 
 ### Frontend
@@ -25,6 +34,8 @@ A modern, minimalist, dark-themed portfolio website for contemporary artist Elna
 - Python 3.x
 - Flask (Web framework)
 - SQLite (Database)
+- OpenAI API (AI features)
+- tiktoken (Token management)
 
 ## 📁 Project Structure
 
@@ -34,6 +45,7 @@ Elnaz/
 │   ├── app.py              # Flask application
 │   ├── database.py         # Database connection & initialization
 │   ├── models.py           # Database models (Contact, Shop, Newsletter, Admin)
+│   ├── ai_service.py       # OpenAI integration service
 │   ├── create_admin.py     # Admin user creation script
 │   ├── requirements.txt    # Python dependencies
 │   └── routes/
@@ -41,23 +53,34 @@ Elnaz/
 │       ├── contact.py      # Contact form endpoints
 │       ├── shop.py         # Shop inquiry endpoints
 │       ├── newsletter.py   # Newsletter endpoints
-│       └── admin.py        # Admin dashboard endpoints
+│       ├── admin.py        # Admin dashboard endpoints
+│       ├── ai.py           # AI assistant endpoints
+│       ├── cms.py          # Content management endpoints
+│       ├── seo.py          # SEO management endpoints
+│       └── analytics.py    # Analytics endpoints
 ├── frontend/
 │   ├── index.html          # Main HTML file
-│   ├── admin.html          # Admin dashboard
+│   ├── admin.html          # Admin dashboard (enhanced)
 │   ├── css/
 │   │   ├── style.css       # Main site styles
-│   │   └── admin.css       # Admin dashboard styles
+│   │   └── admin.css       # Admin dashboard styles (enhanced)
 │   ├── js/
 │   │   ├── main.js         # Main site JavaScript
-│   │   └── admin.js        # Admin dashboard JavaScript
+│   │   ├── admin.js        # Admin dashboard JavaScript
+│   │   └── admin_enhanced.js # AI, CMS, SEO, Analytics features
 │   └── assets/
 │       └── images/         # Image assets
 ├── database/
-│   └── elnaz_ashrafi.db    # SQLite database (auto-generated)
+│   ├── elnaz_ashrafi.db    # SQLite database (auto-generated)
+│   ├── schema.sql          # Database schema definition
+│   ├── README.md           # Database documentation
+│   ├── migrations/         # Database migrations
+│   └── backups/           # Database backups
+├── .env.example           # Environment variables template
 ├── .gitignore
 ├── README.md
-└── ADMIN_DASHBOARD.md      # Admin dashboard documentation
+├── ADMIN_DASHBOARD.md     # Admin dashboard documentation
+└── AI_FEATURES.md         # AI features documentation
 ```
 
 ## 🚀 Installation & Setup
@@ -77,6 +100,17 @@ cd Elnaz
 cd backend
 pip install -r requirements.txt
 ```
+
+### Step 2.5: Configure Environment Variables (NEW)
+```bash
+cp .env.example .env
+# Edit .env and add your OpenAI API key
+```
+
+Required environment variables:
+- `OPENAI_API_KEY` - Your OpenAI API key
+- `OPENAI_MODEL` - Model to use (default: gpt-3.5-turbo)
+- `OPENAI_MAX_TOKENS` - Max tokens per request (default: 1000)
 
 ### Step 3: Initialize Database
 The database will be automatically created when you first run the application.
@@ -133,6 +167,35 @@ The server will start at: **http://127.0.0.1:5000**
 - `PATCH /api/admin/orders/<id>/status` - Update order status
 - `GET /api/admin/subscribers` - Get all subscribers
 
+### AI Assistant (Protected - NEW)
+- `POST /api/ai/chat` - Chat with AI assistant
+- `POST /api/ai/seo-suggestions` - Get SEO suggestions
+- `POST /api/ai/marketing-insights` - Get marketing insights
+- `POST /api/ai/content-improvement` - Get content suggestions
+- `POST /api/ai/email-response` - Generate email responses
+- `GET /api/ai/conversation-history` - Get chat history
+
+### Content Management (Protected - NEW)
+- `GET /api/cms/content` - List all content
+- `GET /api/cms/content/<id>` - Get specific content
+- `POST /api/cms/content` - Create content
+- `PUT /api/cms/content/<id>` - Update content
+- `DELETE /api/cms/content/<id>` - Delete content
+- `GET /api/cms/sections` - Get all sections
+
+### SEO Management (Protected - NEW)
+- `GET /api/seo/settings` - List all SEO settings
+- `GET /api/seo/settings/<page>` - Get page SEO settings
+- `POST /api/seo/settings` - Create SEO settings
+- `PUT /api/seo/settings/<id>` - Update SEO settings
+- `DELETE /api/seo/settings/<id>` - Delete SEO settings
+
+### Analytics (Protected - NEW)
+- `POST /api/analytics/track` - Track event
+- `GET /api/analytics/events` - Get events
+- `GET /api/analytics/stats` - Get statistics
+- `GET /api/analytics/dashboard-stats` - Dashboard overview
+
 ### Health Check
 - `GET /api/health` - Server health check
 
@@ -180,6 +243,43 @@ The server will start at: **http://127.0.0.1:5000**
 - expires_at (TIMESTAMP)
 - is_active (INTEGER)
 
+### NEW TABLES
+
+### Site Content Table (CMS)
+- id (INTEGER PRIMARY KEY)
+- section (TEXT)
+- content_key (TEXT)
+- content_value (TEXT)
+- content_type (TEXT)
+- updated_at (TIMESTAMP)
+- updated_by (INTEGER FOREIGN KEY)
+
+### Analytics Events Table
+- id (INTEGER PRIMARY KEY)
+- event_type (TEXT)
+- event_data (TEXT)
+- ip_address (TEXT)
+- user_agent (TEXT)
+- created_at (TIMESTAMP)
+
+### AI Conversations Table
+- id (INTEGER PRIMARY KEY)
+- admin_id (INTEGER FOREIGN KEY)
+- message (TEXT)
+- response (TEXT)
+- model (TEXT)
+- tokens_used (INTEGER)
+- created_at (TIMESTAMP)
+
+### SEO Settings Table
+- id (INTEGER PRIMARY KEY)
+- page (TEXT UNIQUE)
+- title (TEXT)
+- description (TEXT)
+- keywords (TEXT)
+- og_image (TEXT)
+- updated_at (TIMESTAMP)
+
 ## 🎯 Features Breakdown
 
 ### Hero Section
@@ -222,10 +322,14 @@ The server will start at: **http://127.0.0.1:5000**
 - Contact management (view, filter, update status)
 - Order management (view, filter, update status)
 - Subscriber management (view, filter)
+- **NEW: 🤖 AI Assistant** - Chat with AI for SEO, marketing, and content help
+- **NEW: 📝 Content Manager** - Manage site content dynamically
+- **NEW: 🔍 SEO Settings** - Per-page SEO optimization with AI suggestions
+- **NEW: 📈 Analytics** - Track events and get AI-powered insights
 - Responsive design for all devices
 - Real-time data updates
 
-See [ADMIN_DASHBOARD.md](ADMIN_DASHBOARD.md) for detailed documentation.
+See [ADMIN_DASHBOARD.md](ADMIN_DASHBOARD.md) and [AI_FEATURES.md](AI_FEATURES.md) for detailed documentation.
 
 ## 🎨 Design System
 

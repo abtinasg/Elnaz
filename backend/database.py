@@ -78,6 +78,70 @@ def init_db():
         )
     ''')
 
+    # Site Content Table (CMS)
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS site_content (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            section TEXT NOT NULL,
+            content_key TEXT NOT NULL,
+            content_value TEXT,
+            content_type TEXT DEFAULT 'text',
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_by INTEGER,
+            UNIQUE(section, content_key),
+            FOREIGN KEY (updated_by) REFERENCES admin_users(id)
+        )
+    ''')
+
+    # Analytics Events Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS analytics_events (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            event_type TEXT NOT NULL,
+            event_data TEXT,
+            ip_address TEXT,
+            user_agent TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+
+    # AI Conversations Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS ai_conversations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            admin_id INTEGER NOT NULL,
+            message TEXT NOT NULL,
+            response TEXT NOT NULL,
+            model TEXT DEFAULT 'gpt-3.5-turbo',
+            tokens_used INTEGER,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (admin_id) REFERENCES admin_users(id)
+        )
+    ''')
+
+    # SEO Settings Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS seo_settings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            page TEXT UNIQUE NOT NULL,
+            title TEXT,
+            description TEXT,
+            keywords TEXT,
+            og_image TEXT,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+
+    # Create indexes for performance
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_contacts_status ON contacts(status)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_contacts_created ON contacts(created_at DESC)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_orders_status ON shop_orders(status)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_orders_created ON shop_orders(created_at DESC)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_sessions_token ON admin_sessions(session_token)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_sessions_active ON admin_sessions(is_active, expires_at)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_analytics_created ON analytics_events(created_at DESC)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_ai_conversations_admin ON ai_conversations(admin_id, created_at DESC)')
+
     conn.commit()
     conn.close()
     print("✅ Database initialized successfully!")
