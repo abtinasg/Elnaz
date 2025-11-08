@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Elnaz Ashrafi - Contemporary Visual Artist exploring memory and color through abstract painting">
-    
-    <title>Elnaz Ashrafi — Contemporary Artist</title>
+    <meta name="description" data-i18n-content="meta.description" content="الناز اشرفی - هنرمند معاصر که حافظه و رنگ را در نقاشی‌های انتزاعی کاوش می‌کند">
+
+    <title data-i18n="meta.title">الناز اشرفی — هنرمند معاصر</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -193,6 +193,26 @@
             align-items: center;
         }
 
+        .language-switcher select {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            padding: 0.4rem 1rem;
+            border-radius: 999px;
+            font-family: var(--font-body);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+
+        .language-switcher select:hover,
+        .language-switcher select:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
         .theme-toggle {
             width: 40px;
             height: 40px;
@@ -233,6 +253,71 @@
             background: var(--text-primary);
             color: var(--bg-primary);
             transform: translateY(-2px);
+        }
+
+        body.rtl {
+            direction: rtl;
+            text-align: right;
+        }
+
+        body.rtl .nav {
+            flex-direction: row-reverse;
+        }
+
+        body.rtl .nav-controls {
+            flex-direction: row-reverse;
+        }
+
+        body.rtl .hero-cta {
+            flex-direction: row-reverse;
+        }
+
+        body.rtl .language-switcher select {
+            direction: rtl;
+            text-align: right;
+        }
+
+        body.rtl .hero-content,
+        body.rtl .hero-title,
+        body.rtl .hero-subtitle,
+        body.rtl .section-header,
+        body.rtl .section-subtitle,
+        body.rtl .work-info,
+        body.rtl .shop-info,
+        body.rtl .resume-sidebar,
+        body.rtl .resume-content,
+        body.rtl .contact-form,
+        body.rtl .footer,
+        body.rtl .newsletter-popup {
+            text-align: right;
+        }
+
+        body.rtl .menu-links {
+            text-align: right;
+        }
+
+        body.rtl .advanced-filters {
+            flex-direction: row-reverse;
+        }
+
+        body.rtl .filter-group {
+            flex-direction: row-reverse;
+        }
+
+        body.rtl .filter-section {
+            justify-content: flex-end;
+        }
+
+        body.rtl .cart-summary {
+            right: auto;
+            left: 2rem;
+            flex-direction: row-reverse;
+        }
+
+        body.rtl .search-input,
+        body.rtl .contact-form input,
+        body.rtl .contact-form textarea {
+            text-align: right;
         }
 
         /* Full Screen Menu */
@@ -2717,7 +2802,7 @@
         }
     </style>
 </head>
-<body>
+<body class="rtl">
     <!-- Progress Bar -->
     <div class="progress-bar" id="progressBar"></div>
 
@@ -2726,15 +2811,21 @@
 
     <!-- Loading Screen -->
     <div class="loading-screen">
-        <div class="loading-logo">ELNAZ ASHRAFI</div>
+        <div class="loading-logo" data-i18n="brand.wordmark">الناز اشرفی</div>
     </div>
 
     <!-- Navigation -->
     <nav class="nav">
-        <div class="nav-logo">ELNAZ ASHRAFI</div>
+        <div class="nav-logo" data-i18n="brand.wordmark">الناز اشرفی</div>
         <div class="nav-controls">
             <button class="theme-toggle" id="themeToggle">🌙</button>
-            <button class="nav-menu-btn" id="menuBtn">MENU</button>
+            <div class="language-switcher">
+                <select id="languageSelect" aria-label="زبان">
+                    <option value="fa">فارسی</option>
+                    <option value="ar">العربية</option>
+                </select>
+            </div>
+            <button class="nav-menu-btn" id="menuBtn" data-i18n="nav.menu">MENU</button>
         </div>
     </nav>
 
@@ -2742,12 +2833,12 @@
     <div class="fullscreen-menu" id="fullscreenMenu">
         <button class="menu-close" id="menuClose">&times;</button>
         <ul class="menu-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#works">Works</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#shop">Shop</a></li>
-            <li><a href="#resume">Resume</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#home" data-i18n="nav.home">Home</a></li>
+            <li><a href="#works" data-i18n="nav.works">Works</a></li>
+            <li><a href="#about" data-i18n="nav.about">About</a></li>
+            <li><a href="#shop" data-i18n="nav.shop">Shop</a></li>
+            <li><a href="#resume" data-i18n="nav.resume">Resume</a></li>
+            <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
         </ul>
     </div>
 
@@ -2760,22 +2851,22 @@
         </div>
 
         <div class="hero-content">
-            <p class="hero-eyebrow">Contemporary Visual Artist</p>
-            <h1 class="hero-title">WHERE<br>MEMORY<br>BECOMES<br>COLOR</h1>
-            <p class="hero-subtitle">
-                Iranian contemporary artist exploring the delicate intersection of memory, 
+            <p class="hero-eyebrow" data-i18n="hero.eyebrow">Contemporary Visual Artist</p>
+            <h1 class="hero-title" data-i18n-html="hero.title">WHERE<br>MEMORY<br>BECOMES<br>COLOR</h1>
+            <p class="hero-subtitle" data-i18n="hero.subtitle">
+                Iranian contemporary artist exploring the delicate intersection of memory,
                 identity, and emotion through abstract and figurative painting.
             </p>
             <div class="hero-cta">
-                <a href="#works" class="btn btn-primary">EXPLORE WORKS</a>
-                <a href="#about" class="btn btn-secondary">ABOUT ARTIST</a>
+                <a href="#works" class="btn btn-primary" data-i18n="hero.cta.primary">EXPLORE WORKS</a>
+                <a href="#about" class="btn btn-secondary" data-i18n="hero.cta.secondary">ABOUT ARTIST</a>
             </div>
         </div>
 
         <div class="hero-visual"></div>
 
         <div class="scroll-indicator">
-            <p>Scroll Down</p>
+            <p data-i18n="hero.scroll">Scroll Down</p>
             <div class="scroll-line"></div>
         </div>
     </section>
@@ -2783,9 +2874,9 @@
     <!-- Featured Works -->
     <section class="section" id="works">
         <div class="section-header">
-            <p class="section-counter">/4 FEATURED</p>
-            <h2 class="section-title">SELECTED WORKS</h2>
-            <p class="section-subtitle">
+            <p class="section-counter" data-i18n="works.counter">/4 FEATURED</p>
+            <h2 class="section-title" data-i18n="works.title">SELECTED WORKS</h2>
+            <p class="section-subtitle" data-i18n="works.subtitle">
                 A curated collection of recent paintings exploring memory, color, and cultural identity
             </p>
         </div>
@@ -2793,26 +2884,26 @@
         <!-- Filter -->
         <div class="search-container">
             <span class="search-icon">🔍</span>
-            <input type="text" class="search-input" id="searchInput" placeholder="Search artworks by title, medium, or year...">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search artworks by title, medium, or year..." data-i18n-placeholder="works.search">
         </div>
 
         <div class="advanced-filters">
             <div class="filter-group">
-                <span class="filter-label">Sort By:</span>
+                <span class="filter-label" data-i18n="works.sortLabel">Sort By:</span>
                 <select class="sort-select" id="sortSelect">
-                    <option value="newest">Newest First</option>
-                    <option value="oldest">Oldest First</option>
-                    <option value="title">Title (A-Z)</option>
-                    <option value="popular">Most Popular</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="price-low">Price: Low to High</option>
+                    <option value="newest" data-i18n="works.sort.newest">Newest First</option>
+                    <option value="oldest" data-i18n="works.sort.oldest">Oldest First</option>
+                    <option value="title" data-i18n="works.sort.title">Title (A-Z)</option>
+                    <option value="popular" data-i18n="works.sort.popular">Most Popular</option>
+                    <option value="price-high" data-i18n="works.sort.priceHigh">Price: High to Low</option>
+                    <option value="price-low" data-i18n="works.sort.priceLow">Price: Low to High</option>
                 </select>
             </div>
 
             <div class="filter-group">
-                <span class="filter-label">Year:</span>
+                <span class="filter-label" data-i18n="works.yearLabel">Year:</span>
                 <select class="sort-select" id="yearFilter">
-                    <option value="all">All Years</option>
+                    <option value="all" data-i18n="works.year.all">All Years</option>
                     <option value="2023">2023</option>
                     <option value="2022">2022</option>
                     <option value="2021">2021</option>
@@ -2827,10 +2918,10 @@
         </div>
 
         <div class="filter-section" style="position: relative;">
-            <button class="filter-btn active" data-filter="all">All Works</button>
-            <button class="filter-btn" data-filter="abstract">Abstract</button>
-            <button class="filter-btn" data-filter="figurative">Figurative</button>
-            <button class="filter-btn" data-filter="mixed">Mixed Media</button>
+            <button class="filter-btn active" data-filter="all" data-i18n="works.filters.all">All Works</button>
+            <button class="filter-btn" data-filter="abstract" data-i18n="works.filters.abstract">Abstract</button>
+            <button class="filter-btn" data-filter="figurative" data-i18n="works.filters.figurative">Figurative</button>
+            <button class="filter-btn" data-filter="mixed" data-i18n="works.filters.mixed">Mixed Media</button>
         </div>
 
         <div class="works-container">
@@ -2839,15 +2930,15 @@
                 <div class="work-card" data-category="abstract">
                     <div class="work-image">
                         <div class="work-overlay">
-                            <button class="view-work-btn">VIEW WORK</button>
+                            <button class="view-work-btn" data-i18n="works.viewWork">VIEW WORK</button>
                         </div>
                     </div>
                     <div class="work-info">
-                        <h3 class="work-title">Infinite Space</h3>
-                        <p class="work-meta">Acrylic on Canvas • 120×100 cm • 2023</p>
+                        <h3 class="work-title" data-i18n="works.items.infinite.title">Infinite Space</h3>
+                        <p class="work-meta" data-i18n="works.items.infinite.meta">Acrylic on Canvas • 120×100 cm • 2023</p>
                         <div class="work-tags">
-                            <span class="tag">Abstract</span>
-                            <span class="tag">Large Format</span>
+                            <span class="tag" data-i18n="works.items.infinite.tag1">Abstract</span>
+                            <span class="tag" data-i18n="works.items.infinite.tag2">Large Format</span>
                         </div>
                         <div class="work-stats">
                             <div class="work-stat">
@@ -2866,11 +2957,11 @@
                 <div class="work-card" data-category="figurative">
                     <div class="work-image" style="background: linear-gradient(135deg, #4C6EF5 0%, #1971C2 100%);"></div>
                     <div class="work-info">
-                        <h3 class="work-title">Deep Blue</h3>
-                        <p class="work-meta">Oil on Canvas • 100×80 cm • 2023</p>
+                        <h3 class="work-title" data-i18n="works.items.deepBlue.title">Deep Blue</h3>
+                        <p class="work-meta" data-i18n="works.items.deepBlue.meta">Oil on Canvas • 100×80 cm • 2023</p>
                         <div class="work-tags">
-                            <span class="tag">Figurative</span>
-                            <span class="tag">Portrait</span>
+                            <span class="tag" data-i18n="works.items.deepBlue.tag1">Figurative</span>
+                            <span class="tag" data-i18n="works.items.deepBlue.tag2">Portrait</span>
                         </div>
                     </div>
                 </div>
@@ -2879,11 +2970,11 @@
                 <div class="work-card" data-category="mixed">
                     <div class="work-image" style="background: linear-gradient(135deg, #F76707 0%, #E67700 100%);"></div>
                     <div class="work-info">
-                        <h3 class="work-title">Flame & Fantasy</h3>
-                        <p class="work-meta">Mixed Media • 75×60 cm • 2023</p>
+                        <h3 class="work-title" data-i18n="works.items.flameFantasy.title">Flame &amp; Fantasy</h3>
+                        <p class="work-meta" data-i18n="works.items.flameFantasy.meta">Mixed Media • 75×60 cm • 2023</p>
                         <div class="work-tags">
-                            <span class="tag">Mixed Media</span>
-                            <span class="tag">Experimental</span>
+                            <span class="tag" data-i18n="works.items.flameFantasy.tag1">Mixed Media</span>
+                            <span class="tag" data-i18n="works.items.flameFantasy.tag2">Experimental</span>
                         </div>
                     </div>
                 </div>
@@ -2892,11 +2983,11 @@
                 <div class="work-card" data-category="abstract">
                     <div class="work-image" style="background: linear-gradient(135deg, #7950F2 0%, #5F3DC4 100%);"></div>
                     <div class="work-info">
-                        <h3 class="work-title">Purple Night</h3>
-                        <p class="work-meta">Acrylic on Canvas • 90×70 cm • 2022</p>
+                        <h3 class="work-title" data-i18n="works.items.purpleNight.title">Purple Night</h3>
+                        <p class="work-meta" data-i18n="works.items.purpleNight.meta">Acrylic on Canvas • 90×70 cm • 2022</p>
                         <div class="work-tags">
-                            <span class="tag">Abstract</span>
-                            <span class="tag">Night Series</span>
+                            <span class="tag" data-i18n="works.items.purpleNight.tag1">Abstract</span>
+                            <span class="tag" data-i18n="works.items.purpleNight.tag2">Night Series</span>
                         </div>
                     </div>
                 </div>
@@ -2905,11 +2996,11 @@
                 <div class="work-card" data-category="figurative">
                     <div class="work-image" style="background: linear-gradient(135deg, #15AABF 0%, #0C8599 100%);"></div>
                     <div class="work-info">
-                        <h3 class="work-title">Emerald Hope</h3>
-                        <p class="work-meta">Oil on Canvas • 110×110 cm • 2022</p>
+                        <h3 class="work-title" data-i18n="works.items.emeraldHope.title">Emerald Hope</h3>
+                        <p class="work-meta" data-i18n="works.items.emeraldHope.meta">Oil on Canvas • 110×110 cm • 2022</p>
                         <div class="work-tags">
-                            <span class="tag">Figurative</span>
-                            <span class="tag">Square Format</span>
+                            <span class="tag" data-i18n="works.items.emeraldHope.tag1">Figurative</span>
+                            <span class="tag" data-i18n="works.items.emeraldHope.tag2">Square Format</span>
                         </div>
                     </div>
                 </div>
@@ -2918,11 +3009,11 @@
                 <div class="work-card" data-category="mixed">
                     <div class="work-image" style="background: linear-gradient(135deg, #D0BFFF 0%, #B197FC 100%);"></div>
                     <div class="work-info">
-                        <h3 class="work-title">Pastel Streets</h3>
-                        <p class="work-meta">Mixed Media • 85×65 cm • 2022</p>
+                        <h3 class="work-title" data-i18n="works.items.pastelStreets.title">Pastel Streets</h3>
+                        <p class="work-meta" data-i18n="works.items.pastelStreets.meta">Mixed Media • 85×65 cm • 2022</p>
                         <div class="work-tags">
-                            <span class="tag">Mixed Media</span>
-                            <span class="tag">Urban Series</span>
+                            <span class="tag" data-i18n="works.items.pastelStreets.tag1">Mixed Media</span>
+                            <span class="tag" data-i18n="works.items.pastelStreets.tag2">Urban Series</span>
                         </div>
                     </div>
                 </div>
@@ -2939,7 +3030,7 @@
             <!-- Loading More -->
             <div class="loading-more" id="loadingMore">
                 <div class="spinner"></div>
-                <p style="margin-top: 1rem; color: var(--text-secondary);">Loading more artworks...</p>
+                <p style="margin-top: 1rem; color: var(--text-secondary);" data-i18n="works.loading">Loading more artworks...</p>
             </div>
         </div>
     </section>
@@ -2949,33 +3040,33 @@
         <div class="about-grid">
             <div class="about-image"></div>
             <div class="about-text">
-                <h2>Creating Visual<br>Poetry</h2>
-                <p>
-                    Elnaz Ashrafi is a contemporary Iranian artist whose work explores 
+                <h2 data-i18n-html="about.title">Creating Visual<br>Poetry</h2>
+                <p data-i18n="about.paragraph1">
+                    Elnaz Ashrafi is a contemporary Iranian artist whose work explores
                     the delicate intersection of memory, identity, and color.
                 </p>
-                <p>
-                    Based between Tehran and Berlin, her practice bridges Eastern and 
-                    Western aesthetic traditions, transforming personal and cultural 
+                <p data-i18n="about.paragraph2">
+                    Based between Tehran and Berlin, her practice bridges Eastern and
+                    Western aesthetic traditions, transforming personal and cultural
                     memory into visceral visual experiences.
                 </p>
 
                 <div class="stats-grid">
                     <div class="stat-item">
-                        <div class="stat-number">15+</div>
-                        <div class="stat-label">Years Practice</div>
+                        <div class="stat-number" data-i18n="about.stats.years.value">15+</div>
+                        <div class="stat-label" data-i18n="about.stats.years.label">Years Practice</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number">500+</div>
-                        <div class="stat-label">Artworks</div>
+                        <div class="stat-number" data-i18n="about.stats.artworks.value">500+</div>
+                        <div class="stat-label" data-i18n="about.stats.artworks.label">Artworks</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number">100+</div>
-                        <div class="stat-label">Exhibitions</div>
+                        <div class="stat-number" data-i18n="about.stats.exhibitions.value">100+</div>
+                        <div class="stat-label" data-i18n="about.stats.exhibitions.label">Exhibitions</div>
                     </div>
                 </div>
 
-                <a href="#contact" class="btn btn-primary">GET IN TOUCH</a>
+                <a href="#contact" class="btn btn-primary" data-i18n="about.cta">GET IN TOUCH</a>
             </div>
         </div>
     </section>
@@ -2983,42 +3074,42 @@
     <!-- Testimonials Section -->
     <section class="section testimonials-section">
         <div class="section-header">
-            <p class="section-counter">/TESTIMONIALS</p>
-            <h2 class="section-title">WHAT THEY SAY</h2>
+            <p class="section-counter" data-i18n="testimonials.counter">/TESTIMONIALS</p>
+            <h2 class="section-title" data-i18n="testimonials.title">WHAT THEY SAY</h2>
         </div>
 
         <div class="testimonials-slider">
             <div class="testimonial-card active">
-                <p class="testimonial-text">
-                    "Elnaz's work captures something ineffable about memory and identity. 
-                    Her use of color is both bold and subtle, creating visual experiences 
+                <p class="testimonial-text" data-i18n="testimonials.items.1.text">
+                    "Elnaz's work captures something ineffable about memory and identity.
+                    Her use of color is both bold and subtle, creating visual experiences
                     that stay with you long after viewing."
                 </p>
                 <div class="testimonial-author">
-                    <h4>Sarah Mitchell</h4>
-                    <p>Curator, Tehran Museum of Contemporary Art</p>
+                    <h4 data-i18n="testimonials.items.1.author">Sarah Mitchell</h4>
+                    <p data-i18n="testimonials.items.1.role">Curator, Tehran Museum of Contemporary Art</p>
                 </div>
             </div>
 
             <div class="testimonial-card">
-                <p class="testimonial-text">
-                    "A remarkable voice in contemporary art. Ashrafi bridges cultures 
+                <p class="testimonial-text" data-i18n="testimonials.items.2.text">
+                    "A remarkable voice in contemporary art. Ashrafi bridges cultures
                     and traditions with a visual language that speaks universally."
                 </p>
                 <div class="testimonial-author">
-                    <h4>Dr. Klaus Weber</h4>
-                    <p>Art Critic, Berlin Art Review</p>
+                    <h4 data-i18n="testimonials.items.2.author">Dr. Klaus Weber</h4>
+                    <p data-i18n="testimonials.items.2.role">Art Critic, Berlin Art Review</p>
                 </div>
             </div>
 
             <div class="testimonial-card">
-                <p class="testimonial-text">
-                    "Her paintings are meditations on color and emotion. Each work 
+                <p class="testimonial-text" data-i18n="testimonials.items.3.text">
+                    "Her paintings are meditations on color and emotion. Each work
                     reveals new layers upon contemplation."
                 </p>
                 <div class="testimonial-author">
-                    <h4>Maya Chen</h4>
-                    <p>Private Collector, Hong Kong</p>
+                    <h4 data-i18n="testimonials.items.3.author">Maya Chen</h4>
+                    <p data-i18n="testimonials.items.3.role">Private Collector, Hong Kong</p>
                 </div>
             </div>
         </div>
@@ -3033,9 +3124,9 @@
     <!-- Process Comparison Section -->
     <section class="comparison-section">
         <div class="section-header">
-            <p class="section-counter">/PROCESS</p>
-            <h2 class="section-title">CREATIVE JOURNEY</h2>
-            <p class="section-subtitle">
+            <p class="section-counter" data-i18n="process.counter">/PROCESS</p>
+            <h2 class="section-title" data-i18n="process.title">CREATIVE JOURNEY</h2>
+            <p class="section-subtitle" data-i18n="process.subtitle">
                 Drag the slider to see the transformation from sketch to final artwork
             </p>
         </div>
@@ -3043,8 +3134,8 @@
         <div class="comparison-container">
             <div class="image-comparison" id="imageComparison">
                 <div class="comparison-labels">
-                    <span class="comparison-label">Sketch</span>
-                    <span class="comparison-label">Final</span>
+                    <span class="comparison-label" data-i18n="process.labels.sketch">Sketch</span>
+                    <span class="comparison-label" data-i18n="process.labels.final">Final</span>
                 </div>
                 <div class="comparison-image comparison-before" id="comparisonBefore" style="background: linear-gradient(135deg, #666 0%, #999 100%);"></div>
                 <div class="comparison-image comparison-after" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));"></div>
@@ -3058,81 +3149,81 @@
     <!-- Shop Section -->
     <section class="section shop-section" id="shop">
         <div class="section-header">
-            <p class="section-counter">/AVAILABLE</p>
-            <h2 class="section-title">SHOP ARTWORKS</h2>
-            <p class="section-subtitle">
+            <p class="section-counter" data-i18n="shop.counter">/AVAILABLE</p>
+            <h2 class="section-title" data-i18n="shop.title">SHOP ARTWORKS</h2>
+            <p class="section-subtitle" data-i18n="shop.subtitle">
                 Original paintings and limited edition prints available for purchase
             </p>
         </div>
 
         <div class="shop-filters">
-            <button class="filter-btn active" data-shop-filter="all">All Items</button>
-            <button class="filter-btn" data-shop-filter="originals">Originals</button>
-            <button class="filter-btn" data-shop-filter="prints">Prints</button>
-            <button class="filter-btn" data-shop-filter="available">Available</button>
+            <button class="filter-btn active" data-shop-filter="all" data-i18n="shop.filters.all">All Items</button>
+            <button class="filter-btn" data-shop-filter="originals" data-i18n="shop.filters.originals">Originals</button>
+            <button class="filter-btn" data-shop-filter="prints" data-i18n="shop.filters.prints">Prints</button>
+            <button class="filter-btn" data-shop-filter="available" data-i18n="shop.filters.available">Available</button>
         </div>
 
         <div class="shop-grid">
             <!-- Shop Item 1 -->
-            <div class="shop-card" data-shop-category="originals" data-shop-status="available">
+            <div class="shop-card" data-shop-category="originals" data-shop-status="available" data-price="5500">
                 <div class="shop-image" style="background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);">
-                    <span class="shop-badge available">Available</span>
-                    <button class="quick-view-btn">QUICK VIEW</button>
+                    <span class="shop-badge available" data-i18n="shop.badge.available">Available</span>
+                    <button class="quick-view-btn" data-i18n="shop.quickView">QUICK VIEW</button>
                 </div>
                 <div class="shop-info">
-                    <h3 class="shop-title">Infinite Space</h3>
-                    <p class="shop-details">Acrylic on Canvas • 120×100 cm</p>
+                    <h3 class="shop-title" data-i18n="shop.items.infinite.title">Infinite Space</h3>
+                    <p class="shop-details" data-i18n="shop.items.infinite.details">Acrylic on Canvas • 120×100 cm</p>
                     <div class="shop-price-section">
-                        <span class="shop-price">$5,500</span>
-                        <button class="add-to-cart-btn">ADD TO CART</button>
+                        <span class="shop-price" data-i18n="shop.items.infinite.price">$5,500</span>
+                        <button class="add-to-cart-btn" data-i18n="shop.addToCart">ADD TO CART</button>
                     </div>
                 </div>
             </div>
 
             <!-- Shop Item 2 -->
-            <div class="shop-card" data-shop-category="prints" data-shop-status="available">
+            <div class="shop-card" data-shop-category="prints" data-shop-status="available" data-price="350">
                 <div class="shop-image" style="background: linear-gradient(135deg, #4c6ef5 0%, #1971c2 100%);">
-                    <span class="shop-badge limited">Limited Edition</span>
-                    <button class="quick-view-btn">QUICK VIEW</button>
+                    <span class="shop-badge limited" data-i18n="shop.badge.limited">Limited Edition</span>
+                    <button class="quick-view-btn" data-i18n="shop.quickView">QUICK VIEW</button>
                 </div>
                 <div class="shop-info">
-                    <h3 class="shop-title">Deep Blue - Print</h3>
-                    <p class="shop-details">Giclée Print • 50×40 cm • Ed. 25</p>
+                    <h3 class="shop-title" data-i18n="shop.items.deepBluePrint.title">Deep Blue - Print</h3>
+                    <p class="shop-details" data-i18n="shop.items.deepBluePrint.details">Giclée Print • 50×40 cm • Ed. 25</p>
                     <div class="shop-price-section">
-                        <span class="shop-price">$350</span>
-                        <button class="add-to-cart-btn">ADD TO CART</button>
+                        <span class="shop-price" data-i18n="shop.items.deepBluePrint.price">$350</span>
+                        <button class="add-to-cart-btn" data-i18n="shop.addToCart">ADD TO CART</button>
                     </div>
                 </div>
             </div>
 
             <!-- Shop Item 3 -->
-            <div class="shop-card" data-shop-category="originals" data-shop-status="sold">
+            <div class="shop-card" data-shop-category="originals" data-shop-status="sold" data-price="3800">
                 <div class="shop-image" style="background: linear-gradient(135deg, #f76707 0%, #e67700 100%);">
-                    <span class="shop-badge sold">Sold</span>
-                    <button class="quick-view-btn">QUICK VIEW</button>
+                    <span class="shop-badge sold" data-i18n="shop.badge.sold">Sold</span>
+                    <button class="quick-view-btn" data-i18n="shop.quickView">QUICK VIEW</button>
                 </div>
                 <div class="shop-info">
-                    <h3 class="shop-title">Flame & Fantasy</h3>
-                    <p class="shop-details">Mixed Media • 75×60 cm</p>
+                    <h3 class="shop-title" data-i18n="shop.items.flameFantasy.title">Flame &amp; Fantasy</h3>
+                    <p class="shop-details" data-i18n="shop.items.flameFantasy.details">Mixed Media • 75×60 cm</p>
                     <div class="shop-price-section">
-                        <span class="shop-price">$3,800</span>
-                        <button class="add-to-cart-btn" disabled>SOLD OUT</button>
+                        <span class="shop-price" data-i18n="shop.items.flameFantasy.price">$3,800</span>
+                        <button class="add-to-cart-btn" disabled data-i18n="shop.soldOut">SOLD OUT</button>
                     </div>
                 </div>
             </div>
 
             <!-- Shop Item 4 -->
-            <div class="shop-card" data-shop-category="prints" data-shop-status="available">
+            <div class="shop-card" data-shop-category="prints" data-shop-status="available" data-price="280">
                 <div class="shop-image" style="background: linear-gradient(135deg, #7950f2 0%, #5f3dc4 100%);">
-                    <span class="shop-badge new">New</span>
-                    <button class="quick-view-btn">QUICK VIEW</button>
+                    <span class="shop-badge new" data-i18n="shop.badge.new">New</span>
+                    <button class="quick-view-btn" data-i18n="shop.quickView">QUICK VIEW</button>
                 </div>
                 <div class="shop-info">
-                    <h3 class="shop-title">Purple Night - Print</h3>
-                    <p class="shop-details">Giclée Print • 60×50 cm • Ed. 50</p>
+                    <h3 class="shop-title" data-i18n="shop.items.purpleNightPrint.title">Purple Night - Print</h3>
+                    <p class="shop-details" data-i18n="shop.items.purpleNightPrint.details">Giclée Print • 60×50 cm • Ed. 50</p>
                     <div class="shop-price-section">
-                        <span class="shop-price">$280</span>
-                        <button class="add-to-cart-btn">ADD TO CART</button>
+                        <span class="shop-price" data-i18n="shop.items.purpleNightPrint.price">$280</span>
+                        <button class="add-to-cart-btn" data-i18n="shop.addToCart">ADD TO CART</button>
                     </div>
                 </div>
             </div>
@@ -3142,62 +3233,61 @@
         <div class="cart-summary" id="cartSummary">
             <div class="cart-icon-wrapper">
                 <span class="cart-icon">🛒</span>
-                <span class="cart-count" id="cartCount">0</span>
+                <span class="cart-count" id="cartCount" data-count="0">0</span>
             </div>
-            <span class="cart-total" id="cartTotal">$0</span>
-            <button class="view-cart-btn" id="viewCartBtn">VIEW CART</button>
+            <span class="cart-total" id="cartTotal" data-amount="0">$0</span>
+            <button class="view-cart-btn" id="viewCartBtn" data-i18n="shop.viewCart">VIEW CART</button>
         </div>
     </section>
 
     <!-- Resume/CV Section -->
     <section class="section resume-section" id="resume">
         <div class="section-header">
-            <p class="section-counter">/BIOGRAPHY</p>
-            <h2 class="section-title">RESUME & CV</h2>
-            <p class="section-subtitle">
+            <p class="section-counter" data-i18n="resume.counter">/BIOGRAPHY</p>
+            <h2 class="section-title" data-i18n="resume.title">RESUME & CV</h2>
+            <p class="section-subtitle" data-i18n="resume.subtitle">
                 Academic background, exhibitions, awards, and professional experience
             </p>
         </div>
 
-        <div class="resume-container">
-            <div class="resume-sidebar">
-                <div class="resume-profile">
-                    <div class="resume-profile-image"></div>
-                    <h3>Elnaz Ashrafi</h3>
-                    <p>Contemporary Visual Artist</p>
-                    <p class="resume-location">📍 Tehran · Berlin</p>
-                </div>
+            <div class="resume-container">
+                <div class="resume-sidebar">
+                    <div class="resume-profile">
+                        <div class="resume-profile-image"></div>
+                    <h3 data-i18n="resume.profile.name">Elnaz Ashrafi</h3>
+                    <p data-i18n="hero.eyebrow">Contemporary Visual Artist</p>
+                    <p class="resume-location" data-i18n="resume.profile.location">📍 Tehran · Berlin</p>
+                    </div>
 
-                <div class="resume-contact-info">
-                    <h4>Contact</h4>
-                    <p>📧 contact@elnazashrafi.com</p>
-                    <p>🌐 elnazashrafi.com</p>
-                </div>
+                    <div class="resume-contact-info">
+                        <h4 data-i18n="resume.contact">Contact</h4>
+                    <p data-i18n="resume.contact.email">📧 contact@elnazashrafi.com</p>
+                    <p data-i18n="resume.contact.website">🌐 elnazashrafi.com</p>
+                    </div>
 
-                <button class="btn btn-primary" style="width: 100%; margin-top: 2rem;">
-                    DOWNLOAD FULL CV
-                </button>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 2rem;">
+                        <span data-i18n="resume.download">DOWNLOAD FULL CV</span>
+                    </button>
             </div>
 
             <div class="resume-content">
                 <!-- Education -->
                 <div class="resume-section-block">
-                    <h3 class="resume-section-title">Education</h3>
+                    <h3 class="resume-section-title" data-i18n="resume.sections.education">Education</h3>
                     <div class="resume-item-block">
                         <div class="resume-year-badge">2018 - 2020</div>
-                        <h4>Master of Fine Arts</h4>
-                        <p class="resume-institution">Universität der Künste Berlin, Germany</p>
-                        <p class="resume-description">
-                            Specialized in Contemporary Painting and Color Theory. 
-                            Thesis: "Memory as Material: Color Fields in Iranian Contemporary Art"
+                        <h4 data-i18n="resume.education.mfa.title">Master of Fine Arts</h4>
+                        <p class="resume-institution" data-i18n="resume.education.mfa.institution">Universität der Künste Berlin, Germany</p>
+                        <p class="resume-description" data-i18n="resume.education.mfa.description">
+                            Specialized in Contemporary Painting and Color Theory. Thesis: "Memory as Material: Color Fields in Iranian Contemporary Art"
                         </p>
                     </div>
 
                     <div class="resume-item-block">
                         <div class="resume-year-badge">2013 - 2017</div>
-                        <h4>Bachelor of Fine Arts</h4>
-                        <p class="resume-institution">University of Tehran, Iran</p>
-                        <p class="resume-description">
+                        <h4 data-i18n="resume.education.bfa.title">Bachelor of Fine Arts</h4>
+                        <p class="resume-institution" data-i18n="resume.education.bfa.institution">University of Tehran, Iran</p>
+                        <p class="resume-description" data-i18n="resume.education.bfa.description">
                             Focus on Painting and Visual Arts. Graduated with honors.
                         </p>
                     </div>
@@ -3205,27 +3295,27 @@
 
                 <!-- Awards -->
                 <div class="resume-section-block">
-                    <h3 class="resume-section-title">Awards & Honors</h3>
+                    <h3 class="resume-section-title" data-i18n="resume.sections.awards">Awards & Honors</h3>
                     <div class="resume-item-block">
                         <div class="resume-year-badge">2023</div>
-                        <h4>DAAD Artist-in-Residence Grant</h4>
-                        <p class="resume-description">
+                        <h4 data-i18n="resume.awards.daad.title">DAAD Artist-in-Residence Grant</h4>
+                        <p class="resume-description" data-i18n="resume.awards.daad.description">
                             Prestigious German Academic Exchange Service grant for emerging artists.
                         </p>
                     </div>
 
                     <div class="resume-item-block">
                         <div class="resume-year-badge">2022</div>
-                        <h4>Tehran Museum of Contemporary Art Prize</h4>
-                        <p class="resume-description">
+                        <h4 data-i18n="resume.awards.tmoca.title">Tehran Museum of Contemporary Art Prize</h4>
+                        <p class="resume-description" data-i18n="resume.awards.tmoca.description">
                             First place in annual emerging artist competition.
                         </p>
                     </div>
 
                     <div class="resume-item-block">
                         <div class="resume-year-badge">2021</div>
-                        <h4>Berlin Art Week Emerging Artist Award</h4>
-                        <p class="resume-description">
+                        <h4 data-i18n="resume.awards.berlinWeek.title">Berlin Art Week Emerging Artist Award</h4>
+                        <p class="resume-description" data-i18n="resume.awards.berlinWeek.description">
                             Recognition for innovative approach to abstract painting.
                         </p>
                     </div>
@@ -3233,61 +3323,61 @@
 
                 <!-- Exhibitions -->
                 <div class="resume-section-block">
-                    <h3 class="resume-section-title">Selected Exhibitions</h3>
-                    
-                    <h4 style="margin: 2rem 0 1rem; color: var(--accent-purple);">Solo Exhibitions</h4>
+                    <h3 class="resume-section-title" data-i18n="resume.sections.exhibitions">Selected Exhibitions</h3>
+
+                    <h4 style="margin: 2rem 0 1rem; color: var(--accent-purple);" data-i18n="resume.sections.solo">Solo Exhibitions</h4>
                     
                     <div class="resume-item-block">
                         <div class="resume-year-badge">2023</div>
-                        <h4>"Colors Beyond Borders"</h4>
-                        <p class="resume-institution">Tehran Museum of Contemporary Art</p>
+                        <h4 data-i18n="resume.exhibitions.solo1.title">"Colors Beyond Borders"</h4>
+                        <p class="resume-institution" data-i18n="resume.exhibitions.solo1.location">Tehran Museum of Contemporary Art</p>
                     </div>
 
                     <div class="resume-item-block">
                         <div class="resume-year-badge">2023</div>
-                        <h4>"Color & Light: A Dialogue"</h4>
-                        <p class="resume-institution">Galerie Thaddaeus Ropac, Berlin</p>
+                        <h4 data-i18n="resume.exhibitions.solo2.title">"Color & Light: A Dialogue"</h4>
+                        <p class="resume-institution" data-i18n="resume.exhibitions.solo2.location">Galerie Thaddaeus Ropac, Berlin</p>
                     </div>
 
-                    <h4 style="margin: 2rem 0 1rem; color: var(--accent-cyan);">Group Exhibitions</h4>
+                    <h4 style="margin: 2rem 0 1rem; color: var(--accent-cyan);" data-i18n="resume.sections.group">Group Exhibitions</h4>
                     
                     <div class="resume-item-block">
                         <div class="resume-year-badge">2023</div>
-                        <h4>"Middle Eastern Contemporary"</h4>
-                        <p class="resume-institution">Louvre Abu Dhabi</p>
+                        <h4 data-i18n="resume.exhibitions.group1.title">"Middle Eastern Contemporary"</h4>
+                        <p class="resume-institution" data-i18n="resume.exhibitions.group1.location">Louvre Abu Dhabi</p>
                     </div>
 
                     <div class="resume-item-block">
                         <div class="resume-year-badge">2022</div>
-                        <h4>"Urban Memories"</h4>
-                        <p class="resume-institution">Shaykh Bahaei Gallery, Isfahan</p>
+                        <h4 data-i18n="resume.exhibitions.group2.title">"Urban Memories"</h4>
+                        <p class="resume-institution" data-i18n="resume.exhibitions.group2.location">Shaykh Bahaei Gallery, Isfahan</p>
                     </div>
                 </div>
 
                 <!-- Collections -->
                 <div class="resume-section-block">
-                    <h3 class="resume-section-title">Public Collections</h3>
+                    <h3 class="resume-section-title" data-i18n="resume.sections.collections">Public Collections</h3>
                     <ul class="resume-list">
-                        <li>Tehran Museum of Contemporary Art, Iran</li>
-                        <li>Louvre Abu Dhabi, UAE</li>
-                        <li>Berlin State Museums, Germany</li>
-                        <li>Private collections in USA, Europe, and Middle East</li>
+                        <li data-i18n="resume.collections.item1">Tehran Museum of Contemporary Art, Iran</li>
+                        <li data-i18n="resume.collections.item2">Louvre Abu Dhabi, UAE</li>
+                        <li data-i18n="resume.collections.item3">Berlin State Museums, Germany</li>
+                        <li data-i18n="resume.collections.item4">Private collections in USA, Europe, and Middle East</li>
                     </ul>
                 </div>
 
                 <!-- Publications -->
                 <div class="resume-section-block">
-                    <h3 class="resume-section-title">Publications & Press</h3>
+                    <h3 class="resume-section-title" data-i18n="resume.sections.publications">Publications & Press</h3>
                     <div class="resume-item-block">
                         <div class="resume-year-badge">2023</div>
-                        <h4>"Emerging Voices: Iranian Contemporary Art"</h4>
-                        <p class="resume-institution">Art Forum Magazine</p>
+                        <h4 data-i18n="resume.publications.item1.title">"Emerging Voices: Iranian Contemporary Art"</h4>
+                        <p class="resume-institution" data-i18n="resume.publications.item1.source">Art Forum Magazine</p>
                     </div>
 
                     <div class="resume-item-block">
                         <div class="resume-year-badge">2022</div>
-                        <h4>"Color as Memory: Interview with Elnaz Ashrafi"</h4>
-                        <p class="resume-institution">Berlin Art Review</p>
+                        <h4 data-i18n="resume.publications.item2.title">"Color as Memory: Interview with Elnaz Ashrafi"</h4>
+                        <p class="resume-institution" data-i18n="resume.publications.item2.source">Berlin Art Review</p>
                     </div>
                 </div>
             </div>
@@ -3297,9 +3387,9 @@
     <!-- Contact Section -->
     <section class="section contact-section" id="contact">
         <div class="section-header">
-            <p class="section-counter">/CONTACT</p>
-            <h2 class="section-title">LET'S CONNECT</h2>
-            <p class="section-subtitle">
+            <p class="section-counter" data-i18n="contact.counter">/CONTACT</p>
+            <h2 class="section-title" data-i18n="contact.title">LET'S CONNECT</h2>
+            <p class="section-subtitle" data-i18n="contact.subtitle">
                 For commissions, exhibitions, or inquiries about available works
             </p>
         </div>
@@ -3307,22 +3397,22 @@
         <div class="contact-container">
             <form class="contact-form">
                 <div class="form-group">
-                    <label>Your Name</label>
-                    <input type="text" required>
+                    <label data-i18n="contact.name">Your Name</label>
+                    <input type="text" required placeholder="Your full name" data-i18n-placeholder="contact.namePlaceholder">
                 </div>
                 <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" required>
+                    <label data-i18n="contact.email">Email Address</label>
+                    <input type="email" required placeholder="name@example.com" data-i18n-placeholder="contact.emailPlaceholder">
                 </div>
                 <div class="form-group">
-                    <label>Subject</label>
-                    <input type="text" required>
+                    <label data-i18n="contact.subject">Subject</label>
+                    <input type="text" required placeholder="How can I help?" data-i18n-placeholder="contact.subjectPlaceholder">
                 </div>
                 <div class="form-group">
-                    <label>Message</label>
-                    <textarea required></textarea>
+                    <label data-i18n="contact.message">Message</label>
+                    <textarea required placeholder="Share the details of your inquiry" data-i18n-placeholder="contact.messagePlaceholder"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">SEND MESSAGE</button>
+                <button type="submit" class="btn btn-primary" data-i18n="contact.send">SEND MESSAGE</button>
             </form>
         </div>
     </section>
@@ -3331,10 +3421,10 @@
     <footer class="footer">
         <div class="footer-grid">
             <div class="footer-col">
-                <h3>Elnaz Ashrafi</h3>
+                <h3 data-i18n="footer.name">Elnaz Ashrafi</h3>
                 <p style="color: var(--text-secondary); margin-top: 1rem;">
-                    Contemporary Visual Artist<br>
-                    Tehran · Berlin
+                    <span data-i18n="hero.eyebrow">Contemporary Visual Artist</span><br>
+                    <span data-i18n="resume.profile.location">Tehran · Berlin</span>
                 </p>
                 <div class="social-links">
                     <a href="#" class="social-icon">IG</a>
@@ -3344,37 +3434,37 @@
             </div>
 
             <div class="footer-col">
-                <h3>Explore</h3>
+                <h3 data-i18n="footer.explore">Explore</h3>
                 <ul class="footer-links">
-                    <li><a href="#works">Works</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#exhibitions">Exhibitions</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#works" data-i18n="nav.works">Works</a></li>
+                    <li><a href="#about" data-i18n="nav.about">About</a></li>
+                    <li><a href="#exhibitions" data-i18n="footer.exhibitions">Exhibitions</a></li>
+                    <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
-                <h3>Follow</h3>
+                <h3 data-i18n="footer.follow">Follow</h3>
                 <ul class="footer-links">
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">LinkedIn</a></li>
-                    <li><a href="#">Artsy</a></li>
-                    <li><a href="#">Behance</a></li>
+                    <li><a href="#" data-i18n="footer.social.instagram">Instagram</a></li>
+                    <li><a href="#" data-i18n="footer.social.linkedin">LinkedIn</a></li>
+                    <li><a href="#" data-i18n="footer.social.artsy">Artsy</a></li>
+                    <li><a href="#" data-i18n="footer.social.behance">Behance</a></li>
                 </ul>
             </div>
 
             <div class="footer-col">
-                <h3>Contact</h3>
+                <h3 data-i18n="footer.contact">Contact</h3>
                 <ul class="footer-links">
-                    <li><a href="mailto:contact@elnazashrafi.com">Email</a></li>
-                    <li><a href="#">Studio Visits</a></li>
-                    <li><a href="#">Press Kit</a></li>
+                    <li><a href="mailto:contact@elnazashrafi.com" data-i18n="footer.email">Email</a></li>
+                    <li><a href="#" data-i18n="footer.studio">Studio Visits</a></li>
+                    <li><a href="#" data-i18n="footer.press">Press Kit</a></li>
                 </ul>
             </div>
         </div>
 
         <div class="footer-bottom">
-            <p>© 2024 Elnaz Ashrafi. All rights reserved. • Where Memory Becomes Color</p>
+            <p data-i18n="footer.bottom">© 2024 Elnaz Ashrafi. All rights reserved. • Where Memory Becomes Color</p>
         </div>
     </footer>
 
@@ -3385,19 +3475,19 @@
     <nav class="mobile-bottom-nav">
         <a href="#home" class="mobile-nav-item active">
             <span class="mobile-nav-icon">🏠</span>
-            <span class="mobile-nav-label">Home</span>
+            <span class="mobile-nav-label" data-i18n="nav.home">Home</span>
         </a>
         <a href="#works" class="mobile-nav-item">
             <span class="mobile-nav-icon">🎨</span>
-            <span class="mobile-nav-label">Works</span>
+            <span class="mobile-nav-label" data-i18n="nav.works">Works</span>
         </a>
         <a href="#shop" class="mobile-nav-item">
             <span class="mobile-nav-icon">🛒</span>
-            <span class="mobile-nav-label">Shop</span>
+            <span class="mobile-nav-label" data-i18n="nav.shop">Shop</span>
         </a>
         <a href="#resume" class="mobile-nav-item">
             <span class="mobile-nav-icon">📄</span>
-            <span class="mobile-nav-label">Resume</span>
+            <span class="mobile-nav-label" data-i18n="nav.resume">Resume</span>
         </a>
     </nav>
 
@@ -3409,7 +3499,7 @@
     <!-- Pull to Refresh Indicator -->
     <div class="pull-to-refresh" id="pullToRefresh">
         <span class="pull-to-refresh-icon">↻</span>
-        <span>Release to refresh</span>
+        <span data-i18n="ui.release">Release to refresh</span>
     </div>
 
     <!-- Swipe Indicators -->
@@ -3432,48 +3522,45 @@
             </div>
 
             <div class="modal-info-section">
-                <h2 id="modalTitle">Infinite Space</h2>
-                <p class="modal-price" id="modalPrice">$5,500 USD</p>
-                
-                <p class="modal-description" id="modalDescription">
-                    This large-format abstract painting explores the concept of infinite space through 
-                    bold color fields and subtle gestural marks. The work invites contemplation on the 
-                    boundaries between memory and imagination.
+                <h2 id="modalTitle" data-i18n="modal.title">Infinite Space</h2>
+                <p class="modal-price" id="modalPrice" data-i18n="modal.price">$5,500 USD</p>
+
+                <p class="modal-description" id="modalDescription" data-i18n="modal.description">
+                    This large-format abstract painting explores the concept of infinite space through bold color fields and subtle gestural marks. The work invites contemplation on the boundaries between memory and imagination.
                 </p>
 
                 <div class="modal-details">
                     <div class="modal-detail-item">
-                        <span class="modal-detail-label">Medium</span>
-                        <span class="modal-detail-value">Acrylic on Canvas</span>
+                        <span class="modal-detail-label" data-i18n="modal.details.medium.label">Medium</span>
+                        <span class="modal-detail-value" data-i18n="modal.details.medium.value">Acrylic on Canvas</span>
                     </div>
                     <div class="modal-detail-item">
-                        <span class="modal-detail-label">Dimensions</span>
-                        <span class="modal-detail-value">120 × 100 cm</span>
+                        <span class="modal-detail-label" data-i18n="modal.details.dimensions.label">Dimensions</span>
+                        <span class="modal-detail-value" data-i18n="modal.details.dimensions.value">120 × 100 cm</span>
                     </div>
                     <div class="modal-detail-item">
-                        <span class="modal-detail-label">Year</span>
-                        <span class="modal-detail-value">2023</span>
+                        <span class="modal-detail-label" data-i18n="modal.details.year.label">Year</span>
+                        <span class="modal-detail-value" data-i18n="modal.details.year.value">2023</span>
                     </div>
                     <div class="modal-detail-item">
-                        <span class="modal-detail-label">Status</span>
-                        <span class="modal-detail-value">Available</span>
+                        <span class="modal-detail-label" data-i18n="modal.details.status.label">Status</span>
+                        <span class="modal-detail-value" data-i18n="modal.details.status.value">Available</span>
                     </div>
                     <div class="modal-detail-item">
-                        <span class="modal-detail-label">Edition</span>
-                        <span class="modal-detail-value">Original (1/1)</span>
+                        <span class="modal-detail-label" data-i18n="modal.details.edition.label">Edition</span>
+                        <span class="modal-detail-value" data-i18n="modal.details.edition.value">Original (1/1)</span>
                     </div>
                 </div>
 
                 <div class="modal-actions">
-                    <button class="btn btn-primary">INQUIRE</button>
-                    <button class="btn btn-secondary">ADD TO WISHLIST</button>
+                    <button class="btn btn-primary" data-i18n="modal.actions.inquire">INQUIRE</button>
+                    <button class="btn btn-secondary" data-i18n="modal.actions.wishlist">ADD TO WISHLIST</button>
                 </div>
 
                 <div class="artist-info-card">
-                    <h4>About the Artist</h4>
-                    <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
-                        Elnaz Ashrafi is a contemporary Iranian artist based between Tehran and Berlin, 
-                        known for her exploration of memory and color.
+                    <h4 data-i18n="modal.artist.heading">About the Artist</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;" data-i18n="modal.artist.description">
+                        Elnaz Ashrafi is a contemporary Iranian artist based between Tehran and Berlin, known for her exploration of memory and color.
                     </p>
                 </div>
             </div>
@@ -3485,12 +3572,12 @@
         <button class="lightbox-close" id="lightboxClose">&times;</button>
         <button class="lightbox-nav lightbox-prev">‹</button>
         <button class="lightbox-nav lightbox-next">›</button>
-        <button class="share-btn" id="shareBtn">SHARE</button>
+        <button class="share-btn" id="shareBtn" data-i18n="lightbox.share">SHARE</button>
         <div class="lightbox-content">
             <img src="" alt="" class="lightbox-image" id="lightboxImage">
             <div class="lightbox-info">
-                <h3 class="lightbox-title" id="lightboxTitle">Artwork Title</h3>
-                <p class="lightbox-meta" id="lightboxMeta">Medium • Size • Year</p>
+                <h3 class="lightbox-title" id="lightboxTitle" data-i18n="lightbox.title">Artwork Title</h3>
+                <p class="lightbox-meta" id="lightboxMeta" data-i18n="lightbox.meta">Medium • Size • Year</p>
             </div>
         </div>
     </div>
@@ -3498,18 +3585,555 @@
     <!-- Newsletter Popup -->
     <div class="newsletter-popup" id="newsletterPopup">
         <button class="newsletter-popup-close" id="popupClose">&times;</button>
-        <h3>Stay Updated</h3>
-        <p>Get the latest news about exhibitions and new artworks delivered to your inbox.</p>
+        <h3 data-i18n="newsletter.title">Stay Updated</h3>
+        <p data-i18n="newsletter.description">Get the latest news about exhibitions and new artworks delivered to your inbox.</p>
         <form class="newsletter-popup-form" id="popupNewsletterForm">
-            <input type="email" placeholder="Your email address" required>
-            <button type="submit">SUBSCRIBE</button>
+            <input type="email" placeholder="Your email address" required data-i18n-placeholder="newsletter.placeholder">
+            <button type="submit" data-i18n="newsletter.submit">SUBSCRIBE</button>
         </form>
-        <p style="font-size: 0.75rem; margin-top: 1rem; margin-bottom: 0;">
+        <p style="font-size: 0.75rem; margin-top: 1rem; margin-bottom: 0;" data-i18n="newsletter.note">
             No spam. Unsubscribe anytime.
         </p>
     </div>
 
     <script>
+        const translations = {
+            fa: {
+                'meta.title': 'الناز اشرفی — هنرمند معاصر',
+                'meta.description': 'الناز اشرفی هنرمند معاصر ایرانی است که حافظه، هویت و رنگ را در نقاشی‌های انتزاعی می‌کاود.',
+                'brand.wordmark': 'الناز اشرفی',
+                'nav.menu': 'منو',
+                'nav.home': 'خانه',
+                'nav.works': 'آثار',
+                'nav.about': 'درباره',
+                'nav.shop': 'فروشگاه',
+                'nav.resume': 'رزومه',
+                'nav.contact': 'تماس',
+                'hero.eyebrow': 'هنرمند معاصر تجسمی',
+                'hero.title': 'جایی<br>که خاطره<br>به رنگ<br>تبدیل می‌شود',
+                'hero.subtitle': 'هنرمند معاصر ایرانی که تقاطع ظریف میان حافظه، هویت و احساس را از طریق نقاشی‌های انتزاعی و فیگوراتیو کاوش می‌کند.',
+                'hero.cta.primary': 'مشاهده آثار',
+                'hero.cta.secondary': 'درباره هنرمند',
+                'hero.scroll': 'اسکرول به پایین',
+                'works.counter': '/۴ برجسته',
+                'works.title': 'آثار منتخب',
+                'works.subtitle': 'مجموعه‌ای گزیده از نقاشی‌های اخیر که حافظه، رنگ و هویت فرهنگی را جست‌وجو می‌کند',
+                'works.search': 'جستجوی آثار بر اساس عنوان، تکنیک یا سال...',
+                'works.sortLabel': 'مرتب‌سازی:',
+                'works.sort.newest': 'جدیدترین',
+                'works.sort.oldest': 'قدیمی‌ترین',
+                'works.sort.title': 'عنوان (الف تا ی)',
+                'works.sort.popular': 'محبوب‌ترین',
+                'works.sort.priceHigh': 'قیمت: زیاد به کم',
+                'works.sort.priceLow': 'قیمت: کم به زیاد',
+                'works.yearLabel': 'سال:',
+                'works.year.all': 'همه سال‌ها',
+                'works.filters.all': 'همه آثار',
+                'works.filters.abstract': 'انتزاعی',
+                'works.filters.figurative': 'فیگوراتیو',
+                'works.filters.mixed': 'ترکیبی',
+                'works.viewWork': 'مشاهده اثر',
+                'works.items.infinite.title': 'فضای بی‌نهایت',
+                'works.items.infinite.meta': 'اکرلیک روی بوم • ۱۲۰×۱۰۰ سانتی‌متر • ۲۰۲۳',
+                'works.items.infinite.tag1': 'انتزاعی',
+                'works.items.infinite.tag2': 'قطع بزرگ',
+                'works.items.deepBlue.title': 'آبی عمیق',
+                'works.items.deepBlue.meta': 'روغن روی بوم • ۱۰۰×۸۰ سانتی‌متر • ۲۰۲۳',
+                'works.items.deepBlue.tag1': 'فیگوراتیو',
+                'works.items.deepBlue.tag2': 'پرتره',
+                'works.items.flameFantasy.title': 'شعله و خیال',
+                'works.items.flameFantasy.meta': 'ترکیب مواد • ۷۵×۶۰ سانتی‌متر • ۲۰۲۳',
+                'works.items.flameFantasy.tag1': 'ترکیب مواد',
+                'works.items.flameFantasy.tag2': 'تجربی',
+                'works.items.purpleNight.title': 'شب بنفش',
+                'works.items.purpleNight.meta': 'اکرلیک روی بوم • ۹۰×۷۰ سانتی‌متر • ۲۰۲۲',
+                'works.items.purpleNight.tag1': 'انتزاعی',
+                'works.items.purpleNight.tag2': 'مجموعه شب',
+                'works.items.emeraldHope.title': 'امید زمردین',
+                'works.items.emeraldHope.meta': 'روغن روی بوم • ۱۱۰×۱۱۰ سانتی‌متر • ۲۰۲۲',
+                'works.items.emeraldHope.tag1': 'فیگوراتیو',
+                'works.items.emeraldHope.tag2': 'قطع مربع',
+                'works.items.pastelStreets.title': 'خیابان‌های پاستلی',
+                'works.items.pastelStreets.meta': 'ترکیب مواد • ۸۵×۶۵ سانتی‌متر • ۲۰۲۲',
+                'works.items.pastelStreets.tag1': 'ترکیب مواد',
+                'works.items.pastelStreets.tag2': 'مجموعه شهری',
+                'works.loading': 'در حال بارگذاری آثار...',
+                'about.title': 'خلق شعر<br>بصری',
+                'about.paragraph1': 'الناز اشرفی هنرمند معاصر ایرانی است که در آثارش تلاقی ظریف حافظه، هویت و رنگ را جست‌وجو می‌کند.',
+                'about.paragraph2': 'او که میان تهران و برلین فعالیت می‌کند، سنت‌های زیبایی‌شناختی شرق و غرب را پیوند داده و خاطرات شخصی و فرهنگی را به تجربه‌های بصری ملموس بدل می‌سازد.',
+                'about.stats.years.value': '۱۵+',
+                'about.stats.years.label': 'سال فعالیت',
+                'about.stats.artworks.value': '۵۰۰+',
+                'about.stats.artworks.label': 'اثر هنری',
+                'about.stats.exhibitions.value': '۱۰۰+',
+                'about.stats.exhibitions.label': 'نمایشگاه',
+                'about.cta': 'تماس بگیرید',
+                'testimonials.counter': '/نظرات',
+                'testimonials.title': 'آن‌ها چه می‌گویند',
+                'testimonials.items.1.text': 'آثار الناز لایه‌های نامحسوس حافظه و هویت را به تصویر می‌کشد. استفاده او از رنگ هم جسورانه است و هم لطیف و تجربه‌ای ماندگار خلق می‌کند.',
+                'testimonials.items.1.author': 'سارا میتچل',
+                'testimonials.items.1.role': 'کیوریتور، موزه هنرهای معاصر تهران',
+                'testimonials.items.2.text': 'صدایی شاخص در هنر معاصر؛ اشرفی با زبان بصری خود فرهنگ‌ها و سنت‌ها را به هم پیوند می‌دهد.',
+                'testimonials.items.2.author': 'دکتر کلاوس وبر',
+                'testimonials.items.2.role': 'منتقد هنر، برلین آرت ریویو',
+                'testimonials.items.3.text': 'نقاشی‌های او مراقبه‌ای بر رنگ و احساس است؛ هر اثر با تأمل بیشتر لایه‌های تازه‌ای را آشکار می‌کند.',
+                'testimonials.items.3.author': 'مایا چن',
+                'testimonials.items.3.role': 'کلکسیونر خصوصی، هنگ‌کنگ',
+                'process.counter': '/فرآیند',
+                'process.title': 'سفر خلاقانه',
+                'process.subtitle': 'برای دیدن دگرگونی از طراحی اولیه تا اثر نهایی، لغزنده را جابه‌جا کنید',
+                'process.labels.sketch': 'اتود',
+                'process.labels.final': 'نهایی',
+                'shop.counter': '/موجود',
+                'shop.title': 'خرید آثار هنری',
+                'shop.subtitle': 'نقاشی‌های اصل و چاپ‌های محدود برای خرید در دسترس است',
+                'shop.filters.all': 'همه موارد',
+                'shop.filters.originals': 'آثار اصل',
+                'shop.filters.prints': 'چاپ‌ها',
+                'shop.filters.available': 'موجود',
+                'shop.badge.available': 'موجود',
+                'shop.badge.limited': 'نسخه محدود',
+                'shop.badge.sold': 'فروخته شد',
+                'shop.badge.new': 'جدید',
+                'shop.quickView': 'نمایش سریع',
+                'shop.addToCart': 'افزودن به سبد',
+                'shop.soldOut': 'ناموجود',
+                'shop.viewCart': 'مشاهده سبد',
+                'shop.added': '✓ افزوده شد',
+                'shop.cartAlertTitle': 'اقلام سبد',
+                'shop.cartAlertTotal': 'جمع کل',
+                'shop.cartEmpty': 'سبد خرید خالی است.',
+                'shop.items.infinite.title': 'فضای بی‌نهایت',
+                'shop.items.infinite.details': 'اکرلیک روی بوم • ۱۲۰×۱۰۰ سانتی‌متر',
+                'shop.items.infinite.price': '۵٬۵۰۰ دلار',
+                'shop.items.deepBluePrint.title': 'آبی عمیق - چاپ',
+                'shop.items.deepBluePrint.details': 'چاپ جیکله • ۵۰×۴۰ سانتی‌متر • نسخه ۲۵',
+                'shop.items.deepBluePrint.price': '۳۵۰ دلار',
+                'shop.items.flameFantasy.title': 'شعله و خیال',
+                'shop.items.flameFantasy.details': 'ترکیب مواد • ۷۵×۶۰ سانتی‌متر',
+                'shop.items.flameFantasy.price': '۳٬۸۰۰ دلار',
+                'shop.items.purpleNightPrint.title': 'شب بنفش - چاپ',
+                'shop.items.purpleNightPrint.details': 'چاپ جیکله • ۶۰×۵۰ سانتی‌متر • نسخه ۵۰',
+                'shop.items.purpleNightPrint.price': '۲۸۰ دلار',
+                'resume.counter': '/زندگی‌نامه',
+                'resume.title': 'رزومه و سوابق',
+                'resume.subtitle': 'پیشینه تحصیلی، نمایشگاه‌ها، جوایز و تجربه حرفه‌ای',
+                'resume.profile.name': 'الناز اشرفی',
+                'resume.profile.location': 'تهران · برلین',
+                'resume.contact': 'اطلاعات تماس',
+                'resume.contact.email': '📧 contact@elnazashrafi.com',
+                'resume.contact.website': '🌐 elnazashrafi.com',
+                'resume.download': 'دانلود رزومه کامل',
+                'resume.sections.education': 'تحصیلات',
+                'resume.sections.awards': 'جوایز و افتخارات',
+                'resume.sections.exhibitions': 'نمایشگاه‌های منتخب',
+                'resume.sections.solo': 'نمایشگاه‌های انفرادی',
+                'resume.sections.group': 'نمایشگاه‌های گروهی',
+                'resume.sections.collections': 'مجموعه‌های عمومی',
+                'resume.sections.publications': 'انتشارات و رسانه‌ها',
+                'resume.education.mfa.title': 'کارشناسی ارشد هنرهای زیبا',
+                'resume.education.mfa.institution': 'دانشگاه هنرهای برلین، آلمان',
+                'resume.education.mfa.description': 'تخصص در نقاشی معاصر و نظریه رنگ. پایان‌نامه: «حافظه به مثابه ماده: میدان‌های رنگ در هنر معاصر ایران»',
+                'resume.education.bfa.title': 'کارشناسی هنرهای زیبا',
+                'resume.education.bfa.institution': 'دانشگاه تهران، ایران',
+                'resume.education.bfa.description': 'تمرکز بر نقاشی و هنرهای تجسمی. فارغ‌التحصیل با افتخار.',
+                'resume.awards.daad.title': 'بورسیه اقامت هنری DAAD',
+                'resume.awards.daad.description': 'بورسیه معتبر سرویس تبادل آکادمیک آلمان برای هنرمندان نوظهور.',
+                'resume.awards.tmoca.title': 'جایزه موزه هنرهای معاصر تهران',
+                'resume.awards.tmoca.description': 'مقام نخست در رقابت سالانه هنرمندان جوان.',
+                'resume.awards.berlinWeek.title': 'جایزه هنرمند نوظهور هفته هنر برلین',
+                'resume.awards.berlinWeek.description': 'قدردانی از رویکرد نوآورانه در نقاشی انتزاعی.',
+                'resume.exhibitions.solo1.title': '«رنگ‌ها آن سوی مرزها»',
+                'resume.exhibitions.solo1.location': 'موزه هنرهای معاصر تهران',
+                'resume.exhibitions.solo2.title': '«رنگ و نور: گفت‌وگو»',
+                'resume.exhibitions.solo2.location': 'گالری تادئوس روپاک، برلین',
+                'resume.exhibitions.group1.title': '«هنر معاصر خاورمیانه»',
+                'resume.exhibitions.group1.location': 'لوور ابوظبی',
+                'resume.exhibitions.group2.title': '«خاطرات شهری»',
+                'resume.exhibitions.group2.location': 'نگارخانه شیخ بهایی، اصفهان',
+                'resume.collections.item1': 'موزه هنرهای معاصر تهران، ایران',
+                'resume.collections.item2': 'لوور ابوظبی، امارات',
+                'resume.collections.item3': 'موزه‌های ایالتی برلین، آلمان',
+                'resume.collections.item4': 'مجموعه‌های خصوصی در آمریکا، اروپا و خاورمیانه',
+                'resume.publications.item1.title': '«صداهای نوظهور: هنر معاصر ایران»',
+                'resume.publications.item1.source': 'مجله آرت فروم',
+                'resume.publications.item2.title': '«رنگ به مثابه حافظه: گفت‌وگو با الناز اشرفی»',
+                'resume.publications.item2.source': 'برلین آرت ریویو',
+                'contact.counter': '/تماس',
+                'contact.title': 'با هم در ارتباط باشیم',
+                'contact.subtitle': 'برای سفارش، نمایشگاه‌ها یا اطلاعات آثار موجود پیام دهید',
+                'contact.name': 'نام شما',
+                'contact.email': 'آدرس ایمیل',
+                'contact.subject': 'موضوع',
+                'contact.message': 'پیام',
+                'contact.send': 'ارسال پیام',
+                'contact.namePlaceholder': 'نام کامل شما',
+                'contact.emailPlaceholder': 'name@example.com',
+                'contact.subjectPlaceholder': 'چگونه می‌توانم کمک کنم؟',
+                'contact.messagePlaceholder': 'جزئیات درخواست خود را بنویسید',
+                'contact.success': 'پیام شما ارسال شد! از تماس شما سپاسگزارم.',
+                'footer.name': 'الناز اشرفی',
+                'footer.explore': 'کاوش',
+                'footer.exhibitions': 'نمایشگاه‌ها',
+                'footer.follow': 'دنبال کنید',
+                'footer.contact': 'تماس',
+                'footer.email': 'ایمیل',
+                'footer.studio': 'بازدید از استودیو',
+                'footer.press': 'کیت رسانه‌ای',
+                'footer.social.instagram': 'اینستاگرام',
+                'footer.social.linkedin': 'لینکدین',
+                'footer.social.artsy': 'آرتسی',
+                'footer.social.behance': 'بیهنس',
+                'footer.bottom': '© ۲۰۲۴ الناز اشرفی. تمامی حقوق محفوظ است. • جایی که خاطره به رنگ تبدیل می‌شود',
+                'newsletter.title': 'باخبر بمانید',
+                'newsletter.description': 'آخرین خبرهای نمایشگاه‌ها و آثار جدید را در صندوق ایمیل خود دریافت کنید.',
+                'newsletter.placeholder': 'آدرس ایمیل شما',
+                'newsletter.submit': 'اشتراک',
+                'newsletter.note': 'بدون اسپم. هر زمان بخواهید لغو اشتراک کنید.',
+                'newsletter.success': 'از اشتراک شما سپاسگزاریم!',
+                'ui.release': 'برای تازه‌سازی رها کنید',
+                'lightbox.share': 'اشتراک‌گذاری',
+                'lightbox.title': 'عنوان اثر',
+                'lightbox.meta': 'متریال • ابعاد • سال',
+                'modal.title': 'فضای بی‌نهایت',
+                'modal.price': '۵٬۵۰۰ دلار آمریکا',
+                'modal.description': 'این نقاشی انتزاعی در قطع بزرگ مفهوم فضای بی‌کران را با میدان‌های رنگی جسور و ضربه‌های نرم قلم بررسی می‌کند و مخاطب را به تأمل در مرزهای میان حافظه و خیال دعوت می‌نماید.',
+                'modal.details.medium.label': 'متریال',
+                'modal.details.medium.value': 'اکرلیک روی بوم',
+                'modal.details.dimensions.label': 'ابعاد',
+                'modal.details.dimensions.value': '۱۲۰ × ۱۰۰ سانتی‌متر',
+                'modal.details.year.label': 'سال',
+                'modal.details.year.value': '۲۰۲۳',
+                'modal.details.status.label': 'وضعیت',
+                'modal.details.status.value': 'موجود',
+                'modal.details.edition.label': 'نسخه',
+                'modal.details.edition.value': 'اصل (۱/۱)',
+                'modal.actions.inquire': 'درخواست اطلاعات',
+                'modal.actions.wishlist': 'افزودن به علاقه‌مندی‌ها',
+                'modal.artist.heading': 'درباره هنرمند',
+                'modal.artist.description': 'الناز اشرفی هنرمندی ایرانی است که میان تهران و برلین فعالیت می‌کند و به کاوش حافظه و رنگ شهرت دارد.',
+                'alerts.copy': 'لینک کپی شد!'
+            },
+            ar: {
+                'meta.title': 'الناز أشرفي — فنانة معاصرة',
+                'meta.description': 'الناز أشرفي فنانة إيرانية معاصرة تستكشف الذاكرة والهوية واللون في لوحاتها التجريدية.',
+                'brand.wordmark': 'الناز أشرفي',
+                'nav.menu': 'القائمة',
+                'nav.home': 'الرئيسية',
+                'nav.works': 'الأعمال',
+                'nav.about': 'نبذة',
+                'nav.shop': 'المتجر',
+                'nav.resume': 'السيرة',
+                'nav.contact': 'اتصال',
+                'hero.eyebrow': 'فنانة بصرية معاصرة',
+                'hero.title': 'حيث<br>تصبح الذاكرة<br>ألوانًا',
+                'hero.subtitle': 'فنانة إيرانية معاصرة تستكشف التداخل الدقيق بين الذاكرة والهوية والعاطفة من خلال اللوحات التجريدية والتصويرية.',
+                'hero.cta.primary': 'استكشف الأعمال',
+                'hero.cta.secondary': 'عن الفنانة',
+                'hero.scroll': 'مرّر للأسفل',
+                'works.counter': '/٤ مختارة',
+                'works.title': 'أعمال مختارة',
+                'works.subtitle': 'مجموعة من اللوحات الحديثة التي تستكشف الذاكرة واللون والهوية الثقافية',
+                'works.search': 'ابحث عن الأعمال حسب العنوان أو الخامة أو السنة...',
+                'works.sortLabel': 'رتّب حسب:',
+                'works.sort.newest': 'الأحدث أولاً',
+                'works.sort.oldest': 'الأقدم أولاً',
+                'works.sort.title': 'العنوان (أ-ي)',
+                'works.sort.popular': 'الأكثر شهرة',
+                'works.sort.priceHigh': 'السعر: من الأعلى إلى الأدنى',
+                'works.sort.priceLow': 'السعر: من الأدنى إلى الأعلى',
+                'works.yearLabel': 'السنة:',
+                'works.year.all': 'جميع السنوات',
+                'works.filters.all': 'كل الأعمال',
+                'works.filters.abstract': 'تجريدي',
+                'works.filters.figurative': 'تصويري',
+                'works.filters.mixed': 'وسائط متعددة',
+                'works.viewWork': 'عرض العمل',
+                'works.items.infinite.title': 'فضاء لا نهائي',
+                'works.items.infinite.meta': 'أكريليك على قماش • ١٢٠×١٠٠ سم • ٢٠٢٣',
+                'works.items.infinite.tag1': 'تجريدي',
+                'works.items.infinite.tag2': 'قياس كبير',
+                'works.items.deepBlue.title': 'الأزرق العميق',
+                'works.items.deepBlue.meta': 'زيت على قماش • ١٠٠×٨٠ سم • ٢٠٢٣',
+                'works.items.deepBlue.tag1': 'تصويري',
+                'works.items.deepBlue.tag2': 'بورتريه',
+                'works.items.flameFantasy.title': 'لهيب وخيال',
+                'works.items.flameFantasy.meta': 'وسائط متعددة • ٧٥×٦٠ سم • ٢٠٢٣',
+                'works.items.flameFantasy.tag1': 'وسائط متعددة',
+                'works.items.flameFantasy.tag2': 'تجريبي',
+                'works.items.purpleNight.title': 'ليلة بنفسجية',
+                'works.items.purpleNight.meta': 'أكريليك على قماش • ٩٠×٧٠ سم • ٢٠٢٢',
+                'works.items.purpleNight.tag1': 'تجريدي',
+                'works.items.purpleNight.tag2': 'سلسلة الليل',
+                'works.items.emeraldHope.title': 'أمل زمردي',
+                'works.items.emeraldHope.meta': 'زيت على قماش • ١١٠×١١٠ سم • ٢٠٢٢',
+                'works.items.emeraldHope.tag1': 'تصويري',
+                'works.items.emeraldHope.tag2': 'قياس مربع',
+                'works.items.pastelStreets.title': 'شوارع باستيلية',
+                'works.items.pastelStreets.meta': 'وسائط متعددة • ٨٥×٦٥ سم • ٢٠٢٢',
+                'works.items.pastelStreets.tag1': 'وسائط متعددة',
+                'works.items.pastelStreets.tag2': 'سلسلة حضرية',
+                'works.loading': 'جارٍ تحميل المزيد من الأعمال...',
+                'about.title': 'صناعة شعر<br>بصري',
+                'about.paragraph1': 'الناز أشرفي فنانة إيرانية معاصرة تستكشف في أعمالها التداخل الدقيق بين الذاكرة والهوية واللون.',
+                'about.paragraph2': 'تعمل بين طهران وبرلين، وتبني جسورًا بين التقاليد الجمالية الشرقية والغربية وتحول الذاكرة الشخصية والثقافية إلى تجارب بصرية محسوسة.',
+                'about.stats.years.value': '١٥+',
+                'about.stats.years.label': 'عامًا من الممارسة',
+                'about.stats.artworks.value': '٥٠٠+',
+                'about.stats.artworks.label': 'عمل فني',
+                'about.stats.exhibitions.value': '١٠٠+',
+                'about.stats.exhibitions.label': 'معرض',
+                'about.cta': 'تواصل معنا',
+                'testimonials.counter': '/الشهادات',
+                'testimonials.title': 'ماذا يقولون',
+                'testimonials.items.1.text': 'تلتقط أعمال الناز شيئًا عصيًا عن الذاكرة والهوية. استخدام الألوان جريء ورقيق في آن، ويترك أثرًا طويلًا بعد المشاهدة.',
+                'testimonials.items.1.author': 'سارة ميتشل',
+                'testimonials.items.1.role': 'أمين معرض، متحف طهران للفن المعاصر',
+                'testimonials.items.2.text': 'صوت لافت في الفن المعاصر؛ تجمع أشرفي الثقافات والتقاليد بلغة بصرية عالمية.',
+                'testimonials.items.2.author': 'الدكتور كلاوس فيبر',
+                'testimonials.items.2.role': 'ناقد فني، مجلة برلين آرت ريفيو',
+                'testimonials.items.3.text': 'لوحاتها تأملات في اللون والعاطفة؛ يكشف كل عمل عن طبقات جديدة مع التعمق.',
+                'testimonials.items.3.author': 'مايا تشين',
+                'testimonials.items.3.role': 'مقتنية خاصة، هونغ كونغ',
+                'process.counter': '/العملية',
+                'process.title': 'الرحلة الإبداعية',
+                'process.subtitle': 'حرّك المؤشر لمشاهدة التحول من المخطط إلى العمل النهائي',
+                'process.labels.sketch': 'مسودة',
+                'process.labels.final': 'نهائي',
+                'shop.counter': '/المتاح',
+                'shop.title': 'تسوق الأعمال الفنية',
+                'shop.subtitle': 'لوحات أصلية ومطبوعات محدودة متاحة للشراء',
+                'shop.filters.all': 'كل العناصر',
+                'shop.filters.originals': 'أعمال أصلية',
+                'shop.filters.prints': 'مطبوعات',
+                'shop.filters.available': 'المتاح',
+                'shop.badge.available': 'متاح',
+                'shop.badge.limited': 'إصدار محدود',
+                'shop.badge.sold': 'مباع',
+                'shop.badge.new': 'جديد',
+                'shop.quickView': 'عرض سريع',
+                'shop.addToCart': 'أضف إلى السلة',
+                'shop.soldOut': 'نفد المخزون',
+                'shop.viewCart': 'عرض السلة',
+                'shop.added': '✓ تمت الإضافة',
+                'shop.cartAlertTitle': 'عناصر السلة',
+                'shop.cartAlertTotal': 'الإجمالي',
+                'shop.cartEmpty': 'سلة التسوق فارغة.',
+                'shop.items.infinite.title': 'فضاء لا نهائي',
+                'shop.items.infinite.details': 'أكريليك على قماش • ١٢٠×١٠٠ سم',
+                'shop.items.infinite.price': '٥٬٥٠٠ دولار',
+                'shop.items.deepBluePrint.title': 'الأزرق العميق - طباعة',
+                'shop.items.deepBluePrint.details': 'طباعة جيكليه • ٥٠×٤٠ سم • إصدار ٢٥',
+                'shop.items.deepBluePrint.price': '٣٥٠ دولار',
+                'shop.items.flameFantasy.title': 'لهيب وخيال',
+                'shop.items.flameFantasy.details': 'وسائط متعددة • ٧٥×٦٠ سم',
+                'shop.items.flameFantasy.price': '٣٬٨٠٠ دولار',
+                'shop.items.purpleNightPrint.title': 'ليلة بنفسجية - طباعة',
+                'shop.items.purpleNightPrint.details': 'طباعة جيكليه • ٦٠×٥٠ سم • إصدار ٥٠',
+                'shop.items.purpleNightPrint.price': '٢٨٠ دولار',
+                'resume.counter': '/السيرة',
+                'resume.title': 'السيرة الذاتية',
+                'resume.subtitle': 'الخلفية الأكاديمية والمعارض والجوائز والخبرة المهنية',
+                'resume.profile.name': 'الناز أشرفي',
+                'resume.profile.location': 'طهران · برلين',
+                'resume.contact': 'معلومات الاتصال',
+                'resume.contact.email': '📧 contact@elnazashrafi.com',
+                'resume.contact.website': '🌐 elnazashrafi.com',
+                'resume.download': 'تحميل السيرة الكاملة',
+                'resume.sections.education': 'التعليم',
+                'resume.sections.awards': 'الجوائز والتكريم',
+                'resume.sections.exhibitions': 'المعارض المختارة',
+                'resume.sections.solo': 'معارض فردية',
+                'resume.sections.group': 'معارض جماعية',
+                'resume.sections.collections': 'المجموعات العامة',
+                'resume.sections.publications': 'المنشورات والصحافة',
+                'resume.education.mfa.title': 'ماجستير الفنون الجميلة',
+                'resume.education.mfa.institution': 'جامعة الفنون في برلين، ألمانيا',
+                'resume.education.mfa.description': 'تخصص في الرسم المعاصر ونظرية اللون. الأطروحة: «الذاكرة كمادة: مساحات اللون في الفن الإيراني المعاصر»',
+                'resume.education.bfa.title': 'بكالوريوس الفنون الجميلة',
+                'resume.education.bfa.institution': 'جامعة طهران، إيران',
+                'resume.education.bfa.description': 'تركيز على الرسم والفنون البصرية. تخرجت بمرتبة الشرف.',
+                'resume.awards.daad.title': 'منحة DAAD للإقامة الفنية',
+                'resume.awards.daad.description': 'منحة مرموقة من هيئة التبادل الأكاديمي الألمانية للفنانين الصاعدين.',
+                'resume.awards.tmoca.title': 'جائزة متحف طهران للفن المعاصر',
+                'resume.awards.tmoca.description': 'المركز الأول في مسابقة الفنانين الناشئين السنوية.',
+                'resume.awards.berlinWeek.title': 'جائزة فنان صاعد في أسبوع الفن ببرلين',
+                'resume.awards.berlinWeek.description': 'تقدير للنهج المبتكر في الرسم التجريدي.',
+                'resume.exhibitions.solo1.title': '«ألوان تتجاوز الحدود»',
+                'resume.exhibitions.solo1.location': 'متحف طهران للفن المعاصر',
+                'resume.exhibitions.solo2.title': '«لون وضوء: حوار»',
+                'resume.exhibitions.solo2.location': 'غاليري تادايوس روباك، برلين',
+                'resume.exhibitions.group1.title': '«الفن المعاصر في الشرق الأوسط»',
+                'resume.exhibitions.group1.location': 'متحف اللوفر أبوظبي',
+                'resume.exhibitions.group2.title': '«ذكريات حضرية»',
+                'resume.exhibitions.group2.location': 'غاليري شيخ بهایی، أصفهان',
+                'resume.collections.item1': 'متحف طهران للفن المعاصر، إيران',
+                'resume.collections.item2': 'متحف اللوفر أبوظبي، الإمارات',
+                'resume.collections.item3': 'متاحف ولاية برلين، ألمانيا',
+                'resume.collections.item4': 'مجموعات خاصة في الولايات المتحدة وأوروبا والشرق الأوسط',
+                'resume.publications.item1.title': '«أصوات صاعدة: الفن الإيراني المعاصر»',
+                'resume.publications.item1.source': 'مجلة آرت فوروم',
+                'resume.publications.item2.title': '«اللون كذاكرة: حوار مع الناز أشرفي»',
+                'resume.publications.item2.source': 'برلين آرت ريفيو',
+                'contact.counter': '/اتصال',
+                'contact.title': 'لنتواصل',
+                'contact.subtitle': 'للطلبات والمعارض أو الاستفسار عن الأعمال المتاحة يرجى المراسلة',
+                'contact.name': 'اسمك',
+                'contact.email': 'البريد الإلكتروني',
+                'contact.subject': 'الموضوع',
+                'contact.message': 'الرسالة',
+                'contact.send': 'أرسل الرسالة',
+                'contact.namePlaceholder': 'اسمك الكامل',
+                'contact.emailPlaceholder': 'name@example.com',
+                'contact.subjectPlaceholder': 'كيف يمكنني المساعدة؟',
+                'contact.messagePlaceholder': 'شارك تفاصيل طلبك',
+                'contact.success': 'تم إرسال رسالتك! شكرًا على تواصلك.',
+                'footer.name': 'الناز أشرفي',
+                'footer.explore': 'استكشف',
+                'footer.exhibitions': 'المعارض',
+                'footer.follow': 'تابع',
+                'footer.contact': 'اتصال',
+                'footer.email': 'البريد الإلكتروني',
+                'footer.studio': 'زيارات الاستوديو',
+                'footer.press': 'المواد الصحفية',
+                'footer.social.instagram': 'إنستغرام',
+                'footer.social.linkedin': 'لينكدإن',
+                'footer.social.artsy': 'آرتسي',
+                'footer.social.behance': 'بيهانس',
+                'footer.bottom': '© 2024 الناز أشرفي. جميع الحقوق محفوظة. • حيث تصبح الذاكرة ألوانًا',
+                'newsletter.title': 'ابقَ على اطلاع',
+                'newsletter.description': 'احصل على آخر الأخبار حول المعارض والأعمال الجديدة مباشرة إلى بريدك.',
+                'newsletter.placeholder': 'عنوان بريدك الإلكتروني',
+                'newsletter.submit': 'اشترك',
+                'newsletter.note': 'لا رسائل مزعجة. يمكنك الإلغاء في أي وقت.',
+                'newsletter.success': 'شكرًا على اشتراكك!',
+                'ui.release': 'حرّر للتحديث',
+                'lightbox.share': 'شارك',
+                'lightbox.title': 'عنوان العمل',
+                'lightbox.meta': 'الخامة • الأبعاد • السنة',
+                'modal.title': 'فضاء لا نهائي',
+                'modal.price': '٥٬٥٠٠ دولار أمريكي',
+                'modal.description': 'تستكشف هذه اللوحة التجريدية كبيرة الحجم مفهوم الفضاء اللامتناهي من خلال مساحات لونية جريئة وضربات فرشاة رقيقة، وتدعو إلى التأمل في الحدود بين الذاكرة والخيال.',
+                'modal.details.medium.label': 'الخامة',
+                'modal.details.medium.value': 'أكريليك على قماش',
+                'modal.details.dimensions.label': 'الأبعاد',
+                'modal.details.dimensions.value': '١٢٠ × ١٠٠ سم',
+                'modal.details.year.label': 'السنة',
+                'modal.details.year.value': '٢٠٢٣',
+                'modal.details.status.label': 'الحالة',
+                'modal.details.status.value': 'متاح',
+                'modal.details.edition.label': 'النسخة',
+                'modal.details.edition.value': 'أصلي (١/١)',
+                'modal.actions.inquire': 'طلب معلومات',
+                'modal.actions.wishlist': 'أضف إلى المفضلة',
+                'modal.artist.heading': 'عن الفنانة',
+                'modal.artist.description': 'الناز أشرفي فنانة إيرانية معاصرة تعمل بين طهران وبرلين ومعروفة باستكشاف الذاكرة واللون.',
+                'alerts.copy': 'تم نسخ الرابط!'
+            }
+        };
+
+        const defaultLanguage = 'fa';
+        const supportedLanguages = new Set(['fa', 'ar']);
+        const rtlLanguages = new Set(['fa', 'ar']);
+        const languageSelect = document.getElementById('languageSelect');
+        const storedLanguage = localStorage.getItem('language');
+        let currentLanguage = supportedLanguages.has(storedLanguage) ? storedLanguage : defaultLanguage;
+        if (!supportedLanguages.has(storedLanguage)) {
+            localStorage.setItem('language', defaultLanguage);
+        }
+
+        function getTranslation(lang, key) {
+            return translations[lang]?.[key] ?? translations[defaultLanguage]?.[key];
+        }
+
+        const localeMap = {
+            fa: 'fa-IR',
+            ar: 'ar-SA'
+        };
+
+        function formatNumber(value) {
+            const locale = localeMap[currentLanguage] || localeMap[defaultLanguage];
+            return new Intl.NumberFormat(locale).format(value);
+        }
+
+        function formatCurrency(value) {
+            const locale = localeMap[currentLanguage] || localeMap[defaultLanguage];
+            const useName = true;
+            return new Intl.NumberFormat(locale, {
+                style: 'currency',
+                currency: 'USD',
+                currencyDisplay: useName ? 'name' : 'symbol',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(value);
+        }
+
+        function applyLanguage(lang) {
+            currentLanguage = supportedLanguages.has(lang) ? lang : defaultLanguage;
+            const isRTL = rtlLanguages.has(currentLanguage);
+
+            document.documentElement.lang = currentLanguage;
+            document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+            document.body.classList.toggle('rtl', isRTL);
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const text = getTranslation(currentLanguage, el.dataset.i18n);
+                if (text !== undefined) {
+                    el.textContent = text;
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-html]').forEach(el => {
+                const text = getTranslation(currentLanguage, el.dataset.i18nHtml);
+                if (text !== undefined) {
+                    el.innerHTML = text;
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const text = getTranslation(currentLanguage, el.dataset.i18nPlaceholder);
+                if (text !== undefined) {
+                    el.setAttribute('placeholder', text);
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-content]').forEach(el => {
+                const text = getTranslation(currentLanguage, el.dataset.i18nContent);
+                if (text !== undefined) {
+                    el.setAttribute('content', text);
+                }
+            });
+
+            if (languageSelect) {
+                languageSelect.setAttribute('aria-label', {
+                    fa: 'زبان',
+                    ar: 'اللغة'
+                }[currentLanguage] || 'زبان');
+                languageSelect.value = currentLanguage;
+            }
+
+            const localizedCartCount = document.getElementById('cartCount');
+            if (localizedCartCount) {
+                const countValue = Number(localizedCartCount.dataset.count || 0);
+                localizedCartCount.textContent = formatNumber(countValue);
+            }
+
+            const localizedCartTotal = document.getElementById('cartTotal');
+            if (localizedCartTotal) {
+                const totalValue = Number(localizedCartTotal.dataset.amount || 0);
+                localizedCartTotal.textContent = formatCurrency(totalValue);
+            }
+        }
+
+        applyLanguage(currentLanguage);
+
+        if (languageSelect) {
+            languageSelect.addEventListener('change', (event) => {
+                const selected = event.target.value;
+                localStorage.setItem('language', selected);
+                applyLanguage(selected);
+            });
+        }
         // ================================
         // LOADING SCREEN
         // ================================
@@ -3689,9 +4313,11 @@
         // ================================
         // FORM HANDLING
         // ================================
-        document.querySelector('.contact-form').addEventListener('submit', (e) => {
+        const contactForm = document.querySelector('.contact-form');
+        contactForm?.addEventListener('submit', (e) => {
             e.preventDefault();
-            alert('Message sent! Thank you for reaching out.');
+            const successMessage = getTranslation(currentLanguage, 'contact.success') || 'Message sent! Thank you for reaching out.';
+            alert(successMessage);
             e.target.reset();
         });
 
@@ -3808,7 +4434,8 @@
             } else {
                 // Fallback - copy to clipboard
                 navigator.clipboard.writeText(window.location.href);
-                alert('Link copied to clipboard!');
+                const copyMessage = getTranslation(currentLanguage, 'alerts.copy') || 'Link copied to clipboard!';
+                alert(copyMessage);
             }
         });
 
@@ -4066,7 +4693,8 @@
 
         popupForm?.addEventListener('submit', (e) => {
             e.preventDefault();
-            alert('Thank you for subscribing!');
+            const successMessage = getTranslation(currentLanguage, 'newsletter.success') || 'Thank you for subscribing!';
+            alert(successMessage);
             newsletterPopup.classList.remove('visible');
             localStorage.setItem('newsletterPopupShown', 'true');
         });
@@ -4457,30 +5085,49 @@
                 if (btn.disabled) return;
                 
                 const card = btn.closest('.shop-card');
-                const title = card.querySelector('.shop-title').textContent;
-                const priceText = card.querySelector('.shop-price').textContent;
-                const price = parseFloat(priceText.replace(/[^0-9.]/g, ''));
-                
-                cart.push({ title, price });
+                const titleEl = card.querySelector('.shop-title');
+                const titleKey = titleEl?.dataset.i18n;
+                const fallbackTitle = titleEl?.textContent.trim() || '';
+                const price = parseFloat(card.dataset.price || '0');
+
+                cart.push({ titleKey, fallbackTitle, price });
                 totalPrice += price;
-                
-                cartCount.textContent = cart.length;
-                cartTotal.textContent = '$' + totalPrice.toLocaleString();
+
+                cartCount.dataset.count = cart.length;
+                cartCount.textContent = formatNumber(cart.length);
+                cartTotal.dataset.amount = totalPrice;
+                cartTotal.textContent = formatCurrency(totalPrice);
                 cartSummary.classList.add('visible');
-                
+
                 // Haptic feedback
                 vibrate(20);
                 
                 // Visual feedback
-                btn.textContent = '✓ ADDED';
+                const addedText = getTranslation(currentLanguage, 'shop.added') || '✓ ADDED';
+                const addToCartText = getTranslation(currentLanguage, 'shop.addToCart') || 'ADD TO CART';
+                btn.textContent = addedText;
                 setTimeout(() => {
-                    btn.textContent = 'ADD TO CART';
+                    btn.textContent = addToCartText;
                 }, 2000);
             });
         });
 
         document.getElementById('viewCartBtn')?.addEventListener('click', () => {
-            alert(`Cart Items (${cart.length}):\n\n${cart.map(item => `${item.title}: $${item.price}`).join('\n')}\n\nTotal: $${totalPrice}`);
+            const cartTitle = getTranslation(currentLanguage, 'shop.cartAlertTitle') || 'Cart Items';
+            const totalLabel = getTranslation(currentLanguage, 'shop.cartAlertTotal') || 'Total';
+            const emptyLabel = getTranslation(currentLanguage, 'shop.cartEmpty') || 'Your cart is empty.';
+
+            const itemsList = cart.length
+                ? cart.map(item => {
+                    const localizedTitle = item.titleKey ? (getTranslation(currentLanguage, item.titleKey) || item.fallbackTitle) : item.fallbackTitle;
+                    return `${localizedTitle}: ${formatCurrency(item.price)}`;
+                }).join('\n')
+                : emptyLabel;
+
+            const countLabel = formatNumber(cart.length);
+            const totalValue = formatCurrency(totalPrice);
+
+            alert(`${cartTitle} (${countLabel}):\n\n${itemsList}\n\n${totalLabel}: ${totalValue}`);
         });
 
         // ================================
