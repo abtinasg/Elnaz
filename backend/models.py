@@ -1,10 +1,12 @@
 """
 Database Models
-CRUD operations for Contact Forms, Shop Orders, and Newsletter
+CRUD operations for Contact Forms, Shop Orders, Newsletter, and Admin
 """
 
 from database import get_db, dict_from_row
-from datetime import datetime
+from datetime import datetime, timedelta
+import hashlib
+import secrets
 
 class Contact:
     """Contact Form Model"""
@@ -137,3 +139,129 @@ class Newsletter:
                 query += ' WHERE is_active = 1'
             cursor.execute(f'{query} ORDER BY subscribed_at DESC')
             return [dict_from_row(row) for row in cursor.fetchall()]
+
+
+class Admin:
+    """Admin User Model"""
+
+    @staticmethod
+    def hash_password(password):
+        """Hash password using SHA256"""
+        return hashlib.sha256(password.encode()).hexdigest()
+
+    @staticmethod
+    def create(username, password, email=None):
+        """Create a new admin user"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            password_hash = Admin.hash_password(password)
+            try:
+                cursor.execute('''
+                    INSERT INTO admin_users (username, password_hash, email)
+                    VALUES (?, ?, ?)
+                ''', (username, password_hash, email))
+                return cursor.lastrowid
+            except Exception as e:
+                return None
+
+    @staticmethod
+    def authenticate(username, password):
+        """Authenticate admin user"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            password_hash = Admin.hash_password(password)
+            cursor.execute('''
+                SELECT * FROM admin_users
+                WHERE username = ? AND password_hash = ?
+            ''', (username, password_hash))
+            row = cursor.fetchone()
+            return dict_from_row(row) if row else None
+
+    @staticmethod
+    def create_session(admin_id):
+        """Create a new session for admin"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            session_token = secrets.token_urlsafe(32)
+            expires_at = datetime.now() + timedelta(hours=24)
+
+            cursor.execute('''
+                INSERT INTO admin_sessions (admin_id, session_token, expires_at)
+                VALUES (?, ?, ?)
+            ''', (admin_id, session_token, expires_at.isoformat()))
+
+            # Update last login
+            cursor.execute('''
+                UPDATE admin_users SET last_login = CURRENT_TIMESTAMP
+                WHERE id = ?
+            ''', (admin_id,))
+
+            return session_token
+
+    @staticmethod
+    def verify_session(session_token):
+        """Verify admin session token"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT a.*, s.admin_id
+                FROM admin_sessions s
+                JOIN admin_users a ON s.admin_id = a.id
+                WHERE s.session_token = ?
+                AND s.is_active = 1
+                AND s.expires_at > datetime('now')
+            ''', (session_token,))
+            row = cursor.fetchone()
+            return dict_from_row(row) if row else None
+
+    @staticmethod
+    def logout(session_token):
+        """Invalidate session"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                UPDATE admin_sessions
+                SET is_active = 0
+                WHERE session_token = ?
+            ''', (session_token,))
+            return cursor.rowcount > 0
+
+    @staticmethod
+    def get_stats():
+        """Get dashboard statistics"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+
+            # Total contacts
+            cursor.execute('SELECT COUNT(*) as total FROM contacts')
+            total_contacts = cursor.fetchone()[0]
+
+            # Unread contacts
+            cursor.execute("SELECT COUNT(*) as unread FROM contacts WHERE status = 'unread'")
+            unread_contacts = cursor.fetchone()[0]
+
+            # Total orders
+            cursor.execute('SELECT COUNT(*) as total FROM shop_orders')
+            total_orders = cursor.fetchone()[0]
+
+            # Pending orders
+            cursor.execute("SELECT COUNT(*) as pending FROM shop_orders WHERE status = 'pending'")
+            pending_orders = cursor.fetchone()[0]
+
+            # Total subscribers
+            cursor.execute('SELECT COUNT(*) as total FROM newsletter_subscribers WHERE is_active = 1')
+            total_subscribers = cursor.fetchone()[0]
+
+            return {
+                'contacts': {
+                    'total': total_contacts,
+                    'unread': unread_contacts
+                },
+                'orders': {
+                    'total': total_orders,
+                    'pending': pending_orders
+                },
+                'subscribers': {
+                    'total': total_subscribers
+                }
+            }

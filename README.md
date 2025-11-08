@@ -10,6 +10,7 @@ A modern, minimalist, dark-themed portfolio website for contemporary artist Elna
 - **Contact Form**: Visitors can send inquiries directly
 - **Shop System**: Product inquiry and order management
 - **Newsletter**: Email subscription functionality
+- **Admin Dashboard**: Secure control panel for managing site content
 - **SQLite Database**: Lightweight database for data storage
 - **REST API**: Clean API endpoints for all features
 
@@ -32,25 +33,31 @@ Elnaz/
 ├── backend/
 │   ├── app.py              # Flask application
 │   ├── database.py         # Database connection & initialization
-│   ├── models.py           # Database models
+│   ├── models.py           # Database models (Contact, Shop, Newsletter, Admin)
+│   ├── create_admin.py     # Admin user creation script
 │   ├── requirements.txt    # Python dependencies
 │   └── routes/
 │       ├── __init__.py
 │       ├── contact.py      # Contact form endpoints
 │       ├── shop.py         # Shop inquiry endpoints
-│       └── newsletter.py   # Newsletter endpoints
+│       ├── newsletter.py   # Newsletter endpoints
+│       └── admin.py        # Admin dashboard endpoints
 ├── frontend/
 │   ├── index.html          # Main HTML file
+│   ├── admin.html          # Admin dashboard
 │   ├── css/
-│   │   └── style.css       # Custom styles
+│   │   ├── style.css       # Main site styles
+│   │   └── admin.css       # Admin dashboard styles
 │   ├── js/
-│   │   └── main.js         # JavaScript functionality
+│   │   ├── main.js         # Main site JavaScript
+│   │   └── admin.js        # Admin dashboard JavaScript
 │   └── assets/
 │       └── images/         # Image assets
 ├── database/
 │   └── elnaz_ashrafi.db    # SQLite database (auto-generated)
 ├── .gitignore
-└── README.md
+├── README.md
+└── ADMIN_DASHBOARD.md      # Admin dashboard documentation
 ```
 
 ## 🚀 Installation & Setup
@@ -74,13 +81,25 @@ pip install -r requirements.txt
 ### Step 3: Initialize Database
 The database will be automatically created when you first run the application.
 
-### Step 4: Run the Application
+### Step 4: Create Admin User (Optional)
+```bash
+cd backend
+python create_admin.py
+```
+
+Follow the prompts to create an admin user for the dashboard.
+
+### Step 5: Run the Application
 ```bash
 cd backend
 python app.py
 ```
 
 The server will start at: **http://127.0.0.1:5000**
+
+**Access Points:**
+- Main Website: http://127.0.0.1:5000
+- Admin Dashboard: http://127.0.0.1:5000/admin.html
 
 ## 📡 API Endpoints
 
@@ -100,6 +119,19 @@ The server will start at: **http://127.0.0.1:5000**
 - `POST /api/newsletter/subscribe` - Subscribe to newsletter
 - `POST /api/newsletter/unsubscribe` - Unsubscribe
 - `GET /api/newsletter/subscribers` - List subscribers (admin)
+
+### Admin Dashboard (Protected)
+- `POST /api/admin/login` - Admin login
+- `POST /api/admin/logout` - Admin logout
+- `GET /api/admin/verify` - Verify session
+- `GET /api/admin/stats` - Get dashboard statistics
+- `GET /api/admin/contacts` - Get all contacts (with filters)
+- `GET /api/admin/contacts/<id>` - Get specific contact
+- `PATCH /api/admin/contacts/<id>/status` - Update contact status
+- `GET /api/admin/orders` - Get all orders (with filters)
+- `GET /api/admin/orders/<id>` - Get specific order
+- `PATCH /api/admin/orders/<id>/status` - Update order status
+- `GET /api/admin/subscribers` - Get all subscribers
 
 ### Health Check
 - `GET /api/health` - Server health check
@@ -130,6 +162,22 @@ The server will start at: **http://127.0.0.1:5000**
 - id (INTEGER PRIMARY KEY)
 - email (TEXT UNIQUE)
 - subscribed_at (TIMESTAMP)
+- is_active (INTEGER)
+
+### Admin Users Table
+- id (INTEGER PRIMARY KEY)
+- username (TEXT UNIQUE)
+- password_hash (TEXT)
+- email (TEXT)
+- created_at (TIMESTAMP)
+- last_login (TIMESTAMP)
+
+### Admin Sessions Table
+- id (INTEGER PRIMARY KEY)
+- admin_id (INTEGER FOREIGN KEY)
+- session_token (TEXT UNIQUE)
+- created_at (TIMESTAMP)
+- expires_at (TIMESTAMP)
 - is_active (INTEGER)
 
 ## 🎯 Features Breakdown
@@ -168,6 +216,17 @@ The server will start at: **http://127.0.0.1:5000**
 - Duplicate prevention
 - Confirmation messaging
 
+### Admin Dashboard
+- Secure authentication with session management
+- Overview statistics (contacts, orders, subscribers)
+- Contact management (view, filter, update status)
+- Order management (view, filter, update status)
+- Subscriber management (view, filter)
+- Responsive design for all devices
+- Real-time data updates
+
+See [ADMIN_DASHBOARD.md](ADMIN_DASHBOARD.md) for detailed documentation.
+
 ## 🎨 Design System
 
 ### Colors
@@ -190,6 +249,10 @@ The server will start at: **http://127.0.0.1:5000**
 
 - Input validation on both frontend and backend
 - SQL injection protection via parameterized queries
+- Password hashing (SHA256) for admin users
+- Token-based authentication for admin dashboard
+- Session management with 24-hour expiry
+- Protected admin API endpoints
 - CORS configuration for API endpoints
 - Error handling for all routes
 
@@ -208,7 +271,10 @@ The website is fully responsive with breakpoints:
 3. Configure proper database backups
 4. Set up SSL/HTTPS
 5. Configure environment variables
-6. Add authentication for admin endpoints
+6. Change default admin credentials
+7. Use stronger password hashing (e.g., bcrypt)
+8. Implement rate limiting for login attempts
+9. Enable HTTPS-only sessions
 
 ### Example Gunicorn Deployment
 ```bash
