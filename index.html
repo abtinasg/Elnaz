@@ -3621,10 +3621,6 @@
 
     <script>
         const translations = {
-            fa: {
-                'meta.title': 'الناز اشرفی — هنرمند معاصر',
-                'meta.description': 'الناز اشرفی هنرمند معاصر ایرانی است که حافظه، هویت و رنگ را در نقاشی‌های انتزاعی می‌کاود.',
-                'brand.wordmark': 'الناز اشرفی',
             en: {
                 'nav.menu': 'MENU',
                 'nav.home': 'Home',
@@ -3939,14 +3935,6 @@
                 'alerts.copy': 'لینک کپی شد!'
             },
             ar: {
-                'meta.title': 'الناز أشرفي — فنانة معاصرة',
-                'meta.description': 'الناز أشرفي فنانة إيرانية معاصرة تستكشف الذاكرة والهوية واللون في لوحاتها التجريدية.',
-                'brand.wordmark': 'الناز أشرفي',
-                'ui.release': 'برای تازه‌سازی رها کنید',
-                'lightbox.share': 'اشتراک‌گذاری',
-                'alerts.copy': 'لینک کپی شد!'
-            },
-            ar: {
                 'nav.menu': 'القائمة',
                 'nav.home': 'الرئيسية',
                 'nav.works': 'الأعمال',
@@ -4204,12 +4192,6 @@
                 maximumFractionDigits: 0
             }).format(value);
         }
-
-        function applyLanguage(lang) {
-            currentLanguage = supportedLanguages.has(lang) ? lang : defaultLanguage;
-        const rtlLanguages = new Set(['fa', 'ar']);
-        const languageSelect = document.getElementById('languageSelect');
-        let currentLanguage = localStorage.getItem('language') || 'en';
 
         function getTranslation(lang, key) {
             return translations[lang]?.[key] ?? translations.en?.[key];
