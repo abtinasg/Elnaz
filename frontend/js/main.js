@@ -469,6 +469,250 @@ class ScrollAnimations {
 }
 
 // ================================
+// PARALLAX EFFECTS
+// ================================
+
+class ParallaxEffects {
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
+
+        window.addEventListener('scroll', () => {
+            this.handleParallax();
+        }, { passive: true });
+    }
+
+    handleParallax() {
+        const scrolled = window.pageYOffset;
+
+        // Parallax for hero section background
+        const heroSection = document.querySelector('#home');
+        if (heroSection) {
+            const parallaxElements = heroSection.querySelectorAll('.parallax-slow');
+            parallaxElements.forEach(el => {
+                const speed = 0.5;
+                el.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        }
+
+        // Parallax for background decorations
+        const decorations = document.querySelectorAll('.absolute.opacity-30, .absolute.opacity-10');
+        decorations.forEach((el, index) => {
+            const speed = 0.3 + (index * 0.1);
+            el.style.transform = `translateY(${scrolled * speed}px)`;
+        });
+    }
+}
+
+// ================================
+// STATS COUNTER ANIMATION
+// ================================
+
+class StatsCounter {
+    constructor() {
+        this.counters = document.querySelectorAll('.text-4xl');
+        this.init();
+    }
+
+    init() {
+        if (!('IntersectionObserver' in window)) return;
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.dataset.counted) {
+                    this.animateCounter(entry.target);
+                    entry.target.dataset.counted = 'true';
+                }
+            });
+        }, { threshold: 0.5 });
+
+        this.counters.forEach(counter => {
+            // Only observe number elements in stats section
+            if (counter.textContent.includes('+') && counter.closest('#about')) {
+                observer.observe(counter);
+            }
+        });
+    }
+
+    animateCounter(element) {
+        const text = element.textContent;
+        const number = parseInt(text.match(/\d+/)?.[0] || 0);
+        const duration = 2000;
+        const steps = 60;
+        const increment = number / steps;
+        let current = 0;
+        let step = 0;
+
+        const timer = setInterval(() => {
+            current += increment;
+            step++;
+            element.textContent = Math.floor(current) + '+';
+
+            if (step >= steps) {
+                element.textContent = text; // Restore original text
+                clearInterval(timer);
+            }
+        }, duration / steps);
+    }
+}
+
+// ================================
+// ENHANCED CURSOR EFFECTS
+// ================================
+
+class CursorEffects {
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        // Add hover effects to interactive elements
+        const interactiveElements = document.querySelectorAll(
+            'a, button, .gallery-item, .shop-card, .exhibition-card, .testimonial-card'
+        );
+
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                el.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+        });
+    }
+}
+
+// ================================
+// SMOOTH REVEAL ON SCROLL
+// ================================
+
+class SmoothReveal {
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        if (!('IntersectionObserver' in window)) return;
+
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }, index * 50); // Stagger effect
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe section titles and content blocks
+        const elementsToReveal = document.querySelectorAll(`
+            section h2,
+            section p,
+            .testimonial-card
+        `);
+
+        elementsToReveal.forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+            observer.observe(el);
+        });
+    }
+}
+
+// ================================
+// ENHANCED FORM VALIDATION
+// ================================
+
+class FormValidation {
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        const forms = document.querySelectorAll('form');
+
+        forms.forEach(form => {
+            const inputs = form.querySelectorAll('input, textarea');
+
+            inputs.forEach(input => {
+                input.addEventListener('blur', () => {
+                    this.validateField(input);
+                });
+
+                input.addEventListener('input', () => {
+                    if (input.classList.contains('invalid')) {
+                        this.validateField(input);
+                    }
+                });
+            });
+        });
+    }
+
+    validateField(field) {
+        const isValid = field.checkValidity();
+
+        if (!isValid) {
+            field.classList.add('invalid');
+            field.style.borderColor = '#ef4444';
+        } else {
+            field.classList.remove('invalid');
+            field.style.borderColor = '';
+        }
+    }
+}
+
+// ================================
+// LOADING STATES
+// ================================
+
+class LoadingStates {
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        // Add loading states to buttons with data-loading attribute
+        const buttons = document.querySelectorAll('button[type="submit"]');
+
+        buttons.forEach(button => {
+            const form = button.closest('form');
+            if (form) {
+                form.addEventListener('submit', () => {
+                    this.showLoading(button);
+                });
+            }
+        });
+    }
+
+    showLoading(button) {
+        const originalText = button.textContent;
+        button.dataset.originalText = originalText;
+        button.innerHTML = `
+            <span class="flex items-center justify-center">
+                <span class="spinner mr-2"></span>
+                <span>Loading...</span>
+            </span>
+        `;
+        button.disabled = true;
+    }
+
+    hideLoading(button) {
+        button.textContent = button.dataset.originalText || 'Submit';
+        button.disabled = false;
+    }
+}
+
+// ================================
 // INITIALIZATION
 // ================================
 
@@ -481,8 +725,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const shopInquiryHandler = new ShopInquiryHandler();
     const backToTop = new BackToTop();
     const scrollAnimations = new ScrollAnimations();
+    const parallaxEffects = new ParallaxEffects();
+    const statsCounter = new StatsCounter();
+    const cursorEffects = new CursorEffects();
+    const smoothReveal = new SmoothReveal();
+    const formValidation = new FormValidation();
+    const loadingStates = new LoadingStates();
 
-    console.log('✨ Elnaz Ashrafi Website initialized');
+    // Add page load animation
+    document.body.style.opacity = '0';
+    setTimeout(() => {
+        document.body.style.transition = 'opacity 0.5s ease';
+        document.body.style.opacity = '1';
+    }, 100);
+
+    console.log('✨ Elnaz Ashrafi Website initialized with enhanced features');
 });
 
 // ================================
