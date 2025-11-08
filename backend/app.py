@@ -7,7 +7,7 @@ from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 import os
 from database import init_db
-from routes import contact_bp, shop_bp, newsletter_bp
+from routes import contact_bp, shop_bp, newsletter_bp, admin_bp
 
 # Initialize Flask app
 app = Flask(__name__,
@@ -34,6 +34,7 @@ init_db()
 app.register_blueprint(contact_bp)
 app.register_blueprint(shop_bp)
 app.register_blueprint(newsletter_bp)
+app.register_blueprint(admin_bp)
 
 # Serve frontend
 @app.route('/')

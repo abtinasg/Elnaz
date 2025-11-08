@@ -3,10 +3,11 @@ Contact Form Routes
 API endpoints for contact form submissions
 """
 
-from flask import request, jsonify
-from routes import contact_bp
+from flask import Blueprint, request, jsonify
 from models import Contact
 import re
+
+contact_bp = Blueprint('contact', __name__, url_prefix='/api/contact')
 
 def validate_email(email):
     """Validate email format"""

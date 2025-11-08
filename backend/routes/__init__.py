@@ -3,12 +3,9 @@ Routes Package
 API endpoints for the application
 """
 
-from flask import Blueprint
+from routes.contact import contact_bp
+from routes.shop import shop_bp
+from routes.newsletter import newsletter_bp
+from routes.admin import admin_bp
 
-# Create blueprints
-contact_bp = Blueprint('contact', __name__, url_prefix='/api/contact')
-shop_bp = Blueprint('shop', __name__, url_prefix='/api/shop')
-newsletter_bp = Blueprint('newsletter', __name__, url_prefix='/api/newsletter')
-
-# Import routes after blueprint creation to avoid circular imports
-from routes import contact, shop, newsletter
+__all__ = ['contact_bp', 'shop_bp', 'newsletter_bp', 'admin_bp']

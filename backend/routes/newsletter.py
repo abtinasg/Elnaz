@@ -3,10 +3,11 @@ Newsletter Routes
 API endpoints for newsletter subscriptions
 """
 
-from flask import request, jsonify
-from routes import newsletter_bp
+from flask import Blueprint, request, jsonify
 from models import Newsletter
 import re
+
+newsletter_bp = Blueprint('newsletter', __name__, url_prefix='/api/newsletter')
 
 def validate_email(email):
     """Validate email format"""
