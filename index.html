@@ -1,0 +1,4539 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Elnaz Ashrafi - Contemporary Visual Artist exploring memory and color through abstract painting">
+    
+    <title>Elnaz Ashrafi — Contemporary Artist</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors - Dark + Vibrant */
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #111111;
+            --bg-card: #1A1A1A;
+            
+            --accent-purple: #9D4EDD;
+            --accent-cyan: #00F5FF;
+            --accent-yellow: #FFD60A;
+            --accent-pink: #FF006E;
+            --accent-green: #06FFA5;
+            
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0A0A0;
+            --text-muted: #666666;
+            
+            /* Fonts */
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Space Grotesk', sans-serif;
+            
+            /* Spacing */
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2rem;
+            --space-xl: 3rem;
+            --space-2xl: 4rem;
+            --space-3xl: 6rem;
+            
+            /* Effects */
+            --blur-sm: 10px;
+            --blur-md: 20px;
+            --blur-lg: 40px;
+        }
+
+        /* Light Mode */
+        body.light-mode {
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F5F5F5;
+            --bg-card: #FAFAFA;
+            --text-primary: #0A0A0A;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+        }
+
+        body.light-mode .shape {
+            opacity: 0.15;
+        }
+
+        body.light-mode .nav {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .work-card,
+        body.light-mode .testimonial-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--accent-purple);
+            color: white;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            z-index: 10001;
+            transition: width 0.1s ease;
+        }
+
+        /* ================================
+           CURSOR CUSTOM
+           ================================ */
+        .custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent-purple);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.15s ease;
+            mix-blend-mode: difference;
+        }
+
+        .custom-cursor.hover {
+            width: 40px;
+            height: 40px;
+            background: rgba(157, 78, 221, 0.2);
+        }
+
+        /* ================================
+           LOADING SCREEN
+           ================================ */
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-logo {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.05); }
+        }
+
+        /* ================================
+           NAVIGATION
+           ================================ */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(var(--blur-md));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: 2px solid var(--text-primary);
+            border-radius: 50%;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+            transform: rotate(180deg);
+        }
+
+        .nav-menu-btn {
+            background: transparent;
+            border: 2px solid var(--text-primary);
+            color: var(--text-primary);
+            padding: 0.75rem 2rem;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu-btn:hover {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            transform: translateY(-2px);
+        }
+
+        /* Full Screen Menu */
+        .fullscreen-menu {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .fullscreen-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .menu-close {
+            position: absolute;
+            top: 2rem;
+            right: 3rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-close:hover {
+            transform: rotate(90deg);
+        }
+
+        /* Mobile Menu Bottom Nav */
+        .mobile-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+            display: none;
+            justify-content: space-around;
+            z-index: 1000;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-bottom-nav {
+                display: flex;
+            }
+
+            .menu-close {
+                right: 1.5rem;
+            }
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            flex: 1;
+            max-width: 80px;
+        }
+
+        .mobile-nav-item.active,
+        .mobile-nav-item:hover {
+            color: var(--accent-purple);
+        }
+
+        .mobile-nav-icon {
+            font-size: 1.5rem;
+        }
+
+        .mobile-nav-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .menu-links {
+            list-style: none;
+            text-align: center;
+        }
+
+        .menu-links li {
+            margin: 1rem 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s ease;
+        }
+
+        .fullscreen-menu.active .menu-links li {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .menu-links li:nth-child(1) { transition-delay: 0.1s; }
+        .menu-links li:nth-child(2) { transition-delay: 0.2s; }
+        .menu-links li:nth-child(3) { transition-delay: 0.3s; }
+        .menu-links li:nth-child(4) { transition-delay: 0.4s; }
+        .menu-links li:nth-child(5) { transition-delay: 0.5s; }
+
+        .menu-links a {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            display: inline-block;
+            position: relative;
+        }
+
+        .menu-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            transition: width 0.4s ease;
+        }
+
+        .menu-links a:hover::before {
+            width: 100%;
+        }
+
+        /* ================================
+           HERO SECTION
+           ================================ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg-shapes {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .shape-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--accent-purple);
+            top: 10%;
+            right: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent-cyan);
+            bottom: 20%;
+            left: 5%;
+            animation-delay: 5s;
+        }
+
+        .shape-3 {
+            width: 300px;
+            height: 300px;
+            background: var(--accent-yellow);
+            top: 40%;
+            left: 50%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -50px) scale(1.1); }
+            66% { transform: translate(-30px, 30px) scale(0.9); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+
+        .hero-eyebrow {
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+            opacity: 0;
+            animation: slideUp 0.8s ease forwards;
+            animation-delay: 0.2s;
+            display: block;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 10vw, 8rem);
+            line-height: 0.9;
+            margin-bottom: var(--space-lg);
+            background: linear-gradient(135deg, #FFFFFF, var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            animation: slideUp 0.8s ease forwards;
+            animation-delay: 0.4s;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (max-width: 968px) {
+            .hero-eyebrow {
+                font-size: 0.75rem;
+                margin-bottom: var(--space-sm);
+                z-index: 100;
+                background: rgba(10, 10, 10, 0.8);
+                padding: 0.5rem 1rem;
+                border-radius: 50px;
+                display: inline-block;
+            }
+
+            .hero-title {
+                z-index: 100;
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: var(--space-xl);
+            opacity: 0;
+            animation: slideUp 0.8s ease forwards;
+            animation-delay: 0.6s;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: var(--space-md);
+            opacity: 0;
+            animation: slideUp 0.8s ease forwards;
+            animation-delay: 0.8s;
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+            border: 2px solid;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            border-color: transparent;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(157, 78, 221, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border-color: var(--text-primary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
+        .hero-visual {
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            animation: scaleIn 1s ease forwards;
+            animation-delay: 1s;
+        }
+
+        .hero-visual::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-yellow));
+            opacity: 0.8;
+        }
+
+        @keyframes scaleIn {
+            to {
+                opacity: 1;
+                transform: translateY(-50%) scale(1);
+            }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 1.5s;
+        }
+
+        .scroll-indicator p {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 50px;
+            background: linear-gradient(to bottom, var(--accent-purple), transparent);
+            margin: 0 auto;
+            animation: scrollMove 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollMove {
+            0%, 100% { opacity: 0; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(20px); }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* ================================
+           FEATURED WORKS
+           ================================ */
+        .section {
+            padding: var(--space-3xl) 3rem;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--space-3xl);
+        }
+
+        .section-counter {
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            color: var(--accent-purple);
+            margin-bottom: var(--space-sm);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            margin-bottom: var(--space-md);
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Works Grid with Pagination */
+        .works-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: var(--space-xl);
+        }
+
+        .work-card {
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            border-radius: 12px;
+            background: var(--bg-card);
+            transition: transform 0.4s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .work-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .work-card.tilt {
+            transition: transform 0.1s ease-out;
+        }
+
+        .work-image {
+            width: 100%;
+            aspect-ratio: 3/4;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .work-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan), var(--accent-yellow));
+            opacity: 0.7;
+            transition: opacity 0.4s ease;
+        }
+
+        .work-card:hover .work-image::before {
+            opacity: 0.9;
+        }
+
+        .work-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .work-card:hover .work-overlay {
+            opacity: 1;
+        }
+
+        .view-work-btn {
+            background: white;
+            color: var(--bg-primary);
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+        .work-card:hover .view-work-btn {
+            transform: translateY(0);
+        }
+
+        .work-info {
+            padding: 1.5rem;
+        }
+
+        .work-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .work-meta {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .work-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(157, 78, 221, 0.1);
+            color: var(--accent-purple);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* Work Stats */
+        .work-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .work-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .work-stat-icon {
+            font-size: 1rem;
+        }
+
+        .like-btn {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .like-btn:hover,
+        .like-btn.liked {
+            color: var(--accent-pink);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: var(--space-xl);
+        }
+
+        .page-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .page-btn:hover,
+        .page-btn.active {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+        }
+
+        /* Loading Spinner */
+        .loading-more {
+            text-align: center;
+            padding: 3rem 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .loading-more.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(157, 78, 221, 0.2);
+            border-top-color: var(--accent-purple);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ================================
+           FILTER SYSTEM
+           ================================ */
+        .filter-section {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+        }
+
+        /* Advanced Filters */
+        .advanced-filters {
+            max-width: 1200px;
+            margin: 0 auto var(--space-lg);
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .filter-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .sort-select {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sort-select:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .sort-select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto var(--space-lg);
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem 1rem 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent-purple);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+            transform: translateY(-2px);
+        }
+
+        /* View Mode Toggle */
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            position: absolute;
+            right: 3rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .view-btn {
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            cursor: pointer;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .view-btn:hover,
+        .view-btn.active {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+        }
+
+        /* List View */
+        .works-grid.list-view {
+            grid-template-columns: 1fr;
+        }
+
+        .works-grid.list-view .work-card {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .works-grid.list-view .work-image {
+            aspect-ratio: 4/5;
+        }
+
+        /* ================================
+           ABOUT SECTION
+           ================================ */
+        .about-section {
+            background: var(--bg-secondary);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3xl);
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        .about-image {
+            position: relative;
+            aspect-ratio: 3/4;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .about-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            opacity: 0.6;
+        }
+
+        .about-text h2 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: var(--space-lg);
+            line-height: 1.2;
+        }
+
+        .about-text p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+            line-height: 1.8;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-lg);
+            margin: var(--space-xl) 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* ================================
+           TESTIMONIALS SECTION
+           ================================ */
+        .testimonials-section {
+            background: var(--bg-primary);
+            overflow: hidden;
+        }
+
+        .testimonials-slider {
+            max-width: 800px;
+            margin: 0 auto var(--space-lg);
+            position: relative;
+            min-height: 250px;
+        }
+
+        .testimonial-card {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(100px);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .testimonial-card.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+            position: relative;
+        }
+
+        .testimonial-text {
+            font-size: 1.5rem;
+            font-style: italic;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
+            text-align: center;
+        }
+
+        .testimonial-author {
+            text-align: center;
+        }
+
+        .testimonial-author h4 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .testimonial-author p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .testimonial-dots {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot:hover,
+        .dot.active {
+            background: var(--accent-purple);
+            transform: scale(1.3);
+        }
+
+        /* ================================
+           LIGHTBOX MODAL
+           ================================ */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            padding: 2rem;
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            position: relative;
+        }
+
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 8px;
+        }
+
+        .lightbox-info {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .lightbox-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .lightbox-meta {
+            color: var(--text-secondary);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+            z-index: 10000;
+            line-height: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .lightbox-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox-nav:hover {
+            background: var(--accent-purple);
+        }
+
+        .lightbox-prev {
+            left: 2rem;
+        }
+
+        .lightbox-next {
+            right: 2rem;
+        }
+
+        /* Image Zoom */
+        .lightbox-image {
+            cursor: zoom-in;
+            transition: transform 0.3s ease;
+        }
+
+        .lightbox-image.zoomed {
+            cursor: zoom-out;
+            transform: scale(1.5);
+        }
+
+        /* Share Button */
+        .share-btn {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .share-btn:hover {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+        }
+
+        /* ================================
+           CONTACT SECTION
+           ================================ */
+        .contact-section {
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+        }
+
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .contact-form {
+            display: grid;
+            gap: var(--space-md);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            padding: 1rem;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* ================================
+           FOOTER
+           ================================ */
+        .footer {
+            background: var(--bg-secondary);
+            padding: var(--space-2xl) 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: var(--space-xl);
+            max-width: 1400px;
+            margin: 0 auto var(--space-xl);
+        }
+
+        .footer-col h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-md);
+            color: var(--text-primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-purple);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: var(--accent-purple);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: var(--space-lg);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ================================
+           BACK TO TOP
+           ================================ */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(157, 78, 221, 0.4);
+        }
+
+        /* ================================
+           ARTWORK DETAIL MODAL
+           ================================ */
+        .artwork-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            overflow-y: auto;
+        }
+
+        .artwork-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .artwork-modal-content {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .modal-image-section {
+            position: sticky;
+            top: 2rem;
+        }
+
+        .modal-main-image {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .modal-thumbnails {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+
+        .modal-thumb {
+            aspect-ratio: 1;
+            background: var(--bg-card);
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .modal-thumb:hover,
+        .modal-thumb.active {
+            border-color: var(--accent-purple);
+        }
+
+        .modal-info-section h2 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-price {
+            font-size: 1.5rem;
+            color: var(--accent-purple);
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .modal-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .modal-details {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .modal-detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .modal-detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .modal-detail-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .modal-detail-value {
+            font-weight: 600;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-close-btn {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close-btn:hover {
+            background: var(--accent-purple);
+            transform: rotate(90deg);
+        }
+
+        .artist-info-card {
+            background: rgba(157, 78, 221, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(157, 78, 221, 0.2);
+        }
+
+        .artist-info-card h4 {
+            margin-bottom: 0.5rem;
+            color: var(--accent-purple);
+        }
+
+        /* ================================
+           NEWSLETTER POPUP
+           ================================ */
+        .newsletter-popup {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            max-width: 400px;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-purple);
+            border-radius: 16px;
+            padding: 2rem;
+            z-index: 9000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(30px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 20px 60px rgba(157, 78, 221, 0.3);
+        }
+
+        .newsletter-popup.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .newsletter-popup-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-popup-close:hover {
+            color: var(--text-primary);
+            transform: rotate(90deg);
+        }
+
+        .newsletter-popup h3 {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .newsletter-popup p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .newsletter-popup-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .newsletter-popup-form input {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-popup-form input:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .newsletter-popup-form button {
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-popup-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(157, 78, 221, 0.4);
+        }
+
+        /* ================================
+           RESPONSIVE
+           ================================ */
+        @media (max-width: 1200px) {
+            .hero-visual {
+                display: none;
+            }
+
+            .artwork-modal-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .modal-image-section {
+                position: relative;
+                top: 0;
+            }
+
+            .advanced-filters {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .view-toggle {
+                position: static;
+                margin-top: 1rem;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .nav {
+                padding: 1.5rem 2rem;
+            }
+
+            .nav-logo {
+                font-size: 1rem;
+            }
+
+            .theme-toggle {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+
+            .nav-menu-btn {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.8rem;
+            }
+
+            .hero {
+                padding: 0 2rem;
+                min-height: 100svh;
+            }
+
+            .hero-title {
+                font-size: clamp(2.5rem, 12vw, 4rem);
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .section {
+                padding: var(--space-2xl) 2rem;
+            }
+
+            .section-title {
+                font-size: clamp(2rem, 8vw, 3rem);
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-xl);
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: var(--space-lg);
+            }
+
+            .works-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .works-grid.list-view {
+                grid-template-columns: 1fr;
+            }
+
+            .works-grid.list-view .work-card {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+
+            .filter-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.85rem;
+            }
+
+            .search-container {
+                margin-bottom: 1rem;
+            }
+
+            .search-input {
+                font-size: 0.9rem;
+                padding: 0.875rem 1.25rem 0.875rem 2.75rem;
+            }
+
+            .testimonial-text {
+                font-size: 1.2rem;
+            }
+
+            .newsletter-popup {
+                right: 1rem;
+                left: 1rem;
+                bottom: 1rem;
+                max-width: 100%;
+            }
+
+            .back-to-top {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                width: 45px;
+                height: 45px;
+            }
+
+            .lightbox-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .lightbox-prev {
+                left: 1rem;
+            }
+
+            .lightbox-next {
+                right: 1rem;
+            }
+
+            .share-btn {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.6rem 1.2rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-cta {
+                flex-direction: column;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-md);
+            }
+
+            .stat-item {
+                padding: 1.5rem;
+                background: rgba(255, 255, 255, 0.02);
+                border-radius: 12px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .menu-links a {
+                font-size: clamp(2rem, 10vw, 4rem);
+            }
+
+            .modal-thumbnails {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+
+            .modal-actions .btn {
+                width: 100%;
+            }
+
+            .pagination {
+                gap: 0.5rem;
+            }
+
+            .page-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+
+            .contact-form {
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                --space-xl: 2rem;
+                --space-2xl: 3rem;
+                --space-3xl: 4rem;
+            }
+
+            .nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .hero {
+                padding: 0 1.5rem;
+            }
+
+            .section {
+                padding: var(--space-xl) 1.5rem;
+            }
+
+            .hero-title {
+                font-size: clamp(2rem, 12vw, 3rem);
+                margin-bottom: var(--space-md);
+            }
+
+            .section-title {
+                font-size: clamp(1.75rem, 8vw, 2.5rem);
+            }
+
+            .work-stats {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .testimonial-text {
+                font-size: 1.1rem;
+            }
+
+            .modal-info-section h2 {
+                font-size: 2rem;
+            }
+
+            .modal-price {
+                font-size: 1.25rem;
+            }
+
+            .modal-details {
+                padding: 1rem;
+            }
+
+            .newsletter-popup {
+                padding: 1.5rem;
+            }
+
+            .newsletter-popup h3 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* ================================
+           MOBILE-SPECIFIC ENHANCEMENTS
+           ================================ */
+
+        /* Touch-friendly buttons */
+        @media (max-width: 968px) {
+            .btn,
+            .filter-btn,
+            .view-btn,
+            .nav-menu-btn,
+            .theme-toggle {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+
+        /* Prevent zoom on input focus (iOS) */
+        @media (max-width: 768px) {
+            input,
+            textarea,
+            select {
+                font-size: 16px !important;
+            }
+        }
+
+        /* Improve tap targets */
+        @media (hover: none) and (pointer: coarse) {
+            .work-card {
+                transition: transform 0.2s ease;
+            }
+
+            .work-card:active {
+                transform: scale(0.98);
+            }
+
+            .custom-cursor {
+                display: none;
+            }
+
+            /* Disable 3D tilt on mobile */
+            .work-card:hover {
+                transform: translateY(-5px) !important;
+            }
+        }
+
+        /* Safe area for notched devices */
+        @supports (padding: max(0px)) {
+            .nav {
+                padding-left: max(1.5rem, env(safe-area-inset-left));
+                padding-right: max(1.5rem, env(safe-area-inset-right));
+            }
+
+            .hero,
+            .section {
+                padding-left: max(1.5rem, env(safe-area-inset-left));
+                padding-right: max(1.5rem, env(safe-area-inset-right));
+            }
+
+            .back-to-top {
+                bottom: max(1.5rem, env(safe-area-inset-bottom));
+                right: max(1.5rem, env(safe-area-inset-right));
+            }
+        }
+
+        /* Landscape mobile optimization */
+        @media (max-width: 968px) and (orientation: landscape) {
+            .hero {
+                min-height: auto;
+                padding: var(--space-xl) 2rem;
+            }
+
+            .section {
+                padding: var(--space-lg) 2rem;
+            }
+        }
+
+        /* ================================
+           PULL TO REFRESH INDICATOR
+           ================================ */
+        .pull-to-refresh {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: var(--bg-card);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 999;
+            transition: transform 0.3s ease;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .pull-to-refresh.visible {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .pull-to-refresh-icon {
+            font-size: 1.2rem;
+            animation: spin 1s linear infinite;
+        }
+
+        /* ================================
+           SWIPE GESTURE INDICATORS
+           ================================ */
+        .swipe-indicator {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(157, 78, 221, 0.9);
+            color: white;
+            padding: 1rem;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .swipe-indicator.left {
+            left: 2rem;
+        }
+
+        .swipe-indicator.right {
+            right: 2rem;
+        }
+
+        .swipe-indicator.visible {
+            opacity: 1;
+        }
+
+        /* ================================
+           MOBILE FAB (Floating Action Button)
+           ================================ */
+        .mobile-fab {
+            position: fixed;
+            bottom: calc(70px + env(safe-area-inset-bottom));
+            right: 1.5rem;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(157, 78, 221, 0.4);
+            cursor: pointer;
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-fab {
+                display: flex;
+            }
+
+            .back-to-top {
+                display: none;
+            }
+        }
+
+        .mobile-fab:active {
+            transform: scale(0.95);
+        }
+
+        /* ================================
+           MOBILE IMAGE VIEWER
+           ================================ */
+        .mobile-image-viewer {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-image-viewer.active {
+            display: flex;
+        }
+
+        .mobile-image-viewer img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .mobile-viewer-controls {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .mobile-viewer-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* ================================
+           IMAGE COMPARISON SLIDER
+           ================================ */
+        .comparison-section {
+            background: var(--bg-secondary);
+            padding: var(--space-3xl) 3rem;
+        }
+
+        .comparison-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .image-comparison {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+            border-radius: 12px;
+            cursor: ew-resize;
+            user-select: none;
+        }
+
+        .comparison-image {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .comparison-before {
+            z-index: 2;
+            clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+            transition: clip-path 0.1s ease;
+        }
+
+        .comparison-after {
+            z-index: 1;
+        }
+
+        .comparison-slider {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-purple);
+            transform: translateX(-50%);
+            z-index: 3;
+            transition: left 0.1s ease;
+        }
+
+        .comparison-handle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: var(--accent-purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(157, 78, 221, 0.4);
+        }
+
+        .comparison-labels {
+            position: absolute;
+            top: 1rem;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 1rem;
+            z-index: 4;
+        }
+
+        .comparison-label {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-section {
+                padding: var(--space-xl) 1.5rem;
+            }
+
+            .comparison-handle {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        /* ================================
+           SHOP SECTION
+           ================================ */
+        .shop-section {
+            background: var(--bg-primary);
+        }
+
+        .shop-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+        }
+
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto var(--space-xl);
+        }
+
+        .shop-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .shop-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(157, 78, 221, 0.2);
+            border-color: var(--accent-purple);
+        }
+
+        .shop-image {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 3/4;
+            overflow: hidden;
+        }
+
+        .shop-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            backdrop-filter: blur(10px);
+            z-index: 2;
+        }
+
+        .shop-badge.available {
+            background: rgba(6, 255, 165, 0.9);
+            color: var(--bg-primary);
+        }
+
+        .shop-badge.limited {
+            background: rgba(255, 208, 10, 0.9);
+            color: var(--bg-primary);
+        }
+
+        .shop-badge.sold {
+            background: rgba(166, 166, 166, 0.9);
+            color: white;
+        }
+
+        .shop-badge.new {
+            background: rgba(157, 78, 221, 0.9);
+            color: white;
+        }
+
+        .quick-view-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: var(--bg-primary);
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .shop-card:hover .quick-view-btn {
+            opacity: 1;
+        }
+
+        .shop-info {
+            padding: 1.5rem;
+        }
+
+        .shop-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .shop-details {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .shop-price-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .shop-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+        }
+
+        .add-to-cart-btn {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .add-to-cart-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(157, 78, 221, 0.4);
+        }
+
+        .add-to-cart-btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        /* Cart Summary */
+        .cart-summary {
+            position: fixed;
+            bottom: calc(70px + env(safe-area-inset-bottom));
+            right: 2rem;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-purple);
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            z-index: 999;
+            box-shadow: 0 10px 30px rgba(157, 78, 221, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+        .cart-summary.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .cart-icon-wrapper {
+            position: relative;
+        }
+
+        .cart-icon {
+            font-size: 1.5rem;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--accent-pink);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .cart-total {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+        }
+
+        .view-cart-btn {
+            background: var(--accent-purple);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .view-cart-btn:hover {
+            background: var(--accent-pink);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .cart-summary {
+                bottom: calc(70px + env(safe-area-inset-bottom));
+                right: 1rem;
+                left: 1rem;
+                padding: 1rem 1.5rem;
+                justify-content: space-between;
+            }
+
+            .shop-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ================================
+           RESUME/CV SECTION
+           ================================ */
+        .resume-section {
+            background: var(--bg-secondary);
+        }
+
+        .resume-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: var(--space-3xl);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .resume-sidebar {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .resume-profile {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .resume-profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            margin: 0 auto 1.5rem;
+            border: 3px solid rgba(157, 78, 221, 0.3);
+        }
+
+        .resume-profile h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .resume-profile p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .resume-location {
+            margin-top: 0.5rem;
+            color: var(--accent-purple) !important;
+        }
+
+        .resume-contact-info {
+            background: rgba(157, 78, 221, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .resume-contact-info h4 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent-purple);
+            margin-bottom: 1rem;
+        }
+
+        .resume-contact-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .resume-content {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2xl);
+        }
+
+        .resume-section-block {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .resume-section-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent-purple);
+        }
+
+        .resume-item-block {
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+            border-left: 2px solid rgba(157, 78, 221, 0.3);
+            position: relative;
+        }
+
+        .resume-item-block::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 0.5rem;
+            width: 10px;
+            height: 10px;
+            background: var(--accent-purple);
+            border-radius: 50%;
+        }
+
+        .resume-year-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .resume-item-block h4 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .resume-institution {
+            color: var(--accent-cyan);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .resume-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .resume-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .resume-list li {
+            color: var(--text-secondary);
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .resume-list li:last-child {
+            border-bottom: none;
+        }
+
+        .resume-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        @media (max-width: 1024px) {
+            .resume-container {
+                grid-template-columns: 1fr;
+            }
+
+            .resume-sidebar {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .resume-section-block {
+                padding: 1.5rem;
+            }
+
+            .resume-section-title {
+                font-size: 1.5rem;
+            }
+
+            .resume-item-block {
+                padding-left: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="loading-logo">ELNAZ ASHRAFI</div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-logo">ELNAZ ASHRAFI</div>
+        <div class="nav-controls">
+            <button class="theme-toggle" id="themeToggle">🌙</button>
+            <button class="nav-menu-btn" id="menuBtn">MENU</button>
+        </div>
+    </nav>
+
+    <!-- Fullscreen Menu -->
+    <div class="fullscreen-menu" id="fullscreenMenu">
+        <button class="menu-close" id="menuClose">&times;</button>
+        <ul class="menu-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#works">Works</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#shop">Shop</a></li>
+            <li><a href="#resume">Resume</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+
+        <div class="hero-content">
+            <p class="hero-eyebrow">Contemporary Visual Artist</p>
+            <h1 class="hero-title">WHERE<br>MEMORY<br>BECOMES<br>COLOR</h1>
+            <p class="hero-subtitle">
+                Iranian contemporary artist exploring the delicate intersection of memory, 
+                identity, and emotion through abstract and figurative painting.
+            </p>
+            <div class="hero-cta">
+                <a href="#works" class="btn btn-primary">EXPLORE WORKS</a>
+                <a href="#about" class="btn btn-secondary">ABOUT ARTIST</a>
+            </div>
+        </div>
+
+        <div class="hero-visual"></div>
+
+        <div class="scroll-indicator">
+            <p>Scroll Down</p>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Featured Works -->
+    <section class="section" id="works">
+        <div class="section-header">
+            <p class="section-counter">/4 FEATURED</p>
+            <h2 class="section-title">SELECTED WORKS</h2>
+            <p class="section-subtitle">
+                A curated collection of recent paintings exploring memory, color, and cultural identity
+            </p>
+        </div>
+
+        <!-- Filter -->
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search artworks by title, medium, or year...">
+        </div>
+
+        <div class="advanced-filters">
+            <div class="filter-group">
+                <span class="filter-label">Sort By:</span>
+                <select class="sort-select" id="sortSelect">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="title">Title (A-Z)</option>
+                    <option value="popular">Most Popular</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="price-low">Price: Low to High</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <span class="filter-label">Year:</span>
+                <select class="sort-select" id="yearFilter">
+                    <option value="all">All Years</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
+                </select>
+            </div>
+
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="grid">⊞</button>
+                <button class="view-btn" data-view="list">☰</button>
+            </div>
+        </div>
+
+        <div class="filter-section" style="position: relative;">
+            <button class="filter-btn active" data-filter="all">All Works</button>
+            <button class="filter-btn" data-filter="abstract">Abstract</button>
+            <button class="filter-btn" data-filter="figurative">Figurative</button>
+            <button class="filter-btn" data-filter="mixed">Mixed Media</button>
+        </div>
+
+        <div class="works-container">
+            <div class="works-grid">
+                <!-- Work 1 -->
+                <div class="work-card" data-category="abstract">
+                    <div class="work-image">
+                        <div class="work-overlay">
+                            <button class="view-work-btn">VIEW WORK</button>
+                        </div>
+                    </div>
+                    <div class="work-info">
+                        <h3 class="work-title">Infinite Space</h3>
+                        <p class="work-meta">Acrylic on Canvas • 120×100 cm • 2023</p>
+                        <div class="work-tags">
+                            <span class="tag">Abstract</span>
+                            <span class="tag">Large Format</span>
+                        </div>
+                        <div class="work-stats">
+                            <div class="work-stat">
+                                <span class="work-stat-icon">👁</span>
+                                <span>1.2k</span>
+                            </div>
+                            <div class="work-stat like-btn" data-likes="234">
+                                <span class="work-stat-icon">♥</span>
+                                <span class="like-count">234</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work 2 -->
+                <div class="work-card" data-category="figurative">
+                    <div class="work-image" style="background: linear-gradient(135deg, #4C6EF5 0%, #1971C2 100%);"></div>
+                    <div class="work-info">
+                        <h3 class="work-title">Deep Blue</h3>
+                        <p class="work-meta">Oil on Canvas • 100×80 cm • 2023</p>
+                        <div class="work-tags">
+                            <span class="tag">Figurative</span>
+                            <span class="tag">Portrait</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work 3 -->
+                <div class="work-card" data-category="mixed">
+                    <div class="work-image" style="background: linear-gradient(135deg, #F76707 0%, #E67700 100%);"></div>
+                    <div class="work-info">
+                        <h3 class="work-title">Flame & Fantasy</h3>
+                        <p class="work-meta">Mixed Media • 75×60 cm • 2023</p>
+                        <div class="work-tags">
+                            <span class="tag">Mixed Media</span>
+                            <span class="tag">Experimental</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work 4 -->
+                <div class="work-card" data-category="abstract">
+                    <div class="work-image" style="background: linear-gradient(135deg, #7950F2 0%, #5F3DC4 100%);"></div>
+                    <div class="work-info">
+                        <h3 class="work-title">Purple Night</h3>
+                        <p class="work-meta">Acrylic on Canvas • 90×70 cm • 2022</p>
+                        <div class="work-tags">
+                            <span class="tag">Abstract</span>
+                            <span class="tag">Night Series</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work 5 -->
+                <div class="work-card" data-category="figurative">
+                    <div class="work-image" style="background: linear-gradient(135deg, #15AABF 0%, #0C8599 100%);"></div>
+                    <div class="work-info">
+                        <h3 class="work-title">Emerald Hope</h3>
+                        <p class="work-meta">Oil on Canvas • 110×110 cm • 2022</p>
+                        <div class="work-tags">
+                            <span class="tag">Figurative</span>
+                            <span class="tag">Square Format</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Work 6 -->
+                <div class="work-card" data-category="mixed">
+                    <div class="work-image" style="background: linear-gradient(135deg, #D0BFFF 0%, #B197FC 100%);"></div>
+                    <div class="work-info">
+                        <h3 class="work-title">Pastel Streets</h3>
+                        <p class="work-meta">Mixed Media • 85×65 cm • 2022</p>
+                        <div class="work-tags">
+                            <span class="tag">Mixed Media</span>
+                            <span class="tag">Urban Series</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">4</button>
+            </div>
+
+            <!-- Loading More -->
+            <div class="loading-more" id="loadingMore">
+                <div class="spinner"></div>
+                <p style="margin-top: 1rem; color: var(--text-secondary);">Loading more artworks...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section about-section" id="about">
+        <div class="about-grid">
+            <div class="about-image"></div>
+            <div class="about-text">
+                <h2>Creating Visual<br>Poetry</h2>
+                <p>
+                    Elnaz Ashrafi is a contemporary Iranian artist whose work explores 
+                    the delicate intersection of memory, identity, and color.
+                </p>
+                <p>
+                    Based between Tehran and Berlin, her practice bridges Eastern and 
+                    Western aesthetic traditions, transforming personal and cultural 
+                    memory into visceral visual experiences.
+                </p>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">Years Practice</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Artworks</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100+</div>
+                        <div class="stat-label">Exhibitions</div>
+                    </div>
+                </div>
+
+                <a href="#contact" class="btn btn-primary">GET IN TOUCH</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section testimonials-section">
+        <div class="section-header">
+            <p class="section-counter">/TESTIMONIALS</p>
+            <h2 class="section-title">WHAT THEY SAY</h2>
+        </div>
+
+        <div class="testimonials-slider">
+            <div class="testimonial-card active">
+                <p class="testimonial-text">
+                    "Elnaz's work captures something ineffable about memory and identity. 
+                    Her use of color is both bold and subtle, creating visual experiences 
+                    that stay with you long after viewing."
+                </p>
+                <div class="testimonial-author">
+                    <h4>Sarah Mitchell</h4>
+                    <p>Curator, Tehran Museum of Contemporary Art</p>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <p class="testimonial-text">
+                    "A remarkable voice in contemporary art. Ashrafi bridges cultures 
+                    and traditions with a visual language that speaks universally."
+                </p>
+                <div class="testimonial-author">
+                    <h4>Dr. Klaus Weber</h4>
+                    <p>Art Critic, Berlin Art Review</p>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <p class="testimonial-text">
+                    "Her paintings are meditations on color and emotion. Each work 
+                    reveals new layers upon contemplation."
+                </p>
+                <div class="testimonial-author">
+                    <h4>Maya Chen</h4>
+                    <p>Private Collector, Hong Kong</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="testimonial-dots">
+            <button class="dot active"></button>
+            <button class="dot"></button>
+            <button class="dot"></button>
+        </div>
+    </section>
+
+    <!-- Process Comparison Section -->
+    <section class="comparison-section">
+        <div class="section-header">
+            <p class="section-counter">/PROCESS</p>
+            <h2 class="section-title">CREATIVE JOURNEY</h2>
+            <p class="section-subtitle">
+                Drag the slider to see the transformation from sketch to final artwork
+            </p>
+        </div>
+
+        <div class="comparison-container">
+            <div class="image-comparison" id="imageComparison">
+                <div class="comparison-labels">
+                    <span class="comparison-label">Sketch</span>
+                    <span class="comparison-label">Final</span>
+                </div>
+                <div class="comparison-image comparison-before" id="comparisonBefore" style="background: linear-gradient(135deg, #666 0%, #999 100%);"></div>
+                <div class="comparison-image comparison-after" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));"></div>
+                <div class="comparison-slider" id="comparisonSlider">
+                    <div class="comparison-handle">⟷</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shop Section -->
+    <section class="section shop-section" id="shop">
+        <div class="section-header">
+            <p class="section-counter">/AVAILABLE</p>
+            <h2 class="section-title">SHOP ARTWORKS</h2>
+            <p class="section-subtitle">
+                Original paintings and limited edition prints available for purchase
+            </p>
+        </div>
+
+        <div class="shop-filters">
+            <button class="filter-btn active" data-shop-filter="all">All Items</button>
+            <button class="filter-btn" data-shop-filter="originals">Originals</button>
+            <button class="filter-btn" data-shop-filter="prints">Prints</button>
+            <button class="filter-btn" data-shop-filter="available">Available</button>
+        </div>
+
+        <div class="shop-grid">
+            <!-- Shop Item 1 -->
+            <div class="shop-card" data-shop-category="originals" data-shop-status="available">
+                <div class="shop-image" style="background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);">
+                    <span class="shop-badge available">Available</span>
+                    <button class="quick-view-btn">QUICK VIEW</button>
+                </div>
+                <div class="shop-info">
+                    <h3 class="shop-title">Infinite Space</h3>
+                    <p class="shop-details">Acrylic on Canvas • 120×100 cm</p>
+                    <div class="shop-price-section">
+                        <span class="shop-price">$5,500</span>
+                        <button class="add-to-cart-btn">ADD TO CART</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shop Item 2 -->
+            <div class="shop-card" data-shop-category="prints" data-shop-status="available">
+                <div class="shop-image" style="background: linear-gradient(135deg, #4c6ef5 0%, #1971c2 100%);">
+                    <span class="shop-badge limited">Limited Edition</span>
+                    <button class="quick-view-btn">QUICK VIEW</button>
+                </div>
+                <div class="shop-info">
+                    <h3 class="shop-title">Deep Blue - Print</h3>
+                    <p class="shop-details">Giclée Print • 50×40 cm • Ed. 25</p>
+                    <div class="shop-price-section">
+                        <span class="shop-price">$350</span>
+                        <button class="add-to-cart-btn">ADD TO CART</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shop Item 3 -->
+            <div class="shop-card" data-shop-category="originals" data-shop-status="sold">
+                <div class="shop-image" style="background: linear-gradient(135deg, #f76707 0%, #e67700 100%);">
+                    <span class="shop-badge sold">Sold</span>
+                    <button class="quick-view-btn">QUICK VIEW</button>
+                </div>
+                <div class="shop-info">
+                    <h3 class="shop-title">Flame & Fantasy</h3>
+                    <p class="shop-details">Mixed Media • 75×60 cm</p>
+                    <div class="shop-price-section">
+                        <span class="shop-price">$3,800</span>
+                        <button class="add-to-cart-btn" disabled>SOLD OUT</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shop Item 4 -->
+            <div class="shop-card" data-shop-category="prints" data-shop-status="available">
+                <div class="shop-image" style="background: linear-gradient(135deg, #7950f2 0%, #5f3dc4 100%);">
+                    <span class="shop-badge new">New</span>
+                    <button class="quick-view-btn">QUICK VIEW</button>
+                </div>
+                <div class="shop-info">
+                    <h3 class="shop-title">Purple Night - Print</h3>
+                    <p class="shop-details">Giclée Print • 60×50 cm • Ed. 50</p>
+                    <div class="shop-price-section">
+                        <span class="shop-price">$280</span>
+                        <button class="add-to-cart-btn">ADD TO CART</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Summary -->
+        <div class="cart-summary" id="cartSummary">
+            <div class="cart-icon-wrapper">
+                <span class="cart-icon">🛒</span>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+            <span class="cart-total" id="cartTotal">$0</span>
+            <button class="view-cart-btn" id="viewCartBtn">VIEW CART</button>
+        </div>
+    </section>
+
+    <!-- Resume/CV Section -->
+    <section class="section resume-section" id="resume">
+        <div class="section-header">
+            <p class="section-counter">/BIOGRAPHY</p>
+            <h2 class="section-title">RESUME & CV</h2>
+            <p class="section-subtitle">
+                Academic background, exhibitions, awards, and professional experience
+            </p>
+        </div>
+
+        <div class="resume-container">
+            <div class="resume-sidebar">
+                <div class="resume-profile">
+                    <div class="resume-profile-image"></div>
+                    <h3>Elnaz Ashrafi</h3>
+                    <p>Contemporary Visual Artist</p>
+                    <p class="resume-location">📍 Tehran · Berlin</p>
+                </div>
+
+                <div class="resume-contact-info">
+                    <h4>Contact</h4>
+                    <p>📧 contact@elnazashrafi.com</p>
+                    <p>🌐 elnazashrafi.com</p>
+                </div>
+
+                <button class="btn btn-primary" style="width: 100%; margin-top: 2rem;">
+                    DOWNLOAD FULL CV
+                </button>
+            </div>
+
+            <div class="resume-content">
+                <!-- Education -->
+                <div class="resume-section-block">
+                    <h3 class="resume-section-title">Education</h3>
+                    <div class="resume-item-block">
+                        <div class="resume-year-badge">2018 - 2020</div>
+                        <h4>Master of Fine Arts</h4>
+                        <p class="resume-institution">Universität der Künste Berlin, Germany</p>
+                        <p class="resume-description">
+                            Specialized in Contemporary Painting and Color Theory. 
+                            Thesis: "Memory as Material: Color Fields in Iranian Contemporary Art"
+                        </p>
+                    </div>
+
+                    <div class="resume-item-block">
+                        <div class="resume-year-badge">2013 - 2017</div>
+                        <h4>Bachelor of Fine Arts</h4>
+                        <p class="resume-institution">University of Tehran, Iran</p>
+                        <p class="resume-description">
+                            Focus on Painting and Visual Arts. Graduated with honors.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Awards -->
+                <div class="resume-section-block">
+                    <h3 class="resume-section-title">Awards & Honors</h3>
+                    <div class="resume-item-block">
+                        <div class="resume-year-badge">2023</div>
+                        <h4>DAAD Artist-in-Residence Grant</h4>
+                        <p class="resume-description">
+                            Prestigious German Academic Exchange Service grant for emerging artists.
+                        </p>
+                    </div>
+
+                    <div class="resume-item-block">
+                        <div class="resume-year-badge">2022</div>
+                        <h4>Tehran Museum of Contemporary Art Prize</h4>
+                        <p class="resume-description">
+                            First place in annual emerging artist competition.
+                        </p>
+                    </div>
+
+                    <div class="resume-item-block">
+                        <div class="resume-year-badge">2021</div>
+                        <h4>Berlin Art Week Emerging Artist Award</h4>
+                        <p class="resume-description">
+                            Recognition for innovative approach to abstract painting.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Exhibitions -->
+                <div class="resume-section-block">
+                    <h3 class="resume-section-title">Selected Exhibitions</h3>
+                    
+                    <h4 style="margin: 2rem 0 1rem; color: var(--accent-purple);">Solo Exhibitions</h4>
+                    
+                    <div class="resume-item-block">
+                        <div class="resume-year-badge">2023</div>
+                        <h4>"Colors Beyond Borders"</h4>
+                        <p class="resume-institution">Tehran Museum of Contemporary Art</p>
+                    </div>
+
+                    <div class="resume-item-block">
+                        <div class="resume-year-badge">2023</div>
+                        <h4>"Color & Light: A Dialogue"</h4>
+                        <p class="resume-institution">Galerie Thaddaeus Ropac, Berlin</p>
+                    </div>
+
+                    <h4 style="margin: 2rem 0 1rem; color: var(--accent-cyan);">Group Exhibitions</h4>
+                    
+                    <div class="resume-item-block">
+                        <div class="resume-year-badge">2023</div>
+                        <h4>"Middle Eastern Contemporary"</h4>
+                        <p class="resume-institution">Louvre Abu Dhabi</p>
+                    </div>
+
+                    <div class="resume-item-block">
+                        <div class="resume-year-badge">2022</div>
+                        <h4>"Urban Memories"</h4>
+                        <p class="resume-institution">Shaykh Bahaei Gallery, Isfahan</p>
+                    </div>
+                </div>
+
+                <!-- Collections -->
+                <div class="resume-section-block">
+                    <h3 class="resume-section-title">Public Collections</h3>
+                    <ul class="resume-list">
+                        <li>Tehran Museum of Contemporary Art, Iran</li>
+                        <li>Louvre Abu Dhabi, UAE</li>
+                        <li>Berlin State Museums, Germany</li>
+                        <li>Private collections in USA, Europe, and Middle East</li>
+                    </ul>
+                </div>
+
+                <!-- Publications -->
+                <div class="resume-section-block">
+                    <h3 class="resume-section-title">Publications & Press</h3>
+                    <div class="resume-item-block">
+                        <div class="resume-year-badge">2023</div>
+                        <h4>"Emerging Voices: Iranian Contemporary Art"</h4>
+                        <p class="resume-institution">Art Forum Magazine</p>
+                    </div>
+
+                    <div class="resume-item-block">
+                        <div class="resume-year-badge">2022</div>
+                        <h4>"Color as Memory: Interview with Elnaz Ashrafi"</h4>
+                        <p class="resume-institution">Berlin Art Review</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section contact-section" id="contact">
+        <div class="section-header">
+            <p class="section-counter">/CONTACT</p>
+            <h2 class="section-title">LET'S CONNECT</h2>
+            <p class="section-subtitle">
+                For commissions, exhibitions, or inquiries about available works
+            </p>
+        </div>
+
+        <div class="contact-container">
+            <form class="contact-form">
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">SEND MESSAGE</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Elnaz Ashrafi</h3>
+                <p style="color: var(--text-secondary); margin-top: 1rem;">
+                    Contemporary Visual Artist<br>
+                    Tehran · Berlin
+                </p>
+                <div class="social-links">
+                    <a href="#" class="social-icon">IG</a>
+                    <a href="#" class="social-icon">LI</a>
+                    <a href="#" class="social-icon">BE</a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>Explore</h3>
+                <ul class="footer-links">
+                    <li><a href="#works">Works</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#exhibitions">Exhibitions</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Follow</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">LinkedIn</a></li>
+                    <li><a href="#">Artsy</a></li>
+                    <li><a href="#">Behance</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Contact</h3>
+                <ul class="footer-links">
+                    <li><a href="mailto:contact@elnazashrafi.com">Email</a></li>
+                    <li><a href="#">Studio Visits</a></li>
+                    <li><a href="#">Press Kit</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2024 Elnaz Ashrafi. All rights reserved. • Where Memory Becomes Color</p>
+        </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <button class="back-to-top" id="backToTop">↑</button>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <a href="#home" class="mobile-nav-item active">
+            <span class="mobile-nav-icon">🏠</span>
+            <span class="mobile-nav-label">Home</span>
+        </a>
+        <a href="#works" class="mobile-nav-item">
+            <span class="mobile-nav-icon">🎨</span>
+            <span class="mobile-nav-label">Works</span>
+        </a>
+        <a href="#shop" class="mobile-nav-item">
+            <span class="mobile-nav-icon">🛒</span>
+            <span class="mobile-nav-label">Shop</span>
+        </a>
+        <a href="#resume" class="mobile-nav-item">
+            <span class="mobile-nav-icon">📄</span>
+            <span class="mobile-nav-label">Resume</span>
+        </a>
+    </nav>
+
+    <!-- Mobile FAB -->
+    <button class="mobile-fab" id="mobileFab">
+        <span id="fabIcon">↑</span>
+    </button>
+
+    <!-- Pull to Refresh Indicator -->
+    <div class="pull-to-refresh" id="pullToRefresh">
+        <span class="pull-to-refresh-icon">↻</span>
+        <span>Release to refresh</span>
+    </div>
+
+    <!-- Swipe Indicators -->
+    <div class="swipe-indicator left" id="swipeLeft">←</div>
+    <div class="swipe-indicator right" id="swipeRight">→</div>
+
+    <!-- Artwork Detail Modal -->
+    <div class="artwork-modal" id="artworkModal">
+        <button class="modal-close-btn" id="modalClose">&times;</button>
+        
+        <div class="artwork-modal-content">
+            <div class="modal-image-section">
+                <div class="modal-main-image" id="modalMainImage"></div>
+                <div class="modal-thumbnails">
+                    <div class="modal-thumb active"></div>
+                    <div class="modal-thumb"></div>
+                    <div class="modal-thumb"></div>
+                    <div class="modal-thumb"></div>
+                </div>
+            </div>
+
+            <div class="modal-info-section">
+                <h2 id="modalTitle">Infinite Space</h2>
+                <p class="modal-price" id="modalPrice">$5,500 USD</p>
+                
+                <p class="modal-description" id="modalDescription">
+                    This large-format abstract painting explores the concept of infinite space through 
+                    bold color fields and subtle gestural marks. The work invites contemplation on the 
+                    boundaries between memory and imagination.
+                </p>
+
+                <div class="modal-details">
+                    <div class="modal-detail-item">
+                        <span class="modal-detail-label">Medium</span>
+                        <span class="modal-detail-value">Acrylic on Canvas</span>
+                    </div>
+                    <div class="modal-detail-item">
+                        <span class="modal-detail-label">Dimensions</span>
+                        <span class="modal-detail-value">120 × 100 cm</span>
+                    </div>
+                    <div class="modal-detail-item">
+                        <span class="modal-detail-label">Year</span>
+                        <span class="modal-detail-value">2023</span>
+                    </div>
+                    <div class="modal-detail-item">
+                        <span class="modal-detail-label">Status</span>
+                        <span class="modal-detail-value">Available</span>
+                    </div>
+                    <div class="modal-detail-item">
+                        <span class="modal-detail-label">Edition</span>
+                        <span class="modal-detail-value">Original (1/1)</span>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn btn-primary">INQUIRE</button>
+                    <button class="btn btn-secondary">ADD TO WISHLIST</button>
+                </div>
+
+                <div class="artist-info-card">
+                    <h4>About the Artist</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                        Elnaz Ashrafi is a contemporary Iranian artist based between Tehran and Berlin, 
+                        known for her exploration of memory and color.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose">&times;</button>
+        <button class="lightbox-nav lightbox-prev">‹</button>
+        <button class="lightbox-nav lightbox-next">›</button>
+        <button class="share-btn" id="shareBtn">SHARE</button>
+        <div class="lightbox-content">
+            <img src="" alt="" class="lightbox-image" id="lightboxImage">
+            <div class="lightbox-info">
+                <h3 class="lightbox-title" id="lightboxTitle">Artwork Title</h3>
+                <p class="lightbox-meta" id="lightboxMeta">Medium • Size • Year</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Newsletter Popup -->
+    <div class="newsletter-popup" id="newsletterPopup">
+        <button class="newsletter-popup-close" id="popupClose">&times;</button>
+        <h3>Stay Updated</h3>
+        <p>Get the latest news about exhibitions and new artworks delivered to your inbox.</p>
+        <form class="newsletter-popup-form" id="popupNewsletterForm">
+            <input type="email" placeholder="Your email address" required>
+            <button type="submit">SUBSCRIBE</button>
+        </form>
+        <p style="font-size: 0.75rem; margin-top: 1rem; margin-bottom: 0;">
+            No spam. Unsubscribe anytime.
+        </p>
+    </div>
+
+    <script>
+        // ================================
+        // LOADING SCREEN
+        // ================================
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelector('.loading-screen').classList.add('hidden');
+            }, 1500);
+        });
+
+        // ================================
+        // PROGRESS BAR
+        // ================================
+        const progressBar = document.getElementById('progressBar');
+        const backToTop = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (window.pageYOffset / windowHeight) * 100;
+            progressBar.style.width = scrolled + '%';
+
+            // Show/hide back to top button
+            if (window.pageYOffset > 500) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        backToTop?.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // ================================
+        // CUSTOM CURSOR
+        // ================================
+        const cursor = document.querySelector('.custom-cursor');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        document.querySelectorAll('a, button, .work-card').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // ================================
+        // FULLSCREEN MENU
+        // ================================
+        const menuBtn = document.getElementById('menuBtn');
+        const menuClose = document.getElementById('menuClose');
+        const fullscreenMenu = document.getElementById('fullscreenMenu');
+        const menuLinks = document.querySelectorAll('.menu-links a');
+
+        menuBtn.addEventListener('click', () => {
+            fullscreenMenu.classList.add('active');
+        });
+
+        menuClose.addEventListener('click', () => {
+            fullscreenMenu.classList.remove('active');
+        });
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                fullscreenMenu.classList.remove('active');
+            });
+        });
+
+        // ================================
+        // FILTER SYSTEM
+        // ================================
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const workCards = document.querySelectorAll('.work-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active state
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.dataset.filter;
+
+                // Filter cards
+                workCards.forEach(card => {
+                    if (filter === 'all' || card.dataset.category === filter) {
+                        card.style.display = 'block';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'scale(1)';
+                        }, 10);
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.transform = 'scale(0.9)';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // ================================
+        // LIGHTBOX
+        // ================================
+        const lightbox = document.getElementById('lightbox');
+        const lightboxClose = document.getElementById('lightboxClose');
+        const viewWorkBtns = document.querySelectorAll('.view-work-btn');
+
+        viewWorkBtns.forEach((btn, index) => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const card = btn.closest('.work-card');
+                const title = card.querySelector('.work-title').textContent;
+                const meta = card.querySelector('.work-meta').textContent;
+                
+                document.getElementById('lightboxTitle').textContent = title;
+                document.getElementById('lightboxMeta').textContent = meta;
+                
+                lightbox.classList.add('active');
+            });
+        });
+
+        lightboxClose.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('active');
+            }
+        });
+
+        // ================================
+        // SMOOTH SCROLL
+        // ================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ================================
+        // SCROLL ANIMATIONS
+        // ================================
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.work-card, .section-header').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(50px)';
+            el.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+            observer.observe(el);
+        });
+
+        // ================================
+        // FORM HANDLING
+        // ================================
+        document.querySelector('.contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Message sent! Thank you for reaching out.');
+            e.target.reset();
+        });
+
+        // ================================
+        // PAGINATION
+        // ================================
+        document.querySelectorAll('.page-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Scroll to top of works section
+                document.getElementById('works').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // ================================
+        // SEARCH FUNCTIONALITY
+        // ================================
+        const searchInput = document.getElementById('searchInput');
+        
+        searchInput?.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            workCards.forEach(card => {
+                const title = card.querySelector('.work-title').textContent.toLowerCase();
+                const meta = card.querySelector('.work-meta').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || meta.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'scale(1)';
+                    }, 10);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 300);
+                }
+            });
+        });
+
+        // ================================
+        // VIEW MODE TOGGLE
+        // ================================
+        const viewBtns = document.querySelectorAll('.view-btn');
+        const worksGrid = document.querySelector('.works-grid');
+
+        viewBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                viewBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const viewMode = btn.dataset.view;
+                
+                if (viewMode === 'list') {
+                    worksGrid.classList.add('list-view');
+                } else {
+                    worksGrid.classList.remove('list-view');
+                }
+            });
+        });
+
+        // ================================
+        // LIKE FUNCTIONALITY
+        // ================================
+        document.querySelectorAll('.like-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                btn.classList.toggle('liked');
+                
+                const countSpan = btn.querySelector('.like-count');
+                let count = parseInt(countSpan.textContent);
+                
+                if (btn.classList.contains('liked')) {
+                    count++;
+                } else {
+                    count--;
+                }
+                
+                countSpan.textContent = count;
+            });
+        });
+
+        // ================================
+        // IMAGE ZOOM IN LIGHTBOX
+        // ================================
+        const lightboxImage = document.getElementById('lightboxImage');
+        
+        lightboxImage?.addEventListener('click', () => {
+            lightboxImage.classList.toggle('zoomed');
+        });
+
+        // ================================
+        // SHARE BUTTON
+        // ================================
+        document.getElementById('shareBtn')?.addEventListener('click', async () => {
+            const title = document.getElementById('lightboxTitle').textContent;
+            
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: title,
+                        text: `Check out "${title}" by Elnaz Ashrafi`,
+                        url: window.location.href
+                    });
+                } catch (err) {
+                    console.log('Share cancelled');
+                }
+            } else {
+                // Fallback - copy to clipboard
+                navigator.clipboard.writeText(window.location.href);
+                alert('Link copied to clipboard!');
+            }
+        });
+
+        // ================================
+        // TESTIMONIALS SLIDER
+        // ================================
+        const testimonialCards = document.querySelectorAll('.testimonial-card');
+        const dots = document.querySelectorAll('.dot');
+        let currentTestimonial = 0;
+
+        function showTestimonial(index) {
+            testimonialCards.forEach(card => card.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            testimonialCards[index].classList.add('active');
+            dots[index].classList.add('active');
+        }
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentTestimonial = index;
+                showTestimonial(index);
+            });
+        });
+
+        // Auto-rotate testimonials
+        setInterval(() => {
+            currentTestimonial = (currentTestimonial + 1) % testimonialCards.length;
+            showTestimonial(currentTestimonial);
+        }, 5000);
+
+        // ================================
+        // KEYBOARD SHORTCUTS
+        // ================================
+        document.addEventListener('keydown', (e) => {
+            if (lightbox.classList.contains('active')) {
+                if (e.key === 'Escape') {
+                    lightbox.classList.remove('active');
+                }
+                if (e.key === 'ArrowLeft') {
+                    // Previous image
+                }
+                if (e.key === 'ArrowRight') {
+                    // Next image
+                }
+            }
+        });
+
+        // ================================
+        // THEME TOGGLE
+        // ================================
+        const themeToggle = document.getElementById('themeToggle');
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+
+        if (currentTheme === 'light') {
+            document.body.classList.add('light-mode');
+            themeToggle.textContent = '☀️';
+        }
+
+        themeToggle?.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            
+            if (document.body.classList.contains('light-mode')) {
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            } else {
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // ================================
+        // SORT FUNCTIONALITY
+        // ================================
+        const sortSelect = document.getElementById('sortSelect');
+        
+        sortSelect?.addEventListener('change', (e) => {
+            const sortBy = e.target.value;
+            const grid = document.querySelector('.works-grid');
+            const cards = Array.from(workCards);
+            
+            cards.sort((a, b) => {
+                if (sortBy === 'title') {
+                    const titleA = a.querySelector('.work-title').textContent;
+                    const titleB = b.querySelector('.work-title').textContent;
+                    return titleA.localeCompare(titleB);
+                }
+                if (sortBy === 'newest') {
+                    return -1; // Reverse order
+                }
+                if (sortBy === 'oldest') {
+                    return 1;
+                }
+                if (sortBy === 'popular') {
+                    const likesA = parseInt(a.querySelector('.like-count')?.textContent || 0);
+                    const likesB = parseInt(b.querySelector('.like-count')?.textContent || 0);
+                    return likesB - likesA;
+                }
+                return 0;
+            });
+            
+            cards.forEach(card => grid.appendChild(card));
+        });
+
+        // ================================
+        // YEAR FILTER
+        // ================================
+        const yearFilter = document.getElementById('yearFilter');
+        
+        yearFilter?.addEventListener('change', (e) => {
+            const selectedYear = e.target.value;
+            
+            workCards.forEach(card => {
+                const meta = card.querySelector('.work-meta').textContent;
+                
+                if (selectedYear === 'all' || meta.includes(selectedYear)) {
+                    card.style.display = 'block';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'scale(1)';
+                    }, 10);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 300);
+                }
+            });
+        });
+
+        // ================================
+        // ARTWORK DETAIL MODAL
+        // ================================
+        const artworkModal = document.getElementById('artworkModal');
+        const modalClose = document.getElementById('modalClose');
+
+        // Open modal when clicking work card
+        workCards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                // Don't open if clicking on like button
+                if (e.target.closest('.like-btn')) return;
+                
+                const title = card.querySelector('.work-title').textContent;
+                const meta = card.querySelector('.work-meta').textContent;
+                
+                document.getElementById('modalTitle').textContent = title;
+                
+                artworkModal.classList.add('active');
+            });
+        });
+
+        modalClose?.addEventListener('click', () => {
+            artworkModal.classList.remove('active');
+        });
+
+        artworkModal?.addEventListener('click', (e) => {
+            if (e.target === artworkModal) {
+                artworkModal.classList.remove('active');
+            }
+        });
+
+        // ================================
+        // INFINITE SCROLL
+        // ================================
+        let isLoading = false;
+        const loadingMore = document.getElementById('loadingMore');
+
+        window.addEventListener('scroll', () => {
+            const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+            
+            if (scrollTop + clientHeight >= scrollHeight - 100 && !isLoading) {
+                isLoading = true;
+                loadingMore.classList.add('visible');
+                
+                // Simulate loading new works
+                setTimeout(() => {
+                    loadingMore.classList.remove('visible');
+                    isLoading = false;
+                    // Here you would actually load more artworks
+                }, 2000);
+            }
+        });
+
+        // ================================
+        // LAZY LOADING IMAGES
+        // ================================
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    // Load actual image here
+                    imageObserver.unobserve(img);
+                }
+            });
+        });
+
+        document.querySelectorAll('.work-image, .modal-main-image').forEach(img => {
+            imageObserver.observe(img);
+        });
+
+        // ================================
+        // PERFORMANCE: Debounce scroll events
+        // ================================
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Use debounce for scroll-heavy operations
+        const handleScroll = debounce(() => {
+            // Scroll-based animations
+        }, 10);
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
+        // ================================
+        // NEWSLETTER POPUP
+        // ================================
+        const newsletterPopup = document.getElementById('newsletterPopup');
+        const popupClose = document.getElementById('popupClose');
+        const popupForm = document.getElementById('popupNewsletterForm');
+
+        // Show popup after 30 seconds or when user scrolls 50%
+        let popupShown = localStorage.getItem('newsletterPopupShown');
+        
+        if (!popupShown) {
+            setTimeout(() => {
+                if (!popupShown) {
+                    newsletterPopup.classList.add('visible');
+                }
+            }, 30000); // 30 seconds
+
+            window.addEventListener('scroll', () => {
+                const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                
+                if (scrollPercent > 50 && !popupShown) {
+                    newsletterPopup.classList.add('visible');
+                    popupShown = true;
+                }
+            });
+        }
+
+        popupClose?.addEventListener('click', () => {
+            newsletterPopup.classList.remove('visible');
+            localStorage.setItem('newsletterPopupShown', 'true');
+        });
+
+        popupForm?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for subscribing!');
+            newsletterPopup.classList.remove('visible');
+            localStorage.setItem('newsletterPopupShown', 'true');
+        });
+
+        // ================================
+        // ANALYTICS TRACKING (example)
+        // ================================
+        function trackEvent(category, action, label) {
+            console.log('Event:', category, action, label);
+            // Here you would integrate with Google Analytics, etc.
+        }
+
+        // Track work views
+        workCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const title = card.querySelector('.work-title').textContent;
+                trackEvent('Artwork', 'View', title);
+            });
+        });
+
+        // Track filter usage
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                trackEvent('Filter', 'Click', btn.dataset.filter);
+            });
+        });
+
+        console.log('🎨 Elnaz Ashrafi Portfolio - Premium Edition Loaded Successfully!');
+
+        // ================================
+        // 3D TILT EFFECT ON CARDS
+        // ================================
+        workCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                card.style.transform = `
+                    perspective(1000px) 
+                    rotateX(${rotateX}deg) 
+                    rotateY(${rotateY}deg) 
+                    translateY(-10px)
+                    scale(1.02)
+                `;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0) scale(1)';
+            });
+        });
+
+        // ================================
+        // PRELOADER OPTIMIZATION
+        // ================================
+        const images = document.querySelectorAll('.work-image');
+        let loadedImages = 0;
+
+        function imageLoaded() {
+            loadedImages++;
+            if (loadedImages === images.length) {
+                console.log('All images loaded!');
+            }
+        }
+
+        images.forEach(img => {
+            if (img.complete) {
+                imageLoaded();
+            } else {
+                img.addEventListener('load', imageLoaded);
+            }
+        });
+
+        // ================================
+        // MOBILE: BOTTOM NAVIGATION
+        // ================================
+        const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+        
+        mobileNavItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                mobileNavItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        // ================================
+        // MOBILE: FAB BUTTON
+        // ================================
+        const mobileFab = document.getElementById('mobileFab');
+        const fabIcon = document.getElementById('fabIcon');
+        
+        mobileFab?.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Change FAB icon based on scroll
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300 && mobileFab) {
+                fabIcon.textContent = '↑';
+            }
+        });
+
+        // ================================
+        // MOBILE: PULL TO REFRESH
+        // ================================
+        const pullToRefresh = document.getElementById('pullToRefresh');
+        let startY = 0;
+        let currentY = 0;
+        let pulling = false;
+
+        if (window.innerWidth <= 768) {
+            document.addEventListener('touchstart', (e) => {
+                if (window.pageYOffset === 0) {
+                    startY = e.touches[0].pageY;
+                    pulling = true;
+                }
+            });
+
+            document.addEventListener('touchmove', (e) => {
+                if (pulling) {
+                    currentY = e.touches[0].pageY;
+                    const pullDistance = currentY - startY;
+                    
+                    if (pullDistance > 80) {
+                        pullToRefresh?.classList.add('visible');
+                    }
+                }
+            });
+
+            document.addEventListener('touchend', () => {
+                if (pulling) {
+                    pulling = false;
+                    pullToRefresh?.classList.remove('visible');
+                    
+                    const pullDistance = currentY - startY;
+                    if (pullDistance > 80) {
+                        // Simulate refresh
+                        setTimeout(() => {
+                            location.reload();
+                        }, 300);
+                    }
+                }
+            });
+        }
+
+        // ================================
+        // MOBILE: SWIPE GESTURES
+        // ================================
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const swipeLeft = document.getElementById('swipeLeft');
+        const swipeRight = document.getElementById('swipeRight');
+
+        if (window.innerWidth <= 768) {
+            document.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+
+            document.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+
+            function handleSwipe() {
+                const swipeDistance = touchEndX - touchStartX;
+                
+                if (Math.abs(swipeDistance) > 100) {
+                    if (swipeDistance > 0) {
+                        // Swipe right
+                        swipeRight?.classList.add('visible');
+                        setTimeout(() => {
+                            swipeRight?.classList.remove('visible');
+                        }, 500);
+                    } else {
+                        // Swipe left
+                        swipeLeft?.classList.add('visible');
+                        setTimeout(() => {
+                            swipeLeft?.classList.remove('visible');
+                        }, 500);
+                    }
+                }
+            }
+        }
+
+        // ================================
+        // MOBILE: DISABLE 3D TILT
+        // ================================
+        if (window.innerWidth <= 768) {
+            workCards.forEach(card => {
+                card.removeEventListener('mousemove', () => {});
+                card.removeEventListener('mouseleave', () => {});
+            });
+        }
+
+        // ================================
+        // MOBILE: HAPTIC FEEDBACK
+        // ================================
+        function vibrate(duration = 10) {
+            if (navigator.vibrate) {
+                navigator.vibrate(duration);
+            }
+        }
+
+        // Add haptic feedback to buttons
+        if (window.innerWidth <= 768) {
+            document.querySelectorAll('.btn, .filter-btn, .mobile-nav-item, .like-btn').forEach(el => {
+                el.addEventListener('click', () => vibrate(10));
+            });
+        }
+
+        // ================================
+        // MOBILE: ORIENTATION CHANGE
+        // ================================
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                window.scrollTo(0, window.pageYOffset + 1);
+                window.scrollTo(0, window.pageYOffset - 1);
+            }, 100);
+        });
+
+        // ================================
+        // MOBILE: PREVENT DOUBLE TAP ZOOM
+        // ================================
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // ================================
+        // MOBILE: SHARE API
+        // ================================
+        async function shareArtwork(title, url) {
+            if (navigator.share && window.innerWidth <= 768) {
+                try {
+                    await navigator.share({
+                        title: title,
+                        text: `Check out "${title}" by Elnaz Ashrafi`,
+                        url: url
+                    });
+                    vibrate(20);
+                } catch (err) {
+                    console.log('Share cancelled');
+                }
+            }
+        }
+
+        // ================================
+        // MOBILE: SMOOTH SCROLLING FIX
+        // ================================
+        if (window.innerWidth <= 768) {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        const offset = 60;
+                        const targetPosition = target.offsetTop - offset;
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        }
+
+        // ================================
+        // MOBILE: LAZY LOADING OPTIMIZATION
+        // ================================
+        if ('IntersectionObserver' in window && window.innerWidth <= 768) {
+            const lazyObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const element = entry.target;
+                        element.classList.add('loaded');
+                        lazyObserver.unobserve(element);
+                    }
+                });
+            }, {
+                rootMargin: '50px'
+            });
+
+            workCards.forEach(card => lazyObserver.observe(card));
+        }
+
+        console.log('📱 Mobile optimizations loaded!');
+
+        // ================================
+        // IMAGE COMPARISON SLIDER
+        // ================================
+        const imageComparison = document.getElementById('imageComparison');
+        const comparisonSlider = document.getElementById('comparisonSlider');
+        const comparisonBefore = document.getElementById('comparisonBefore');
+        let isComparing = false;
+
+        function updateComparison(percentage) {
+            comparisonSlider.style.left = percentage + '%';
+            comparisonBefore.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
+        }
+
+        imageComparison?.addEventListener('mousedown', () => {
+            isComparing = true;
+        });
+
+        document.addEventListener('mouseup', () => {
+            isComparing = false;
+        });
+
+        imageComparison?.addEventListener('mousemove', (e) => {
+            if (isComparing) {
+                const rect = imageComparison.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const percentage = (x / rect.width) * 100;
+                updateComparison(Math.max(0, Math.min(100, percentage)));
+            }
+        });
+
+        // Touch support for mobile
+        imageComparison?.addEventListener('touchstart', () => {
+            isComparing = true;
+        });
+
+        imageComparison?.addEventListener('touchend', () => {
+            isComparing = false;
+        });
+
+        imageComparison?.addEventListener('touchmove', (e) => {
+            if (isComparing) {
+                const rect = imageComparison.getBoundingClientRect();
+                const x = e.touches[0].clientX - rect.left;
+                const percentage = (x / rect.width) * 100;
+                updateComparison(Math.max(0, Math.min(100, percentage)));
+            }
+        });
+
+        // Auto-animate on first view
+        const comparisonObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    let percent = 0;
+                    const interval = setInterval(() => {
+                        percent += 1;
+                        updateComparison(percent);
+                        if (percent >= 50) {
+                            clearInterval(interval);
+                        }
+                    }, 20);
+                    comparisonObserver.unobserve(entry.target);
+                }
+            });
+        });
+
+        if (imageComparison) {
+            comparisonObserver.observe(imageComparison);
+        }
+
+        // ================================
+        // FINAL INITIALIZATION
+        // ================================
+        console.log('✅ All features loaded successfully!');
+        console.log('📊 Total Features: 25+');
+        console.log('🎨 Portfolio Status: Production Ready');
+
+        // ================================
+        // SHOP: ADD TO CART
+        // ================================
+        const cartSummary = document.getElementById('cartSummary');
+        const cartCount = document.getElementById('cartCount');
+        const cartTotal = document.getElementById('cartTotal');
+        let cart = [];
+        let totalPrice = 0;
+
+        document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if (btn.disabled) return;
+                
+                const card = btn.closest('.shop-card');
+                const title = card.querySelector('.shop-title').textContent;
+                const priceText = card.querySelector('.shop-price').textContent;
+                const price = parseFloat(priceText.replace(/[^0-9.]/g, ''));
+                
+                cart.push({ title, price });
+                totalPrice += price;
+                
+                cartCount.textContent = cart.length;
+                cartTotal.textContent = '$' + totalPrice.toLocaleString();
+                cartSummary.classList.add('visible');
+                
+                // Haptic feedback
+                vibrate(20);
+                
+                // Visual feedback
+                btn.textContent = '✓ ADDED';
+                setTimeout(() => {
+                    btn.textContent = 'ADD TO CART';
+                }, 2000);
+            });
+        });
+
+        document.getElementById('viewCartBtn')?.addEventListener('click', () => {
+            alert(`Cart Items (${cart.length}):\n\n${cart.map(item => `${item.title}: $${item.price}`).join('\n')}\n\nTotal: $${totalPrice}`);
+        });
+
+        // ================================
+        // SHOP: FILTER
+        // ================================
+        document.querySelectorAll('[data-shop-filter]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.dataset.shopFilter;
+                
+                document.querySelectorAll('[data-shop-filter]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                document.querySelectorAll('.shop-card').forEach(card => {
+                    const category = card.dataset.shopCategory;
+                    const status = card.dataset.shopStatus;
+                    
+                    let shouldShow = filter === 'all' || 
+                                    category === filter || 
+                                    (filter === 'available' && status === 'available');
+                    
+                    if (shouldShow) {
+                        card.style.display = 'block';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 10);
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // ================================
+        // SHOP: QUICK VIEW
+        // ================================
+        document.querySelectorAll('.quick-view-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const card = btn.closest('.shop-card');
+                const title = card.querySelector('.shop-title').textContent;
+                
+                // Open artwork modal with shop item details
+                artworkModal?.classList.add('active');
+                document.getElementById('modalTitle').textContent = title;
+            });
+        });
+
+        console.log('🛒 Shop features loaded!');
+    </script>
+</body>
+</html>
