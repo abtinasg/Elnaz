@@ -5,6 +5,11 @@ Run this script to create an admin user for the dashboard
 """
 
 import sys
+import os
+
+# Add parent directory to path to allow both direct execution and module import
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from backend.database import init_db
 from backend.models import Admin
 

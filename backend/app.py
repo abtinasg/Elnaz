@@ -6,12 +6,12 @@ Flask application with SQLite database
 from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 import os
-from backend.database import init_db
-from backend.routes import contact_bp, shop_bp, newsletter_bp, admin_bp
-from backend.routes.ai import ai_bp
-from backend.routes.cms import cms_bp
-from backend.routes.seo import seo_bp
-from backend.routes.analytics import analytics_bp
+from .database import init_db
+from .routes import contact_bp, shop_bp, newsletter_bp, admin_bp
+from .routes.ai import ai_bp
+from .routes.cms import cms_bp
+from .routes.seo import seo_bp
+from .routes.analytics import analytics_bp
 
 # Initialize Flask app
 app = Flask(__name__,
@@ -90,7 +90,7 @@ def method_not_allowed(error):
         'message': 'Method not allowed'
     }), 405
 
-# Run the application
+# Run the application (when running as module: python -m backend.app)
 if __name__ == '__main__':
     print("\n" + "="*60)
     print("🎨 ELNAZ ASHRAFI - OFFICIAL WEBSITE")
@@ -98,6 +98,8 @@ if __name__ == '__main__':
     print("📍 Server running at: http://127.0.0.1:5000")
     print("📁 Frontend directory: ../frontend")
     print("💾 Database: ../database/elnaz_ashrafi.db")
+    print("="*60 + "\n")
+    print("💡 Tip: You can also run 'python run_server.py' from the root directory")
     print("="*60 + "\n")
 
     app.run(

@@ -4,8 +4,8 @@ Authentication and dashboard management endpoints
 """
 
 from flask import Blueprint, request, jsonify
-from backend.models import Admin, Contact, ShopOrder, Newsletter
-from backend.auth_utils import require_auth
+from ..models import Admin, Contact, ShopOrder, Newsletter
+from ..auth_utils import require_auth
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/api/admin')
 
