@@ -4,7 +4,7 @@ API endpoints for shop orders and inquiries
 """
 
 from flask import Blueprint, request, jsonify
-from models import ShopOrder
+from backend.models import ShopOrder
 import re
 
 shop_bp = Blueprint('shop', __name__, url_prefix='/api/shop')

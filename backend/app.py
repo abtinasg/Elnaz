@@ -6,12 +6,12 @@ Flask application with SQLite database
 from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 import os
-from database import init_db
-from routes import contact_bp, shop_bp, newsletter_bp, admin_bp
-from routes.ai import ai_bp
-from routes.cms import cms_bp
-from routes.seo import seo_bp
-from routes.analytics import analytics_bp
+from backend.database import init_db
+from backend.routes import contact_bp, shop_bp, newsletter_bp, admin_bp
+from backend.routes.ai import ai_bp
+from backend.routes.cms import cms_bp
+from backend.routes.seo import seo_bp
+from backend.routes.analytics import analytics_bp
 
 # Initialize Flask app
 app = Flask(__name__,
