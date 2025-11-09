@@ -3,7 +3,8 @@
  * AI Assistant, CMS, SEO, and Analytics functionality
  */
 
-const API_BASE = 'http://127.0.0.1:5000/api';
+// Use dynamic API base URL to match the current origin
+const ENHANCED_API_BASE = window.location.origin + '/api';
 
 // AI Assistant functionality
 const AIAssistant = {
@@ -49,7 +50,7 @@ const AIAssistant = {
         this.addMessage('Thinking...', 'assistant', true);
 
         try {
-            const response = await fetch(`${API_BASE}/ai/chat`, {
+            const response = await fetch(`${ENHANCED_API_BASE}/ai/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -126,7 +127,7 @@ const CMS = {
         tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading...</td></tr>';
 
         try {
-            const url = section ? `${API_BASE}/cms/content?section=${section}` : `${API_BASE}/cms/content`;
+            const url = section ? `${ENHANCED_API_BASE}/cms/content?section=${section}` : `${ENHANCED_API_BASE}/cms/content`;
             const response = await fetch(url);
             const data = await response.json();
 
@@ -174,7 +175,7 @@ const CMS = {
         if (!confirm('Are you sure you want to delete this content?')) return;
 
         try {
-            const response = await fetch(`${API_BASE}/cms/content/${id}`, {
+            const response = await fetch(`${ENHANCED_API_BASE}/cms/content/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${state.token}`
@@ -218,7 +219,7 @@ const SEO = {
         tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading...</td></tr>';
 
         try {
-            const response = await fetch(`${API_BASE}/seo/settings`, {
+            const response = await fetch(`${ENHANCED_API_BASE}/seo/settings`, {
                 headers: {
                     'Authorization': `Bearer ${state.token}`
                 }
@@ -268,7 +269,7 @@ const SEO = {
         if (!confirm('Are you sure you want to delete these SEO settings?')) return;
 
         try {
-            const response = await fetch(`${API_BASE}/seo/settings/${id}`, {
+            const response = await fetch(`${ENHANCED_API_BASE}/seo/settings/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${state.token}`
@@ -319,7 +320,7 @@ const Analytics = {
         const days = document.getElementById('analyticsPeriod')?.value || 30;
 
         try {
-            const response = await fetch(`${API_BASE}/analytics/stats?days=${days}`, {
+            const response = await fetch(`${ENHANCED_API_BASE}/analytics/stats?days=${days}`, {
                 headers: {
                     'Authorization': `Bearer ${state.token}`
                 }
@@ -394,7 +395,7 @@ const Analytics = {
         try {
             // First get current analytics data
             const days = document.getElementById('analyticsPeriod')?.value || 30;
-            const statsResponse = await fetch(`${API_BASE}/analytics/stats?days=${days}`, {
+            const statsResponse = await fetch(`${ENHANCED_API_BASE}/analytics/stats?days=${days}`, {
                 headers: {
                     'Authorization': `Bearer ${state.token}`
                 }
@@ -402,7 +403,7 @@ const Analytics = {
             const statsData = await statsResponse.json();
 
             // Get AI insights
-            const response = await fetch(`${API_BASE}/ai/marketing-insights`, {
+            const response = await fetch(`${ENHANCED_API_BASE}/ai/marketing-insights`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -440,7 +441,7 @@ window.saveSEOSettings = async function(page) {
     const keywords = document.getElementById('seoHomeKeywords')?.value;
 
     try {
-        const response = await fetch(`${API_BASE}/seo/settings`, {
+        const response = await fetch(`${ENHANCED_API_BASE}/seo/settings`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -475,7 +476,7 @@ window.getAISEOSuggestions = async function(page) {
     btn.disabled = true;
 
     try {
-        const response = await fetch(`${API_BASE}/ai/seo-suggestions`, {
+        const response = await fetch(`${ENHANCED_API_BASE}/ai/seo-suggestions`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

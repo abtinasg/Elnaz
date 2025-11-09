@@ -137,11 +137,12 @@ body {
     width: 100%;
     background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
     color: white;
+    box-shadow: 0 4px 12px rgba(157, 78, 221, 0.25);
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(157, 78, 221, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(157, 78, 221, 0.4);
 }
 
 .btn-secondary {
@@ -190,6 +191,7 @@ body {
     height: 100vh;
     left: 0;
     top: 0;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
 }
 
 .sidebar-header {
@@ -303,18 +305,19 @@ body {
 .stat-card {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 1.5rem;
+    border-radius: 16px;
+    padding: 2rem;
     display: flex;
     gap: 1.5rem;
     align-items: center;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .stat-card:hover {
     border-color: var(--accent-purple);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 24px rgba(157, 78, 221, 0.2), 0 0 0 1px var(--accent-purple);
 }
 
 .stat-icon {
@@ -383,8 +386,9 @@ body {
 .table-container {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: 16px;
     overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .data-table {
