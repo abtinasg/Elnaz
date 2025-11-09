@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function checkAuth() {
-    adminToken = localStorage.getItem('admin_token');
+    adminToken = localStorage.getItem('adminToken');
     if (!adminToken) {
         window.location.href = '/admin.html';
         return;
@@ -30,22 +30,22 @@ function checkAuth() {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            adminUser = data.data.admin;
+            adminUser = data.data;
             document.getElementById('adminName').textContent = adminUser.username;
             initializeDashboard();
         } else {
-            localStorage.removeItem('admin_token');
+            localStorage.removeItem('adminToken');
             window.location.href = '/admin.html';
         }
     })
     .catch(() => {
-        localStorage.removeItem('admin_token');
+        localStorage.removeItem('adminToken');
         window.location.href = '/admin.html';
     });
 }
 
 function logout() {
-    localStorage.removeItem('admin_token');
+    localStorage.removeItem('adminToken');
     window.location.href = '/admin.html';
 }
 
