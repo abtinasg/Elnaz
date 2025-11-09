@@ -5,8 +5,8 @@ Run this script to create an admin user for the dashboard
 """
 
 import sys
-from database import init_db
-from models import Admin
+from backend.database import init_db
+from backend.models import Admin
 
 def create_admin():
     """Create a new admin user"""

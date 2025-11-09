@@ -5,7 +5,7 @@ Analytics tracking and insights API endpoints
 
 from flask import Blueprint, request, jsonify
 from backend.database import get_db
-from backend.routes.admin import require_auth
+from backend.auth_utils import require_auth
 from datetime import datetime, timedelta
 import json
 
