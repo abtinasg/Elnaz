@@ -61,6 +61,10 @@
                     <span class="icon">📰</span>
                     <span>Subscribers</span>
                 </a>
+                <a href="#" class="nav-item" data-section="shop-pages">
+                    <span class="icon">🛍️</span>
+                    <span>Shop Pages</span>
+                </a>
                 <a href="#" class="nav-item" data-section="ai-assistant">
                     <span class="icon">🤖</span>
                     <span>AI Assistant</span>
@@ -223,6 +227,56 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+            </section>
+
+            <!-- Shop Pages Section -->
+            <section id="shop-pagesSection" class="content-section">
+                <div class="section-header">
+                    <h3>مدیریت صفحات فروشگاه</h3>
+                    <p class="text-secondary">مدیریت محتوای صفحات "تماس با ما" و "درباره فروشگاه"</p>
+                </div>
+
+                <div class="shop-pages-container" style="margin-top: 2rem;">
+                    <!-- Contact Page Editor -->
+                    <div class="page-editor" style="background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 1rem; margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.1);">
+                        <h4 style="margin-bottom: 1rem; font-size: 1.25rem;">📞 صفحه تماس با ما</h4>
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">عنوان صفحه</label>
+                            <input type="text" id="contact-title" placeholder="عنوان صفحه را وارد کنید"
+                                   style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 0.5rem; color: white;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">محتوای صفحه (HTML)</label>
+                            <textarea id="contact-content" rows="10" placeholder="محتوای HTML صفحه را وارد کنید"
+                                      style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 0.5rem; color: white; font-family: monospace; resize: vertical;"></textarea>
+                            <small style="color: #999; display: block; margin-top: 0.5rem;">می‌توانید از HTML استفاده کنید</small>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button onclick="saveShopPage('contact')" class="btn btn-primary">ذخیره صفحه تماس</button>
+                            <button onclick="loadShopPage('contact')" class="btn btn-secondary">بارگذاری مجدد</button>
+                        </div>
+                    </div>
+
+                    <!-- About Page Editor -->
+                    <div class="page-editor" style="background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1);">
+                        <h4 style="margin-bottom: 1rem; font-size: 1.25rem;">ℹ️ صفحه درباره فروشگاه</h4>
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">عنوان صفحه</label>
+                            <input type="text" id="about-title" placeholder="عنوان صفحه را وارد کنید"
+                                   style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 0.5rem; color: white;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">محتوای صفحه (HTML)</label>
+                            <textarea id="about-content" rows="10" placeholder="محتوای HTML صفحه را وارد کنید"
+                                      style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 0.5rem; color: white; font-family: monospace; resize: vertical;"></textarea>
+                            <small style="color: #999; display: block; margin-top: 0.5rem;">می‌توانید از HTML استفاده کنید</small>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button onclick="saveShopPage('about')" class="btn btn-primary">ذخیره صفحه درباره</button>
+                            <button onclick="loadShopPage('about')" class="btn btn-secondary">بارگذاری مجدد</button>
+                        </div>
+                    </div>
                 </div>
             </section>
 

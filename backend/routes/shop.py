@@ -5,7 +5,7 @@ Persian language support with complete e-commerce functionality
 """
 
 from flask import Blueprint, request, jsonify
-from ..models import Product, Order, ShopOrder
+from ..models import Product, Order, ShopOrder, ShopUser, ShopPage
 import re
 
 shop_bp = Blueprint('shop', __name__, url_prefix='/api/shop')
@@ -376,4 +376,274 @@ def submit_inquiry():
         return jsonify({
             'success': False,
             'message': 'خطا در ثبت درخواست. لطفا دوباره تلاش کنید'
+        }), 500
+
+
+# ==================== USER AUTHENTICATION ====================
+
+@shop_bp.route('/auth/register', methods=['POST'])
+def register():
+    """Register new shop user"""
+    try:
+        data = request.get_json()
+
+        # Validation
+        required_fields = ['full_name', 'email', 'password']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({
+                    'success': False,
+                    'message': f'فیلد {field} الزامی است'
+                }), 400
+
+        # Validate email
+        if not validate_email(data['email']):
+            return jsonify({
+                'success': False,
+                'message': 'فرمت ایمیل نامعتبر است'
+            }), 400
+
+        # Check if user already exists
+        existing_user = ShopUser.get_by_email(data['email'])
+        if existing_user:
+            return jsonify({
+                'success': False,
+                'message': 'این ایمیل قبلا ثبت شده است'
+            }), 400
+
+        # Create user
+        user_id = ShopUser.create(
+            full_name=data['full_name'],
+            email=data['email'],
+            password=data['password'],
+            phone=data.get('phone'),
+            address=data.get('address')
+        )
+
+        if not user_id:
+            return jsonify({
+                'success': False,
+                'message': 'خطا در ثبت‌نام. لطفا دوباره تلاش کنید'
+            }), 500
+
+        # Create session
+        session_token = ShopUser.create_session(user_id)
+
+        return jsonify({
+            'success': True,
+            'message': 'ثبت‌نام با موفقیت انجام شد',
+            'data': {
+                'token': session_token,
+                'user': {
+                    'id': user_id,
+                    'full_name': data['full_name'],
+                    'email': data['email']
+                }
+            }
+        }), 201
+
+    except Exception as e:
+        print(f"Error in register: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': 'خطا در ثبت‌نام. لطفا دوباره تلاش کنید'
+        }), 500
+
+
+@shop_bp.route('/auth/login', methods=['POST'])
+def login():
+    """Login shop user"""
+    try:
+        data = request.get_json()
+
+        # Validation
+        if not data.get('email') or not data.get('password'):
+            return jsonify({
+                'success': False,
+                'message': 'ایمیل و رمز عبور الزامی است'
+            }), 400
+
+        # Authenticate user
+        user = ShopUser.authenticate(data['email'], data['password'])
+
+        if not user:
+            return jsonify({
+                'success': False,
+                'message': 'ایمیل یا رمز عبور اشتباه است'
+            }), 401
+
+        # Create session
+        session_token = ShopUser.create_session(user['id'])
+
+        return jsonify({
+            'success': True,
+            'message': 'ورود با موفقیت انجام شد',
+            'data': {
+                'token': session_token,
+                'user': {
+                    'id': user['id'],
+                    'full_name': user['full_name'],
+                    'email': user['email'],
+                    'phone': user.get('phone'),
+                    'address': user.get('address')
+                }
+            }
+        }), 200
+
+    except Exception as e:
+        print(f"Error in login: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': 'خطا در ورود. لطفا دوباره تلاش کنید'
+        }), 500
+
+
+@shop_bp.route('/auth/logout', methods=['POST'])
+def logout():
+    """Logout shop user"""
+    try:
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({
+                'success': False,
+                'message': 'توکن احراز هویت یافت نشد'
+            }), 401
+
+        token = auth_header.split(' ')[1]
+        ShopUser.logout(token)
+
+        return jsonify({
+            'success': True,
+            'message': 'خروج با موفقیت انجام شد'
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در خروج'
+        }), 500
+
+
+@shop_bp.route('/auth/verify', methods=['GET'])
+def verify_auth():
+    """Verify user session"""
+    try:
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({
+                'success': False,
+                'message': 'توکن احراز هویت یافت نشد'
+            }), 401
+
+        token = auth_header.split(' ')[1]
+        user = ShopUser.verify_session(token)
+
+        if not user:
+            return jsonify({
+                'success': False,
+                'message': 'نشست منقضی شده است'
+            }), 401
+
+        return jsonify({
+            'success': True,
+            'data': {
+                'user': {
+                    'id': user['id'],
+                    'full_name': user['full_name'],
+                    'email': user['email'],
+                    'phone': user.get('phone'),
+                    'address': user.get('address')
+                }
+            }
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در احراز هویت'
+        }), 500
+
+
+@shop_bp.route('/auth/profile', methods=['PUT'])
+def update_profile():
+    """Update user profile"""
+    try:
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({
+                'success': False,
+                'message': 'توکن احراز هویت یافت نشد'
+            }), 401
+
+        token = auth_header.split(' ')[1]
+        user = ShopUser.verify_session(token)
+
+        if not user:
+            return jsonify({
+                'success': False,
+                'message': 'نشست منقضی شده است'
+            }), 401
+
+        data = request.get_json()
+        success = ShopUser.update_profile(user['id'], **data)
+
+        if success:
+            return jsonify({
+                'success': True,
+                'message': 'پروفایل با موفقیت به‌روزرسانی شد'
+            }), 200
+        else:
+            return jsonify({
+                'success': False,
+                'message': 'خطا در به‌روزرسانی پروفایل'
+            }), 400
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در به‌روزرسانی پروفایل'
+        }), 500
+
+
+# ==================== SHOP PAGES ====================
+
+@shop_bp.route('/pages/<page_key>', methods=['GET'])
+def get_page(page_key):
+    """Get shop page (Contact, About) by key"""
+    try:
+        page = ShopPage.get_by_key(page_key)
+
+        if not page:
+            return jsonify({
+                'success': False,
+                'message': 'صفحه یافت نشد'
+            }), 404
+
+        return jsonify({
+            'success': True,
+            'data': page
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در دریافت صفحه'
+        }), 500
+
+
+@shop_bp.route('/pages', methods=['GET'])
+def get_all_pages():
+    """Get all shop pages"""
+    try:
+        pages = ShopPage.get_all()
+
+        return jsonify({
+            'success': True,
+            'data': pages
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در دریافت صفحات'
         }), 500

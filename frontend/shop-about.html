@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="درباره فروشگاه آثار هنری النازاشرفی">
+    <title>درباره فروشگاه — Elnaz Ashrafi</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>ℹ️</text></svg>">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Persian Font - Vazir -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Vazir', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: {
+                            900: '#0A0A0A',
+                            800: '#121212',
+                            700: '#1A1A1A',
+                            600: '#242424',
+                        },
+                        accent: {
+                            primary: '#E5E5E5',
+                            secondary: '#999999',
+                            gold: '#D4AF37',
+                            purple: '#9333EA',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            background: rgba(212, 175, 55, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-dark-900 text-white antialiased">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-dark-900/95 backdrop-blur-md border-b border-dark-700">
+        <div class="container mx-auto px-6 lg:px-12 py-6">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="shop.html" class="text-2xl font-semibold tracking-tight hover:opacity-70 transition-opacity">
+                    فروشگاه Elnaz Ashrafi
+                </a>
+
+                <!-- Menu -->
+                <ul class="flex items-center space-x-6 space-x-reverse">
+                    <li><a href="shop.html" class="hover:text-accent-secondary transition-colors">فروشگاه</a></li>
+                    <li><a href="shop-about.html" class="text-accent-gold">درباره</a></li>
+                    <li><a href="shop-contact.html" class="hover:text-accent-secondary transition-colors">تماس</a></li>
+                    <li><a href="index.html" class="hover:text-accent-secondary transition-colors">صفحه اصلی</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="min-h-[40vh] flex items-center justify-center relative overflow-hidden pt-32 pb-16">
+        <div class="absolute inset-0 bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900"></div>
+
+        <div class="container mx-auto px-6 lg:px-12 relative z-10">
+            <div class="max-w-3xl mx-auto text-center">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6">
+                    <span class="bg-gradient-to-r from-white via-accent-gold to-white bg-clip-text text-transparent">
+                        درباره فروشگاه
+                    </span>
+                </h1>
+                <p class="text-xl text-accent-secondary">
+                    فروشگاه آنلاین آثار هنری اورجینال و چاپ‌های محدود
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Content Section -->
+    <section class="py-16 bg-dark-900">
+        <div class="container mx-auto px-6 lg:px-12">
+            <div class="max-w-5xl mx-auto">
+                <!-- Loading State -->
+                <div id="loading-content" class="text-center py-12">
+                    <div class="inline-block w-12 h-12 border-4 border-accent-gold border-t-transparent rounded-full animate-spin"></div>
+                    <p class="text-accent-secondary mt-4">در حال بارگذاری...</p>
+                </div>
+
+                <!-- Content Container -->
+                <div id="page-content" class="hidden">
+                    <!-- Content will be loaded here -->
+                </div>
+
+                <!-- Default About Content (fallback) -->
+                <div id="default-content" class="hidden">
+                    <div class="glass-effect rounded-2xl p-8 md:p-12">
+                        <h2 class="text-3xl font-bold mb-6">درباره فروشگاه آثار هنری</h2>
+                        <p class="text-lg text-accent-secondary leading-relaxed mb-8">
+                            فروشگاه آنلاین آثار هنری النازاشرفی با هدف عرضه مستقیم آثار اورجینال و چاپ‌های محدود به علاقه‌مندان هنر راه‌اندازی شده است.
+                        </p>
+
+                        <h3 class="text-2xl font-semibold mb-6 mt-12">ویژگی‌های فروشگاه</h3>
+                        <div class="grid md:grid-cols-2 gap-6 mb-12">
+                            <div class="feature-card glass-effect rounded-xl p-6">
+                                <div class="text-3xl mb-3">✅</div>
+                                <h4 class="text-lg font-semibold mb-2">اصالت تضمینی</h4>
+                                <p class="text-accent-secondary">تمامی آثار اورجینال و با گواهی اصالت</p>
+                            </div>
+
+                            <div class="feature-card glass-effect rounded-xl p-6">
+                                <div class="text-3xl mb-3">🚚</div>
+                                <h4 class="text-lg font-semibold mb-2">ارسال سریع</h4>
+                                <p class="text-accent-secondary">امکان خرید آنلاین با تحویل سریع</p>
+                            </div>
+
+                            <div class="feature-card glass-effect rounded-xl p-6">
+                                <div class="text-3xl mb-3">💬</div>
+                                <h4 class="text-lg font-semibold mb-2">مشاوره رایگان</h4>
+                                <p class="text-accent-secondary">مشاوره رایگان برای انتخاب اثر مناسب</p>
+                            </div>
+
+                            <div class="feature-card glass-effect rounded-xl p-6">
+                                <div class="text-3xl mb-3">↩️</div>
+                                <h4 class="text-lg font-semibold mb-2">ضمانت بازگشت</h4>
+                                <p class="text-accent-secondary">گارانتی بازگشت وجه در صورت عدم رضایت</p>
+                            </div>
+
+                            <div class="feature-card glass-effect rounded-xl p-6">
+                                <div class="text-3xl mb-3">📞</div>
+                                <h4 class="text-lg font-semibold mb-2">پشتیبانی ۲۴ ساعته</h4>
+                                <p class="text-accent-secondary">پشتیبانی مداوم در تمام ساعات روز</p>
+                            </div>
+
+                            <div class="feature-card glass-effect rounded-xl p-6">
+                                <div class="text-3xl mb-3">🎨</div>
+                                <h4 class="text-lg font-semibold mb-2">تنوع آثار</h4>
+                                <p class="text-accent-secondary">مجموعه‌ای متنوع از آثار هنری</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-accent-gold/10 to-accent-purple/10 rounded-xl border border-accent-gold/20 p-8">
+                            <h3 class="text-2xl font-semibold mb-4">🛒 نحوه خرید</h3>
+                            <p class="text-accent-secondary leading-relaxed mb-4">
+                                برای خرید از فروشگاه، ابتدا باید
+                                <a href="shop.html" class="text-accent-gold hover:underline">ثبت‌نام</a>
+                                کنید و سپس آثار مورد نظر خود را به سبد خرید اضافه نمایید.
+                            </p>
+                            <p class="text-accent-secondary leading-relaxed">
+                                پس از تکمیل فرآیند خرید، کارشناسان ما جهت هماهنگی ارسال با شما تماس خواهند گرفت.
+                            </p>
+                        </div>
+
+                        <div class="mt-12 text-center">
+                            <a href="shop.html" class="inline-block px-8 py-4 bg-gradient-to-r from-accent-gold to-accent-purple rounded-xl font-semibold shadow-lg hover:shadow-2xl hover:shadow-accent-purple/50 transition-all">
+                                بازگشت به فروشگاه
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-dark-900 border-t border-dark-700">
+        <div class="container mx-auto px-6 lg:px-12">
+            <div class="text-center text-accent-secondary">
+                <p>&copy; ۱۴۰۳ Elnaz Ashrafi. تمامی حقوق محفوظ است.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        const API_BASE = 'http://localhost:5000/api/shop';
+
+        // Load page content
+        async function loadPageContent() {
+            try {
+                const response = await fetch(`${API_BASE}/pages/about`);
+                const data = await response.json();
+
+                document.getElementById('loading-content').classList.add('hidden');
+
+                if (data.success && data.data) {
+                    // Display custom content
+                    document.getElementById('page-content').innerHTML = `
+                        <div class="glass-effect rounded-2xl p-8 md:p-12">
+                            <h2 class="text-3xl font-bold mb-8">${data.data.title_fa}</h2>
+                            <div class="prose prose-invert prose-lg max-w-none">
+                                ${data.data.content_fa}
+                            </div>
+                            <div class="mt-12 text-center">
+                                <a href="shop.html" class="inline-block px-8 py-4 bg-gradient-to-r from-accent-gold to-accent-purple rounded-xl font-semibold shadow-lg hover:shadow-2xl hover:shadow-accent-purple/50 transition-all">
+                                    بازگشت به فروشگاه
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('page-content').classList.remove('hidden');
+                } else {
+                    // Show default content
+                    document.getElementById('default-content').classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error loading page:', error);
+                // Show default content on error
+                document.getElementById('loading-content').classList.add('hidden');
+                document.getElementById('default-content').classList.remove('hidden');
+            }
+        }
+
+        // Load content on page load
+        loadPageContent();
+    </script>
+
+    <style>
+        .prose {
+            color: #E5E5E5;
+        }
+
+        .prose h2, .prose h3, .prose h4 {
+            color: #fff;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .prose h2 {
+            font-size: 2rem;
+        }
+
+        .prose h3 {
+            font-size: 1.5rem;
+        }
+
+        .prose p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .prose ul, .prose ol {
+            margin: 1rem 0;
+            padding-right: 2rem;
+        }
+
+        .prose li {
+            margin-bottom: 0.5rem;
+        }
+
+        .prose a {
+            color: #D4AF37;
+            text-decoration: underline;
+        }
+    </style>
+</body>
+</html>

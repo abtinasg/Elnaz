@@ -189,15 +189,41 @@
 
                 <!-- Desktop Menu -->
                 <ul class="hidden md:flex items-center space-x-8 space-x-reverse">
-                    <li><a href="index.html" class="hover:text-accent-secondary transition-colors">صفحه اصلی</a></li>
-                    <li><a href="index.html#about" class="hover:text-accent-secondary transition-colors">درباره</a></li>
-                    <li><a href="index.html#gallery" class="hover:text-accent-secondary transition-colors">گالری</a></li>
                     <li><a href="shop.html" class="text-accent-gold">فروشگاه</a></li>
-                    <li><a href="index.html#contact" class="hover:text-accent-secondary transition-colors">تماس</a></li>
+                    <li><a href="shop-about.html" class="hover:text-accent-secondary transition-colors">درباره</a></li>
+                    <li><a href="shop-contact.html" class="hover:text-accent-secondary transition-colors">تماس</a></li>
+                    <li><a href="index.html" class="hover:text-accent-secondary transition-colors">صفحه اصلی</a></li>
                 </ul>
 
-                <!-- Cart & Wishlist -->
+                <!-- User, Cart & Wishlist -->
                 <div class="flex items-center gap-4">
+                    <!-- User Menu -->
+                    <div id="user-menu" class="relative">
+                        <!-- Not Logged In -->
+                        <div id="auth-buttons" class="flex gap-2">
+                            <button id="login-btn" class="px-4 py-2 text-sm glass-effect rounded-lg hover:bg-white/10 transition-all">
+                                ورود
+                            </button>
+                            <button id="register-btn" class="px-4 py-2 text-sm bg-gradient-to-r from-accent-gold to-accent-purple rounded-lg hover:shadow-lg transition-all">
+                                ثبت‌نام
+                            </button>
+                        </div>
+
+                        <!-- Logged In -->
+                        <div id="user-profile" class="hidden">
+                            <button id="profile-btn" class="flex items-center gap-2 px-4 py-2 glass-effect rounded-lg hover:bg-white/10 transition-all">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                </svg>
+                                <span id="user-name">کاربر</span>
+                            </button>
+                            <div id="profile-dropdown" class="hidden absolute left-0 mt-2 w-48 glass-effect rounded-lg shadow-lg overflow-hidden">
+                                <button id="logout-btn" class="w-full px-4 py-3 text-right hover:bg-white/10 transition-colors">
+                                    خروج
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <button id="wishlist-btn" class="relative p-2 glass-effect rounded-full hover:bg-white/10 transition-all">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
@@ -462,6 +488,105 @@
                         ثبت نهایی سفارش
                     </button>
                 </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-black/80 modal-backdrop hidden z-50 flex items-center justify-center p-6">
+        <div class="bg-dark-800 rounded-2xl max-w-md w-full border border-dark-600">
+            <div class="p-6 border-b border-dark-700">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-2xl font-serif font-bold">ورود به حساب کاربری</h3>
+                    <button id="close-login" class="p-2 hover:bg-dark-700 rounded-full transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <form id="login-form" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-accent-primary">ایمیل *</label>
+                    <input type="email" name="email" required
+                           class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors text-white">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-accent-primary">رمز عبور *</label>
+                    <input type="password" name="password" required
+                           class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors text-white">
+                </div>
+
+                <div id="login-error" class="hidden p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm"></div>
+
+                <div class="pt-4">
+                    <button type="submit" class="w-full bg-gradient-to-r from-accent-gold to-accent-purple py-4 rounded-xl font-bold hover:shadow-lg hover:shadow-accent-purple/50 transition-all">
+                        ورود
+                    </button>
+                </div>
+
+                <p class="text-center text-sm text-accent-secondary">
+                    حساب کاربری ندارید؟
+                    <button type="button" id="switch-to-register" class="text-accent-gold hover:underline">ثبت‌نام کنید</button>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="register-modal" class="fixed inset-0 bg-black/80 modal-backdrop hidden z-50 flex items-center justify-center p-6">
+        <div class="bg-dark-800 rounded-2xl max-w-md w-full border border-dark-600">
+            <div class="p-6 border-b border-dark-700">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-2xl font-serif font-bold">ثبت‌نام</h3>
+                    <button id="close-register" class="p-2 hover:bg-dark-700 rounded-full transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <form id="register-form" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-accent-primary">نام و نام خانوادگی *</label>
+                    <input type="text" name="full_name" required
+                           class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors text-white">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-accent-primary">ایمیل *</label>
+                    <input type="email" name="email" required
+                           class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors text-white">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-accent-primary">شماره تماس</label>
+                    <input type="tel" name="phone" dir="ltr"
+                           class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors text-white">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-accent-primary">رمز عبور *</label>
+                    <input type="password" name="password" required minlength="6"
+                           class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors text-white">
+                    <p class="text-xs text-accent-secondary mt-1">حداقل ۶ کاراکتر</p>
+                </div>
+
+                <div id="register-error" class="hidden p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm"></div>
+
+                <div class="pt-4">
+                    <button type="submit" class="w-full bg-gradient-to-r from-accent-gold to-accent-purple py-4 rounded-xl font-bold hover:shadow-lg hover:shadow-accent-purple/50 transition-all">
+                        ثبت‌نام
+                    </button>
+                </div>
+
+                <p class="text-center text-sm text-accent-secondary">
+                    قبلا ثبت‌نام کرده‌اید؟
+                    <button type="button" id="switch-to-login" class="text-accent-gold hover:underline">ورود</button>
+                </p>
             </form>
         </div>
     </div>
