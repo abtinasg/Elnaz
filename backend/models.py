@@ -1,12 +1,14 @@
 """
 Database Models
-CRUD operations for Contact Forms, Shop Orders, Newsletter, and Admin
+CRUD operations for Contact Forms, Shop Orders, Newsletter, Admin, Products, and Orders
 """
 
-from database import get_db, dict_from_row
+from backend.database import get_db, dict_from_row
 from datetime import datetime, timedelta
 import hashlib
 import secrets
+import random
+import string
 
 class Contact:
     """Contact Form Model"""
@@ -265,3 +267,214 @@ class Admin:
                     'total': total_subscribers
                 }
             }
+
+
+class Product:
+    """Product Model for Shop"""
+
+    @staticmethod
+    def create(name_fa, price, name_en=None, description_fa=None, description_en=None,
+               category=None, image_url=None, stock_quantity=0):
+        """Create a new product"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO products
+                (name_fa, name_en, description_fa, description_en, price, category, image_url, stock_quantity)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (name_fa, name_en, description_fa, description_en, price, category, image_url, stock_quantity))
+            return cursor.lastrowid
+
+    @staticmethod
+    def get_all(category=None, available_only=True):
+        """Get all products with optional filtering"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            query = 'SELECT * FROM products'
+            conditions = []
+            params = []
+
+            if available_only:
+                conditions.append('is_available = 1')
+
+            if category:
+                conditions.append('category = ?')
+                params.append(category)
+
+            if conditions:
+                query += ' WHERE ' + ' AND '.join(conditions)
+
+            query += ' ORDER BY created_at DESC'
+            cursor.execute(query, params)
+            return [dict_from_row(row) for row in cursor.fetchall()]
+
+    @staticmethod
+    def get_by_id(product_id):
+        """Get product by ID"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT * FROM products WHERE id = ?', (product_id,))
+            row = cursor.fetchone()
+            return dict_from_row(row) if row else None
+
+    @staticmethod
+    def update(product_id, **kwargs):
+        """Update product fields"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            allowed_fields = ['name_fa', 'name_en', 'description_fa', 'description_en',
+                            'price', 'category', 'image_url', 'stock_quantity', 'is_available']
+
+            updates = []
+            values = []
+            for field, value in kwargs.items():
+                if field in allowed_fields:
+                    updates.append(f'{field} = ?')
+                    values.append(value)
+
+            if updates:
+                updates.append('updated_at = CURRENT_TIMESTAMP')
+                values.append(product_id)
+                query = f'UPDATE products SET {", ".join(updates)} WHERE id = ?'
+                cursor.execute(query, values)
+                return cursor.rowcount > 0
+            return False
+
+    @staticmethod
+    def delete(product_id):
+        """Delete product (soft delete by marking as unavailable)"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('UPDATE products SET is_available = 0 WHERE id = ?', (product_id,))
+            return cursor.rowcount > 0
+
+    @staticmethod
+    def get_categories():
+        """Get all unique categories"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT DISTINCT category FROM products WHERE category IS NOT NULL AND is_available = 1')
+            return [row[0] for row in cursor.fetchall()]
+
+
+class Order:
+    """Order Model for Shop"""
+
+    @staticmethod
+    def generate_order_number():
+        """Generate unique order number"""
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        random_suffix = ''.join(random.choices(string.digits, k=4))
+        return f'ORD-{timestamp}-{random_suffix}'
+
+    @staticmethod
+    def create(customer_name, customer_email, items, customer_phone=None,
+               customer_address=None, payment_method='cash', notes=None):
+        """Create a new order with items"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+
+            # Calculate total
+            total_amount = sum(item['price'] * item['quantity'] for item in items)
+
+            # Generate order number
+            order_number = Order.generate_order_number()
+
+            # Create order
+            cursor.execute('''
+                INSERT INTO orders
+                (order_number, customer_name, customer_email, customer_phone,
+                 customer_address, total_amount, payment_method, notes)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (order_number, customer_name, customer_email, customer_phone,
+                  customer_address, total_amount, payment_method, notes))
+
+            order_id = cursor.lastrowid
+
+            # Create order items
+            for item in items:
+                cursor.execute('''
+                    INSERT INTO order_items
+                    (order_id, product_id, product_name, quantity, price)
+                    VALUES (?, ?, ?, ?, ?)
+                ''', (order_id, item['product_id'], item['product_name'],
+                      item['quantity'], item['price']))
+
+            return {
+                'order_id': order_id,
+                'order_number': order_number,
+                'total_amount': total_amount
+            }
+
+    @staticmethod
+    def get_all(limit=50, status=None):
+        """Get all orders"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            query = 'SELECT * FROM orders'
+
+            if status:
+                query += ' WHERE status = ?'
+                cursor.execute(f'{query} ORDER BY created_at DESC LIMIT ?', (status, limit))
+            else:
+                cursor.execute(f'{query} ORDER BY created_at DESC LIMIT ?', (limit,))
+
+            return [dict_from_row(row) for row in cursor.fetchall()]
+
+    @staticmethod
+    def get_by_id(order_id):
+        """Get order by ID with items"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+
+            # Get order
+            cursor.execute('SELECT * FROM orders WHERE id = ?', (order_id,))
+            order_row = cursor.fetchone()
+
+            if not order_row:
+                return None
+
+            order = dict_from_row(order_row)
+
+            # Get order items
+            cursor.execute('SELECT * FROM order_items WHERE order_id = ?', (order_id,))
+            order['items'] = [dict_from_row(row) for row in cursor.fetchall()]
+
+            return order
+
+    @staticmethod
+    def get_by_order_number(order_number):
+        """Get order by order number"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+
+            # Get order
+            cursor.execute('SELECT * FROM orders WHERE order_number = ?', (order_number,))
+            order_row = cursor.fetchone()
+
+            if not order_row:
+                return None
+
+            order = dict_from_row(order_row)
+
+            # Get order items
+            cursor.execute('SELECT * FROM order_items WHERE order_id = ?', (order['id'],))
+            order['items'] = [dict_from_row(row) for row in cursor.fetchall()]
+
+            return order
+
+    @staticmethod
+    def update_status(order_id, status):
+        """Update order status"""
+        valid_statuses = ['pending', 'processing', 'completed', 'cancelled']
+        if status not in valid_statuses:
+            return False
+
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                UPDATE orders
+                SET status = ?, updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+            ''', (status, order_id))
+            return cursor.rowcount > 0
