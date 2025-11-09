@@ -5,7 +5,7 @@ Persian language support with complete e-commerce functionality
 """
 
 from flask import Blueprint, request, jsonify
-from ..models import Product, Order, ShopOrder, ShopUser, ShopPage
+from ..models import Product, Order, ShopOrder, ShopUser, ShopPage, Coupon, Inventory, ProductAttribute
 import re
 
 shop_bp = Blueprint('shop', __name__, url_prefix='/api/shop')
@@ -646,4 +646,491 @@ def get_all_pages():
         return jsonify({
             'success': False,
             'message': 'خطا در دریافت صفحات'
+        }), 500
+
+
+# ==================== COUPONS ====================
+
+@shop_bp.route('/coupons', methods=['POST'])
+def create_coupon():
+    """Create new coupon (admin endpoint)"""
+    try:
+        data = request.get_json()
+
+        # Validation
+        required_fields = ['code', 'discount_type', 'discount_value']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({
+                    'success': False,
+                    'message': f'فیلد {field} الزامی است'
+                }), 400
+
+        coupon_id = Coupon.create(
+            code=data['code'],
+            discount_type=data['discount_type'],
+            discount_value=float(data['discount_value']),
+            description_fa=data.get('description_fa'),
+            min_purchase=data.get('min_purchase', 0),
+            max_discount=data.get('max_discount'),
+            usage_limit=data.get('usage_limit'),
+            valid_from=data.get('valid_from'),
+            valid_until=data.get('valid_until')
+        )
+
+        if not coupon_id:
+            return jsonify({
+                'success': False,
+                'message': 'کد تخفیف تکراری است'
+            }), 400
+
+        return jsonify({
+            'success': True,
+            'message': 'کد تخفیف با موفقیت ایجاد شد',
+            'coupon_id': coupon_id
+        }), 201
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در ایجاد کد تخفیف'
+        }), 500
+
+
+@shop_bp.route('/coupons', methods=['GET'])
+def get_coupons():
+    """Get all coupons (admin endpoint)"""
+    try:
+        active_only = request.args.get('active', 'true').lower() == 'true'
+        coupons = Coupon.get_all(active_only=active_only)
+
+        return jsonify({
+            'success': True,
+            'count': len(coupons),
+            'coupons': coupons
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در دریافت کدهای تخفیف'
+        }), 500
+
+
+@shop_bp.route('/coupons/validate', methods=['POST'])
+def validate_coupon():
+    """Validate coupon code"""
+    try:
+        data = request.get_json()
+        code = data.get('code')
+        amount = data.get('amount')
+
+        if not code or not amount:
+            return jsonify({
+                'success': False,
+                'message': 'کد تخفیف و مبلغ الزامی است'
+            }), 400
+
+        result = Coupon.validate(code, float(amount))
+
+        return jsonify({
+            'success': result.get('valid', False),
+            'data': result
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در اعتبارسنجی کد تخفیف'
+        }), 500
+
+
+@shop_bp.route('/coupons/<int:coupon_id>', methods=['PUT'])
+def update_coupon(coupon_id):
+    """Update coupon (admin endpoint)"""
+    try:
+        data = request.get_json()
+        success = Coupon.update(coupon_id, **data)
+
+        if not success:
+            return jsonify({
+                'success': False,
+                'message': 'کد تخفیف یافت نشد'
+            }), 404
+
+        return jsonify({
+            'success': True,
+            'message': 'کد تخفیف با موفقیت به‌روزرسانی شد'
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در به‌روزرسانی کد تخفیف'
+        }), 500
+
+
+@shop_bp.route('/coupons/<int:coupon_id>', methods=['DELETE'])
+def delete_coupon(coupon_id):
+    """Delete/deactivate coupon (admin endpoint)"""
+    try:
+        success = Coupon.delete(coupon_id)
+
+        if not success:
+            return jsonify({
+                'success': False,
+                'message': 'کد تخفیف یافت نشد'
+            }), 404
+
+        return jsonify({
+            'success': True,
+            'message': 'کد تخفیف با موفقیت غیرفعال شد'
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در حذف کد تخفیف'
+        }), 500
+
+
+# ==================== INVENTORY ====================
+
+@shop_bp.route('/inventory/report', methods=['GET'])
+def get_inventory_report():
+    """Get inventory report (admin endpoint)"""
+    try:
+        report = Inventory.get_inventory_report()
+
+        return jsonify({
+            'success': True,
+            'data': report
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در دریافت گزارش انبار'
+        }), 500
+
+
+@shop_bp.route('/inventory/low-stock', methods=['GET'])
+def get_low_stock():
+    """Get low stock products (admin endpoint)"""
+    try:
+        threshold = request.args.get('threshold', 10, type=int)
+        products = Inventory.get_low_stock_products(threshold)
+
+        return jsonify({
+            'success': True,
+            'count': len(products),
+            'products': products
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در دریافت محصولات کم موجودی'
+        }), 500
+
+
+@shop_bp.route('/inventory/history/<int:product_id>', methods=['GET'])
+def get_inventory_history(product_id):
+    """Get inventory history for a product (admin endpoint)"""
+    try:
+        limit = request.args.get('limit', 50, type=int)
+        history = Inventory.get_product_history(product_id, limit)
+
+        return jsonify({
+            'success': True,
+            'count': len(history),
+            'history': history
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در دریافت تاریخچه موجودی'
+        }), 500
+
+
+@shop_bp.route('/inventory/adjust', methods=['POST'])
+def adjust_inventory():
+    """Adjust product inventory (admin endpoint)"""
+    try:
+        data = request.get_json()
+
+        # Validation
+        if 'product_id' not in data or 'quantity' not in data:
+            return jsonify({
+                'success': False,
+                'message': 'شناسه محصول و تعداد الزامی است'
+            }), 400
+
+        success = Inventory.adjust_stock(
+            product_id=data['product_id'],
+            new_quantity=data['quantity'],
+            notes=data.get('notes'),
+            created_by=data.get('created_by')
+        )
+
+        if not success:
+            return jsonify({
+                'success': False,
+                'message': 'محصول یافت نشد'
+            }), 404
+
+        return jsonify({
+            'success': True,
+            'message': 'موجودی با موفقیت تنظیم شد'
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در تنظیم موجودی'
+        }), 500
+
+
+# ==================== PRODUCT ATTRIBUTES ====================
+
+@shop_bp.route('/products/<int:product_id>/attributes', methods=['GET'])
+def get_product_attributes(product_id):
+    """Get all attributes for a product"""
+    try:
+        attributes = ProductAttribute.get_by_product(product_id)
+
+        return jsonify({
+            'success': True,
+            'count': len(attributes),
+            'attributes': attributes
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در دریافت ویژگی‌ها'
+        }), 500
+
+
+@shop_bp.route('/products/<int:product_id>/attributes', methods=['POST'])
+def create_product_attribute(product_id):
+    """Create product attribute (admin endpoint)"""
+    try:
+        data = request.get_json()
+
+        # Validation
+        required_fields = ['attribute_name_fa', 'attribute_value_fa']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({
+                    'success': False,
+                    'message': f'فیلد {field} الزامی است'
+                }), 400
+
+        attribute_id = ProductAttribute.create(
+            product_id=product_id,
+            attribute_name_fa=data['attribute_name_fa'],
+            attribute_value_fa=data['attribute_value_fa'],
+            price_adjustment=data.get('price_adjustment', 0),
+            stock_quantity=data.get('stock_quantity', 0),
+            sku=data.get('sku')
+        )
+
+        return jsonify({
+            'success': True,
+            'message': 'ویژگی محصول با موفقیت ایجاد شد',
+            'attribute_id': attribute_id
+        }), 201
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در ایجاد ویژگی'
+        }), 500
+
+
+@shop_bp.route('/attributes/<int:attribute_id>', methods=['PUT'])
+def update_product_attribute(attribute_id):
+    """Update product attribute (admin endpoint)"""
+    try:
+        data = request.get_json()
+        success = ProductAttribute.update(attribute_id, **data)
+
+        if not success:
+            return jsonify({
+                'success': False,
+                'message': 'ویژگی یافت نشد'
+            }), 404
+
+        return jsonify({
+            'success': True,
+            'message': 'ویژگی با موفقیت به‌روزرسانی شد'
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در به‌روزرسانی ویژگی'
+        }), 500
+
+
+@shop_bp.route('/attributes/<int:attribute_id>', methods=['DELETE'])
+def delete_product_attribute(attribute_id):
+    """Delete product attribute (admin endpoint)"""
+    try:
+        success = ProductAttribute.delete(attribute_id)
+
+        if not success:
+            return jsonify({
+                'success': False,
+                'message': 'ویژگی یافت نشد'
+            }), 404
+
+        return jsonify({
+            'success': True,
+            'message': 'ویژگی با موفقیت حذف شد'
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در حذف ویژگی'
+        }), 500
+
+
+# ==================== SALES REPORTS ====================
+
+@shop_bp.route('/reports/sales', methods=['GET'])
+def get_sales_report():
+    """Get sales report (admin endpoint)"""
+    try:
+        from ..database import get_db
+        from datetime import datetime, timedelta
+
+        period = request.args.get('period', '30')  # days
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+
+        with get_db() as conn:
+            cursor = conn.cursor()
+
+            # Build query based on date range
+            if start_date and end_date:
+                date_filter = f"created_at BETWEEN '{start_date}' AND '{end_date}'"
+            else:
+                days_ago = datetime.now() - timedelta(days=int(period))
+                date_filter = f"created_at >= '{days_ago.isoformat()}'"
+
+            # Total sales
+            cursor.execute(f'''
+                SELECT COUNT(*) as total_orders, SUM(total_amount) as total_revenue
+                FROM orders
+                WHERE {date_filter}
+            ''')
+            sales_data = cursor.fetchone()
+
+            # Sales by status
+            cursor.execute(f'''
+                SELECT status, COUNT(*) as count, SUM(total_amount) as revenue
+                FROM orders
+                WHERE {date_filter}
+                GROUP BY status
+            ''')
+            status_breakdown = [{'status': row[0], 'count': row[1], 'revenue': row[2]}
+                              for row in cursor.fetchall()]
+
+            # Top selling products
+            cursor.execute(f'''
+                SELECT oi.product_name, SUM(oi.quantity) as total_sold,
+                       SUM(oi.quantity * oi.price) as total_revenue
+                FROM order_items oi
+                JOIN orders o ON oi.order_id = o.id
+                WHERE o.{date_filter}
+                GROUP BY oi.product_name
+                ORDER BY total_sold DESC
+                LIMIT 10
+            ''')
+            top_products = [{'name': row[0], 'sold': row[1], 'revenue': row[2]}
+                          for row in cursor.fetchall()]
+
+            # Daily sales trend
+            cursor.execute(f'''
+                SELECT DATE(created_at) as date, COUNT(*) as orders, SUM(total_amount) as revenue
+                FROM orders
+                WHERE {date_filter}
+                GROUP BY DATE(created_at)
+                ORDER BY date DESC
+                LIMIT 30
+            ''')
+            daily_trend = [{'date': row[0], 'orders': row[1], 'revenue': row[2]}
+                         for row in cursor.fetchall()]
+
+            return jsonify({
+                'success': True,
+                'data': {
+                    'summary': {
+                        'total_orders': sales_data[0] or 0,
+                        'total_revenue': sales_data[1] or 0
+                    },
+                    'status_breakdown': status_breakdown,
+                    'top_products': top_products,
+                    'daily_trend': daily_trend
+                }
+            }), 200
+
+    except Exception as e:
+        print(f"Error in sales report: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': 'خطا در دریافت گزارش فروش'
+        }), 500
+
+
+@shop_bp.route('/reports/customers', methods=['GET'])
+def get_customer_report():
+    """Get customer report (admin endpoint)"""
+    try:
+        from ..database import get_db
+
+        with get_db() as conn:
+            cursor = conn.cursor()
+
+            # Total customers
+            cursor.execute('SELECT COUNT(*) FROM shop_users WHERE is_active = 1')
+            total_customers = cursor.fetchone()[0]
+
+            # New customers this month
+            cursor.execute('''
+                SELECT COUNT(*) FROM shop_users
+                WHERE is_active = 1 AND created_at >= date('now', 'start of month')
+            ''')
+            new_customers = cursor.fetchone()[0]
+
+            # Top customers by order count
+            cursor.execute('''
+                SELECT o.customer_name, o.customer_email,
+                       COUNT(*) as order_count, SUM(o.total_amount) as total_spent
+                FROM orders o
+                GROUP BY o.customer_email
+                ORDER BY order_count DESC
+                LIMIT 10
+            ''')
+            top_customers = [{'name': row[0], 'email': row[1],
+                            'orders': row[2], 'spent': row[3]}
+                           for row in cursor.fetchall()]
+
+            return jsonify({
+                'success': True,
+                'data': {
+                    'total_customers': total_customers,
+                    'new_customers_this_month': new_customers,
+                    'top_customers': top_customers
+                }
+            }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در دریافت گزارش مشتریان'
         }), 500

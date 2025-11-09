@@ -726,3 +726,283 @@ class ShopPage:
                 title_fa=page['title_fa'],
                 content_fa=page['content_fa']
             )
+
+
+class Coupon:
+    """Coupon/Discount Model"""
+
+    @staticmethod
+    def create(code, discount_type, discount_value, description_fa=None,
+               min_purchase=0, max_discount=None, usage_limit=None,
+               valid_from=None, valid_until=None):
+        """Create a new coupon"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            try:
+                cursor.execute('''
+                    INSERT INTO coupons
+                    (code, description_fa, discount_type, discount_value, min_purchase,
+                     max_discount, usage_limit, valid_from, valid_until)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ''', (code, description_fa, discount_type, discount_value, min_purchase,
+                      max_discount, usage_limit, valid_from, valid_until))
+                return cursor.lastrowid
+            except Exception:
+                return None
+
+    @staticmethod
+    def get_by_code(code):
+        """Get coupon by code"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT * FROM coupons WHERE code = ? AND is_active = 1', (code,))
+            row = cursor.fetchone()
+            return dict_from_row(row) if row else None
+
+    @staticmethod
+    def validate(code, purchase_amount):
+        """Validate coupon and return discount amount"""
+        coupon = Coupon.get_by_code(code)
+        if not coupon:
+            return {'valid': False, 'error': 'کد تخفیف نامعتبر است'}
+
+        # Check if expired
+        if coupon['valid_until']:
+            from datetime import datetime
+            if datetime.fromisoformat(coupon['valid_until']) < datetime.now():
+                return {'valid': False, 'error': 'کد تخفیف منقضی شده است'}
+
+        # Check minimum purchase
+        if purchase_amount < coupon['min_purchase']:
+            return {'valid': False, 'error': f'حداقل خرید برای این کد {coupon["min_purchase"]} تومان است'}
+
+        # Check usage limit
+        if coupon['usage_limit'] and coupon['used_count'] >= coupon['usage_limit']:
+            return {'valid': False, 'error': 'ظرفیت استفاده از این کد تخفیف تمام شده است'}
+
+        # Calculate discount
+        if coupon['discount_type'] == 'percentage':
+            discount = purchase_amount * (coupon['discount_value'] / 100)
+            if coupon['max_discount']:
+                discount = min(discount, coupon['max_discount'])
+        else:  # fixed
+            discount = coupon['discount_value']
+
+        return {
+            'valid': True,
+            'discount_amount': discount,
+            'final_amount': purchase_amount - discount
+        }
+
+    @staticmethod
+    def use_coupon(code):
+        """Increment usage count"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                UPDATE coupons SET used_count = used_count + 1
+                WHERE code = ?
+            ''', (code,))
+            return cursor.rowcount > 0
+
+    @staticmethod
+    def get_all(active_only=True):
+        """Get all coupons"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            query = 'SELECT * FROM coupons'
+            if active_only:
+                query += ' WHERE is_active = 1'
+            query += ' ORDER BY created_at DESC'
+            cursor.execute(query)
+            return [dict_from_row(row) for row in cursor.fetchall()]
+
+    @staticmethod
+    def update(coupon_id, **kwargs):
+        """Update coupon"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            allowed_fields = ['description_fa', 'discount_type', 'discount_value',
+                            'min_purchase', 'max_discount', 'usage_limit',
+                            'valid_from', 'valid_until', 'is_active']
+
+            updates = []
+            values = []
+            for field, value in kwargs.items():
+                if field in allowed_fields:
+                    updates.append(f'{field} = ?')
+                    values.append(value)
+
+            if updates:
+                values.append(coupon_id)
+                query = f'UPDATE coupons SET {", ".join(updates)} WHERE id = ?'
+                cursor.execute(query, values)
+                return cursor.rowcount > 0
+            return False
+
+    @staticmethod
+    def delete(coupon_id):
+        """Deactivate coupon"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('UPDATE coupons SET is_active = 0 WHERE id = ?', (coupon_id,))
+            return cursor.rowcount > 0
+
+
+class Inventory:
+    """Inventory Management Model"""
+
+    @staticmethod
+    def record_change(product_id, quantity_change, change_type, previous_quantity,
+                     reference_type=None, reference_id=None, notes=None, created_by=None):
+        """Record inventory change"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            new_quantity = previous_quantity + quantity_change
+            cursor.execute('''
+                INSERT INTO inventory_history
+                (product_id, quantity_change, previous_quantity, new_quantity,
+                 change_type, reference_type, reference_id, notes, created_by)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (product_id, quantity_change, previous_quantity, new_quantity,
+                  change_type, reference_type, reference_id, notes, created_by))
+            return cursor.lastrowid
+
+    @staticmethod
+    def get_product_history(product_id, limit=50):
+        """Get inventory history for a product"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT * FROM inventory_history
+                WHERE product_id = ?
+                ORDER BY created_at DESC
+                LIMIT ?
+            ''', (product_id, limit))
+            return [dict_from_row(row) for row in cursor.fetchall()]
+
+    @staticmethod
+    def adjust_stock(product_id, new_quantity, notes=None, created_by=None):
+        """Adjust product stock with history tracking"""
+        product = Product.get_by_id(product_id)
+        if not product:
+            return False
+
+        previous_quantity = product['stock_quantity']
+        quantity_change = new_quantity - previous_quantity
+
+        with get_db() as conn:
+            cursor = conn.cursor()
+
+            # Update product stock
+            cursor.execute('''
+                UPDATE products SET stock_quantity = ?
+                WHERE id = ?
+            ''', (new_quantity, product_id))
+
+            # Record history
+            Inventory.record_change(
+                product_id, quantity_change, 'adjustment',
+                previous_quantity, notes=notes, created_by=created_by
+            )
+
+            return True
+
+    @staticmethod
+    def get_low_stock_products(threshold=10):
+        """Get products with low stock"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT * FROM products
+                WHERE stock_quantity <= ? AND is_available = 1
+                ORDER BY stock_quantity ASC
+            ''', (threshold,))
+            return [dict_from_row(row) for row in cursor.fetchall()]
+
+    @staticmethod
+    def get_inventory_report():
+        """Get comprehensive inventory report"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+
+            # Total products
+            cursor.execute('SELECT COUNT(*) FROM products WHERE is_available = 1')
+            total_products = cursor.fetchone()[0]
+
+            # Total stock value
+            cursor.execute('SELECT SUM(stock_quantity * price) FROM products WHERE is_available = 1')
+            total_value = cursor.fetchone()[0] or 0
+
+            # Low stock count
+            cursor.execute('SELECT COUNT(*) FROM products WHERE stock_quantity <= 10 AND is_available = 1')
+            low_stock_count = cursor.fetchone()[0]
+
+            # Out of stock count
+            cursor.execute('SELECT COUNT(*) FROM products WHERE stock_quantity = 0 AND is_available = 1')
+            out_of_stock_count = cursor.fetchone()[0]
+
+            return {
+                'total_products': total_products,
+                'total_stock_value': total_value,
+                'low_stock_count': low_stock_count,
+                'out_of_stock_count': out_of_stock_count
+            }
+
+
+class ProductAttribute:
+    """Product Attributes/Variants Model"""
+
+    @staticmethod
+    def create(product_id, attribute_name_fa, attribute_value_fa,
+               price_adjustment=0, stock_quantity=0, sku=None):
+        """Create product attribute"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO product_attributes
+                (product_id, attribute_name_fa, attribute_value_fa, price_adjustment, stock_quantity, sku)
+                VALUES (?, ?, ?, ?, ?, ?)
+            ''', (product_id, attribute_name_fa, attribute_value_fa, price_adjustment, stock_quantity, sku))
+            return cursor.lastrowid
+
+    @staticmethod
+    def get_by_product(product_id):
+        """Get all attributes for a product"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT * FROM product_attributes
+                WHERE product_id = ? AND is_available = 1
+            ''', (product_id,))
+            return [dict_from_row(row) for row in cursor.fetchall()]
+
+    @staticmethod
+    def update(attribute_id, **kwargs):
+        """Update product attribute"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            allowed_fields = ['attribute_name_fa', 'attribute_value_fa',
+                            'price_adjustment', 'stock_quantity', 'sku', 'is_available']
+
+            updates = []
+            values = []
+            for field, value in kwargs.items():
+                if field in allowed_fields:
+                    updates.append(f'{field} = ?')
+                    values.append(value)
+
+            if updates:
+                values.append(attribute_id)
+                query = f'UPDATE product_attributes SET {", ".join(updates)} WHERE id = ?'
+                cursor.execute(query, values)
+                return cursor.rowcount > 0
+            return False
+
+    @staticmethod
+    def delete(attribute_id):
+        """Delete product attribute"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('UPDATE product_attributes SET is_available = 0 WHERE id = ?', (attribute_id,))
+            return cursor.rowcount > 0

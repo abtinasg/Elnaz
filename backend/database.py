@@ -236,6 +236,133 @@ def init_db():
         )
     ''')
 
+    # Coupons Table (for discounts)
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS coupons (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            code TEXT NOT NULL UNIQUE,
+            description_fa TEXT,
+            discount_type TEXT DEFAULT 'percentage' CHECK(discount_type IN ('percentage', 'fixed')),
+            discount_value REAL NOT NULL,
+            min_purchase REAL DEFAULT 0,
+            max_discount REAL,
+            usage_limit INTEGER,
+            used_count INTEGER DEFAULT 0,
+            valid_from TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            valid_until TIMESTAMP,
+            is_active INTEGER DEFAULT 1,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+
+    # Inventory History Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS inventory_history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            product_id INTEGER NOT NULL,
+            quantity_change INTEGER NOT NULL,
+            previous_quantity INTEGER NOT NULL,
+            new_quantity INTEGER NOT NULL,
+            change_type TEXT CHECK(change_type IN ('purchase', 'sale', 'return', 'adjustment', 'initial')),
+            reference_type TEXT,
+            reference_id INTEGER,
+            notes TEXT,
+            created_by INTEGER,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (product_id) REFERENCES products(id),
+            FOREIGN KEY (created_by) REFERENCES admin_users(id)
+        )
+    ''')
+
+    # Product Attributes Table (for variants like size, color)
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS product_attributes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            product_id INTEGER NOT NULL,
+            attribute_name_fa TEXT NOT NULL,
+            attribute_value_fa TEXT NOT NULL,
+            price_adjustment REAL DEFAULT 0,
+            stock_quantity INTEGER DEFAULT 0,
+            sku TEXT,
+            is_available INTEGER DEFAULT 1,
+            FOREIGN KEY (product_id) REFERENCES products(id)
+        )
+    ''')
+
+    # Product Reviews Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS product_reviews (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            product_id INTEGER NOT NULL,
+            user_id INTEGER,
+            customer_name TEXT NOT NULL,
+            rating INTEGER NOT NULL CHECK(rating >= 1 AND rating <= 5),
+            review_text TEXT,
+            is_verified INTEGER DEFAULT 0,
+            is_approved INTEGER DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (product_id) REFERENCES products(id),
+            FOREIGN KEY (user_id) REFERENCES shop_users(id)
+        )
+    ''')
+
+    # Order Status History Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS order_status_history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            order_id INTEGER NOT NULL,
+            old_status TEXT,
+            new_status TEXT NOT NULL,
+            notes TEXT,
+            changed_by INTEGER,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (order_id) REFERENCES orders(id),
+            FOREIGN KEY (changed_by) REFERENCES admin_users(id)
+        )
+    ''')
+
+    # Product Images Table (multiple images per product)
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS product_images (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            product_id INTEGER NOT NULL,
+            image_url TEXT NOT NULL,
+            is_primary INTEGER DEFAULT 0,
+            display_order INTEGER DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (product_id) REFERENCES products(id)
+        )
+    ''')
+
+    # Wishlist Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS wishlists (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            product_id INTEGER NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES shop_users(id),
+            FOREIGN KEY (product_id) REFERENCES products(id),
+            UNIQUE(user_id, product_id)
+        )
+    ''')
+
+    # Customer Addresses Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS customer_addresses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            address_title TEXT,
+            full_address TEXT NOT NULL,
+            city TEXT,
+            postal_code TEXT,
+            phone TEXT,
+            is_default INTEGER DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES shop_users(id)
+        )
+    ''')
+
     # Create indexes for performance
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_contacts_status ON contacts(status)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_contacts_created ON contacts(created_at DESC)')
@@ -254,6 +381,16 @@ def init_db():
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_shop_users_email ON shop_users(email)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_shop_user_sessions_token ON shop_user_sessions(session_token)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_shop_pages_key ON shop_pages(page_key)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_coupons_code ON coupons(code)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_coupons_active ON coupons(is_active)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_inventory_history_product ON inventory_history(product_id, created_at DESC)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_product_attributes_product ON product_attributes(product_id)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_product_reviews_product ON product_reviews(product_id)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_product_reviews_approved ON product_reviews(is_approved)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_order_status_history_order ON order_status_history(order_id, created_at DESC)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_product_images_product ON product_images(product_id, display_order)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_wishlists_user ON wishlists(user_id)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_customer_addresses_user ON customer_addresses(user_id)')
 
     conn.commit()
     conn.close()
