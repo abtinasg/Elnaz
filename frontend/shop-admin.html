@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت فروشگاه | النازاشرفی</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        .tab-active {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .tab-inactive {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .stat-card {
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 2000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.success {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .notification.error {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: right;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background-color: #f9fafb;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-info {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">پنل مدیریت فروشگاه</h1>
+                    <p class="text-sm text-gray-600">مدیریت کامل محصولات و سفارشات</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-sm text-gray-600" id="adminName"></span>
+                    <button onclick="logout()" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                        خروج
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-6">
+        <!-- Tab Navigation -->
+        <div class="bg-white rounded-lg shadow-sm mb-6 p-4">
+            <div class="flex gap-2 flex-wrap">
+                <button onclick="switchTab('dashboard')" id="tab-dashboard" class="px-6 py-2 rounded-lg tab-active">
+                    داشبورد
+                </button>
+                <button onclick="switchTab('products')" id="tab-products" class="px-6 py-2 rounded-lg tab-inactive">
+                    محصولات
+                </button>
+                <button onclick="switchTab('orders')" id="tab-orders" class="px-6 py-2 rounded-lg tab-inactive">
+                    سفارشات
+                </button>
+                <button onclick="switchTab('inventory')" id="tab-inventory" class="px-6 py-2 rounded-lg tab-inactive">
+                    انبار
+                </button>
+                <button onclick="switchTab('coupons')" id="tab-coupons" class="px-6 py-2 rounded-lg tab-inactive">
+                    کوپن تخفیف
+                </button>
+                <button onclick="switchTab('customers')" id="tab-customers" class="px-6 py-2 rounded-lg tab-inactive">
+                    مشتریان
+                </button>
+                <button onclick="switchTab('reports')" id="tab-reports" class="px-6 py-2 rounded-lg tab-inactive">
+                    گزارشات
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="content-dashboard" class="tab-content">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <div class="bg-white rounded-lg shadow-sm p-6 stat-card">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">کل محصولات</p>
+                            <p class="text-3xl font-bold text-gray-800" id="stat-products">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm p-6 stat-card">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">سفارشات</p>
+                            <p class="text-3xl font-bold text-gray-800" id="stat-orders">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm p-6 stat-card">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">ارزش انبار</p>
+                            <p class="text-2xl font-bold text-gray-800" id="stat-inventory">0 تومان</p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm p-6 stat-card">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">مشتریان</p>
+                            <p class="text-3xl font-bold text-gray-800" id="stat-customers">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions & Alerts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">اقدامات سریع</h3>
+                    <div class="space-y-3">
+                        <button onclick="switchTab('products'); showAddProductModal();" class="w-full px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-right">
+                            + افزودن محصول جدید
+                        </button>
+                        <button onclick="switchTab('coupons'); showAddCouponModal();" class="w-full px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 text-right">
+                            + ایجاد کد تخفیف
+                        </button>
+                        <button onclick="switchTab('reports');" class="w-full px-4 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 text-right">
+                            مشاهده گزارش فروش
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">هشدارها</h3>
+                    <div id="dashboard-alerts" class="space-y-3">
+                        <div class="text-center text-gray-500 py-4">
+                            در حال بارگذاری...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Tab -->
+        <div id="content-products" class="tab-content" style="display:none;">
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">مدیریت محصولات</h2>
+                    <button onclick="showAddProductModal()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                        + افزودن محصول
+                    </button>
+                </div>
+
+                <!-- Filters -->
+                <div class="flex gap-4 mb-6">
+                    <input type="text" id="product-search" placeholder="جستجوی محصول..."
+                           class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select id="product-category-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">همه دسته‌بندی‌ها</option>
+                    </select>
+                    <button onclick="loadProducts()" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                        جستجو
+                    </button>
+                </div>
+
+                <!-- Products Table -->
+                <div class="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>شناسه</th>
+                                <th>نام محصول</th>
+                                <th>دسته‌بندی</th>
+                                <th>قیمت</th>
+                                <th>موجودی</th>
+                                <th>وضعیت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-table-body">
+                            <tr>
+                                <td colspan="7" class="text-center py-8 text-gray-500">
+                                    در حال بارگذاری...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div id="content-orders" class="tab-content" style="display:none;">
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">مدیریت سفارشات</h2>
+
+                <!-- Status Filter -->
+                <div class="flex gap-2 mb-6">
+                    <button onclick="filterOrders('all')" id="filter-all" class="px-4 py-2 bg-blue-500 text-white rounded-lg">همه</button>
+                    <button onclick="filterOrders('pending')" id="filter-pending" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">در انتظار</button>
+                    <button onclick="filterOrders('processing')" id="filter-processing" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">در حال پردازش</button>
+                    <button onclick="filterOrders('completed')" id="filter-completed" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">تکمیل شده</button>
+                    <button onclick="filterOrders('cancelled')" id="filter-cancelled" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">لغو شده</button>
+                </div>
+
+                <!-- Orders Table -->
+                <div class="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>شماره سفارش</th>
+                                <th>مشتری</th>
+                                <th>تاریخ</th>
+                                <th>مبلغ</th>
+                                <th>وضعیت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table-body">
+                            <tr>
+                                <td colspan="6" class="text-center py-8 text-gray-500">
+                                    در حال بارگذاری...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory Tab -->
+        <div id="content-inventory" class="tab-content" style="display:none;">
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">مدیریت انبار</h2>
+
+                <!-- Inventory Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <p class="text-sm text-gray-600">کل محصولات</p>
+                        <p class="text-2xl font-bold text-blue-600" id="inv-total">0</p>
+                    </div>
+                    <div class="bg-green-50 rounded-lg p-4">
+                        <p class="text-sm text-gray-600">ارزش کل</p>
+                        <p class="text-xl font-bold text-green-600" id="inv-value">0 تومان</p>
+                    </div>
+                    <div class="bg-yellow-50 rounded-lg p-4">
+                        <p class="text-sm text-gray-600">موجودی کم</p>
+                        <p class="text-2xl font-bold text-yellow-600" id="inv-low">0</p>
+                    </div>
+                    <div class="bg-red-50 rounded-lg p-4">
+                        <p class="text-sm text-gray-600">ناموجود</p>
+                        <p class="text-2xl font-bold text-red-600" id="inv-out">0</p>
+                    </div>
+                </div>
+
+                <!-- Low Stock Products -->
+                <h3 class="text-lg font-bold text-gray-800 mb-4">محصولات کم موجود</h3>
+                <div class="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>محصول</th>
+                                <th>موجودی فعلی</th>
+                                <th>قیمت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="low-stock-table">
+                            <tr>
+                                <td colspan="4" class="text-center py-8 text-gray-500">
+                                    در حال بارگذاری...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coupons Tab -->
+        <div id="content-coupons" class="tab-content" style="display:none;">
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">مدیریت کوپن تخفیف</h2>
+                    <button onclick="showAddCouponModal()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                        + ایجاد کوپن جدید
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>کد</th>
+                                <th>توضیحات</th>
+                                <th>نوع تخفیف</th>
+                                <th>مقدار</th>
+                                <th>استفاده شده</th>
+                                <th>وضعیت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="coupons-table-body">
+                            <tr>
+                                <td colspan="7" class="text-center py-8 text-gray-500">
+                                    در حال بارگذاری...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customers Tab -->
+        <div id="content-customers" class="tab-content" style="display:none;">
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">مدیریت مشتریان</h2>
+                <div id="customers-content" class="text-center py-8 text-gray-500">
+                    در حال بارگذاری...
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="content-reports" class="tab-content" style="display:none;">
+            <div class="space-y-6">
+                <!-- Period Selector -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">گزارش فروش</h2>
+                    <div class="flex gap-4">
+                        <select id="report-period" class="px-4 py-2 border border-gray-300 rounded-lg">
+                            <option value="7">7 روز گذشته</option>
+                            <option value="30" selected>30 روز گذشته</option>
+                            <option value="90">90 روز گذشته</option>
+                        </select>
+                        <button onclick="loadReports()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                            بارگذاری گزارش
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sales Summary -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">خلاصه فروش</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <p class="text-sm text-gray-600">تعداد سفارشات</p>
+                            <p class="text-3xl font-bold text-gray-800" id="report-orders">0</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <p class="text-sm text-gray-600">کل درآمد</p>
+                            <p class="text-2xl font-bold text-green-600" id="report-revenue">0 تومان</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Products -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">محصولات پرفروش</h3>
+                    <div id="top-products-list" class="space-y-3">
+                        <div class="text-center text-gray-500 py-4">در حال بارگذاری...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals will be added dynamically via JavaScript -->
+
+    <script src="js/shop-admin.js"></script>
+</body>
+</html>
