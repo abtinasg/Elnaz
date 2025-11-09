@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="تیکت‌های پشتیبانی فروشگاه">
+    <title>تیکت‌های پشتیبانی — Elnaz Ashrafi</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💬</text></svg>">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Persian Font - Vazir -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Vazir', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: {
+                            900: '#0A0A0A',
+                            800: '#121212',
+                            700: '#1A1A1A',
+                            600: '#242424',
+                        },
+                        accent: {
+                            primary: '#E5E5E5',
+                            secondary: '#999999',
+                            gold: '#D4AF37',
+                            purple: '#9333EA',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ticket-card {
+            transition: all 0.3s ease;
+        }
+
+        .ticket-card:hover {
+            transform: translateY(-3px);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-open {
+            background: rgba(147, 51, 234, 0.2);
+            color: #9333EA;
+        }
+
+        .status-answered {
+            background: rgba(212, 175, 55, 0.2);
+            color: #D4AF37;
+        }
+
+        .status-closed {
+            background: rgba(153, 153, 153, 0.2);
+            color: #999999;
+        }
+    </style>
+</head>
+<body class="bg-dark-900 text-white antialiased">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-dark-900/95 backdrop-blur-md border-b border-dark-700">
+        <div class="container mx-auto px-6 lg:px-12 py-6">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="shop.html" class="text-2xl font-semibold tracking-tight hover:opacity-70 transition-opacity">
+                    فروشگاه Elnaz Ashrafi
+                </a>
+
+                <!-- Menu -->
+                <ul class="flex items-center space-x-6 space-x-reverse">
+                    <li><a href="shop.html" class="hover:text-accent-secondary transition-colors">خانه</a></li>
+                    <li><a href="shop-products.html" class="hover:text-accent-secondary transition-colors">محصولات</a></li>
+                    <li><a href="shop-profile.html" class="hover:text-accent-secondary transition-colors" id="nav-profile">پنل من</a></li>
+                    <li><a href="shop-tickets.html" class="text-accent-gold">تیکت‌ها</a></li>
+                    <li><a href="shop-about.html" class="hover:text-accent-secondary transition-colors">درباره</a></li>
+                    <li><a href="shop-contact.html" class="hover:text-accent-secondary transition-colors">تماس</a></li>
+                    <li><a href="index.html" class="hover:text-accent-secondary transition-colors">صفحه اصلی</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="min-h-[30vh] flex items-center justify-center relative overflow-hidden pt-32 pb-8">
+        <div class="absolute inset-0 bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900"></div>
+
+        <div class="container mx-auto px-6 lg:px-12 relative z-10">
+            <div class="max-w-3xl mx-auto text-center">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6">
+                    <span class="bg-gradient-to-r from-white via-accent-gold to-white bg-clip-text text-transparent">
+                        تیکت‌های پشتیبانی
+                    </span>
+                </h1>
+                <p class="text-xl text-accent-secondary mb-8">
+                    ارتباط مستقیم با تیم پشتیبانی فروشگاه
+                </p>
+                <button id="new-ticket-btn" class="px-8 py-4 bg-gradient-to-r from-accent-gold to-accent-purple rounded-xl font-semibold shadow-lg hover:shadow-2xl hover:shadow-accent-purple/50 transition-all">
+                    ایجاد تیکت جدید
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tickets List -->
+    <section class="py-16 bg-dark-800">
+        <div class="container mx-auto px-6 lg:px-12">
+            <div class="max-w-4xl mx-auto">
+                <!-- Tickets Loading -->
+                <div id="tickets-loading" class="text-center py-12">
+                    <div class="inline-block w-8 h-8 border-4 border-accent-gold border-t-transparent rounded-full animate-spin"></div>
+                    <p class="mt-4 text-accent-secondary">در حال بارگذاری تیکت‌ها...</p>
+                </div>
+
+                <!-- Tickets List -->
+                <div id="tickets-list" class="space-y-4 hidden">
+                    <!-- Tickets will be loaded here -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="tickets-empty" class="text-center py-16 hidden">
+                    <div class="mb-6">
+                        <svg class="w-24 h-24 mx-auto text-accent-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">هنوز تیکتی ندارید</h3>
+                    <p class="text-accent-secondary mb-6">برای ارتباط با پشتیبانی، تیکت جدید ایجاد کنید</p>
+                    <button id="new-ticket-btn-empty" class="px-6 py-3 bg-gradient-to-r from-accent-gold to-accent-purple rounded-lg font-semibold">
+                        ایجاد اولین تیکت
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Ticket Modal -->
+    <div id="new-ticket-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-6">
+        <div class="bg-dark-800 rounded-2xl max-w-2xl w-full border border-dark-600">
+            <div class="p-6 border-b border-dark-700">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-2xl font-bold">ایجاد تیکت جدید</h3>
+                    <button id="close-new-ticket" class="p-2 hover:bg-dark-700 rounded-full transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <form id="new-ticket-form" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-accent-primary">موضوع تیکت *</label>
+                    <input type="text" name="subject" required
+                           class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors text-white"
+                           placeholder="موضوع تیکت خود را وارد کنید">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-accent-primary">دسته‌بندی</label>
+                    <select name="category"
+                            class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors text-white">
+                        <option value="support">پشتیبانی عمومی</option>
+                        <option value="order">پیگیری سفارش</option>
+                        <option value="product">سوال درباره محصول</option>
+                        <option value="payment">مشکل پرداخت</option>
+                        <option value="other">سایر موارد</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-accent-primary">پیام *</label>
+                    <textarea name="message" required rows="6"
+                              class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors resize-none text-white"
+                              placeholder="توضیحات خود را بنویسید..."></textarea>
+                </div>
+
+                <div id="new-ticket-error" class="hidden p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm"></div>
+
+                <div class="pt-4 flex gap-3">
+                    <button type="submit" class="flex-1 bg-gradient-to-r from-accent-gold to-accent-purple py-3 rounded-lg font-bold hover:shadow-lg transition-all">
+                        ارسال تیکت
+                    </button>
+                    <button type="button" id="cancel-new-ticket" class="px-6 py-3 bg-dark-700 rounded-lg hover:bg-dark-600 transition-colors">
+                        انصراف
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Ticket Detail Modal -->
+    <div id="ticket-detail-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-6">
+        <div class="bg-dark-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-dark-600">
+            <div class="p-6 border-b border-dark-700 sticky top-0 bg-dark-800 z-10">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 id="ticket-detail-subject" class="text-2xl font-bold mb-2">عنوان تیکت</h3>
+                        <div class="flex items-center gap-3 text-sm text-accent-secondary">
+                            <span id="ticket-detail-number">شماره تیکت: #12345</span>
+                            <span>•</span>
+                            <span id="ticket-detail-status" class="status-badge">باز</span>
+                            <span>•</span>
+                            <span id="ticket-detail-date">۱۴۰۳/۰۸/۱۸</span>
+                        </div>
+                    </div>
+                    <button id="close-ticket-detail" class="p-2 hover:bg-dark-700 rounded-full transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div id="ticket-messages" class="p-6 space-y-6">
+                <!-- Messages will be loaded here -->
+            </div>
+
+            <div id="ticket-reply-section" class="p-6 border-t border-dark-700 bg-dark-900">
+                <form id="ticket-reply-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-2 text-accent-primary">پاسخ شما</label>
+                        <textarea name="reply" required rows="4"
+                                  class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors resize-none text-white"
+                                  placeholder="پاسخ خود را بنویسید..."></textarea>
+                    </div>
+                    <button type="submit" class="px-6 py-3 bg-gradient-to-r from-accent-gold to-accent-purple rounded-lg font-bold hover:shadow-lg transition-all">
+                        ارسال پاسخ
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/shop-tickets.js"></script>
+</body>
+</html>

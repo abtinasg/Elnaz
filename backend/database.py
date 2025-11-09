@@ -411,6 +411,45 @@ def init_db():
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_wishlists_user ON wishlists(user_id)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_customer_addresses_user ON customer_addresses(user_id)')
 
+    # Support Tickets Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS support_tickets (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            ticket_number TEXT UNIQUE NOT NULL,
+            subject TEXT NOT NULL,
+            category TEXT DEFAULT 'support',
+            status TEXT DEFAULT 'open',
+            priority TEXT DEFAULT 'normal',
+            customer_name TEXT NOT NULL,
+            customer_email TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            closed_at TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES shop_users(id)
+        )
+    ''')
+
+    # Ticket Messages Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS ticket_messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ticket_id INTEGER NOT NULL,
+            user_id INTEGER,
+            is_staff_reply INTEGER DEFAULT 0,
+            message TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (ticket_id) REFERENCES support_tickets(id) ON DELETE CASCADE,
+            FOREIGN KEY (user_id) REFERENCES shop_users(id)
+        )
+    ''')
+
+    # Indexes for tickets
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_tickets_user ON support_tickets(user_id)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_tickets_status ON support_tickets(status)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_tickets_number ON support_tickets(ticket_number)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_ticket_messages_ticket ON ticket_messages(ticket_id, created_at ASC)')
+
     conn.commit()
     conn.close()
     print("✅ Database initialized successfully!")
