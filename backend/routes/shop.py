@@ -312,7 +312,7 @@ def delete_review(review_id):
 
 @shop_bp.route('/orders', methods=['POST'])
 def create_order():
-    """Create new order"""
+    """Create new order with inventory checking and coupon support"""
     try:
         data = request.get_json()
 
@@ -339,7 +339,7 @@ def create_order():
                 'message': 'سبد خرید خالی است'
             }), 400
 
-        # Create order
+        # Create order with coupon support
         result = Order.create(
             customer_name=data['customer_name'],
             customer_email=data['customer_email'],
@@ -347,7 +347,8 @@ def create_order():
             customer_phone=data.get('customer_phone'),
             customer_address=data.get('customer_address'),
             payment_method=data.get('payment_method', 'cash'),
-            notes=data.get('notes')
+            notes=data.get('notes'),
+            coupon_code=data.get('coupon_code')  # NEW: Support for coupon codes
         )
 
         return jsonify({
@@ -355,6 +356,13 @@ def create_order():
             'message': 'سفارش شما با موفقیت ثبت شد',
             'order': result
         }), 201
+
+    except ValueError as e:
+        # Handle inventory and coupon validation errors
+        return jsonify({
+            'success': False,
+            'message': str(e)
+        }), 400
 
     except Exception as e:
         print(f"Error creating order: {str(e)}")
@@ -436,7 +444,7 @@ def track_order(order_number):
 
 @shop_bp.route('/orders/<int:order_id>/status', methods=['PATCH'])
 def update_order_status(order_id):
-    """Update order status (admin endpoint)"""
+    """Update order status with inventory management (admin endpoint)"""
     try:
         data = request.get_json()
         status = data.get('status')
@@ -447,7 +455,10 @@ def update_order_status(order_id):
                 'message': 'وضعیت الزامی است'
             }), 400
 
-        success = Order.update_status(order_id, status)
+        # Get admin user from session/token (for now using 'admin')
+        admin_user = data.get('admin_user', 'admin')
+
+        success = Order.update_status(order_id, status, admin_user)
 
         if not success:
             return jsonify({
@@ -460,7 +471,15 @@ def update_order_status(order_id):
             'message': 'وضعیت سفارش با موفقیت به‌روزرسانی شد'
         }), 200
 
+    except ValueError as e:
+        # Handle inventory errors
+        return jsonify({
+            'success': False,
+            'message': str(e)
+        }), 400
+
     except Exception as e:
+        print(f"Error updating order status: {str(e)}")
         return jsonify({
             'success': False,
             'message': 'خطا در به‌روزرسانی وضعیت'

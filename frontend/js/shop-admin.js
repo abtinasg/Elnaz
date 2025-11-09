@@ -207,13 +207,30 @@ function displayProducts(products) {
         return;
     }
 
-    tbody.innerHTML = products.map(product => `
-        <tr>
+    tbody.innerHTML = products.map(product => {
+        const isOutOfStock = product.stock_quantity === 0;
+        const isLowStock = product.stock_quantity > 0 && product.stock_quantity <= 10;
+
+        let stockClass = '';
+        let stockWarning = '';
+
+        if (isOutOfStock) {
+            stockClass = 'text-red-600 font-bold';
+            stockWarning = ' ⚠️';
+        } else if (isLowStock) {
+            stockClass = 'text-orange-600 font-semibold';
+            stockWarning = ' ⚡';
+        }
+
+        return `
+        <tr class="${isOutOfStock ? 'bg-red-50' : isLowStock ? 'bg-yellow-50' : ''}">
             <td>${product.id}</td>
             <td>${product.name_fa}</td>
             <td>${product.category || '-'}</td>
             <td>${formatCurrency(product.price)}</td>
-            <td>${product.stock_quantity}</td>
+            <td class="${stockClass}">
+                ${product.stock_quantity}${stockWarning}
+            </td>
             <td>
                 <span class="badge ${product.is_available ? 'badge-success' : 'badge-danger'}">
                     ${product.is_available ? 'فعال' : 'غیرفعال'}
@@ -224,7 +241,7 @@ function displayProducts(products) {
                 <button onclick="deleteProduct(${product.id})" class="text-red-600 hover:text-red-800">حذف</button>
             </td>
         </tr>
-    `).join('');
+    `}).join('');
 }
 
 async function loadProductCategories() {
@@ -456,16 +473,32 @@ function displayOrders(orders) {
     const tbody = document.getElementById('orders-table-body');
 
     if (orders.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-gray-500">سفارشی یافت نشد</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-8 text-gray-500">سفارشی یافت نشد</td></tr>';
         return;
     }
 
-    tbody.innerHTML = orders.map(order => `
-        <tr>
+    tbody.innerHTML = orders.map(order => {
+        const hasDiscount = order.discount_amount && order.discount_amount > 0;
+        const originalAmount = hasDiscount ? order.total_amount + order.discount_amount : order.total_amount;
+
+        return `
+        <tr class="${order.status === 'cancelled' ? 'bg-red-50' : ''}">
             <td class="font-mono">${order.order_number}</td>
             <td>${order.customer_name}</td>
             <td>${new Date(order.created_at).toLocaleDateString('fa-IR')}</td>
-            <td>${formatCurrency(order.total_amount)}</td>
+            <td>
+                ${hasDiscount ? `
+                    <div>
+                        <span class="text-sm text-gray-500 line-through">${formatCurrency(originalAmount)}</span>
+                        <br>
+                        <span class="text-green-600 font-bold">${formatCurrency(order.total_amount)}</span>
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">تخفیف: ${formatCurrency(order.discount_amount)}</span>
+                    </div>
+                ` : formatCurrency(order.total_amount)}
+            </td>
+            <td>
+                ${order.coupon_code ? `<span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">${order.coupon_code}</span>` : '-'}
+            </td>
             <td>
                 <span class="badge ${getStatusBadgeClass(order.status)}">
                     ${getStatusText(order.status)}
@@ -473,10 +506,12 @@ function displayOrders(orders) {
             </td>
             <td>
                 <button onclick="viewOrder(${order.id})" class="text-blue-600 hover:text-blue-800 ml-3">جزئیات</button>
-                <button onclick="updateOrderStatus(${order.id})" class="text-green-600 hover:text-green-800">تغییر وضعیت</button>
+                ${order.status !== 'cancelled' ? `
+                    <button onclick="updateOrderStatus(${order.id})" class="text-green-600 hover:text-green-800">تغییر وضعیت</button>
+                ` : ''}
             </td>
         </tr>
-    `).join('');
+    `}).join('');
 }
 
 function filterOrders(status) {
@@ -506,6 +541,9 @@ async function viewOrder(id) {
         }
 
         const order = data.order;
+        const hasDiscount = order.discount_amount && order.discount_amount > 0;
+        const itemsTotal = order.items.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+
         const modal = createModal('جزئیات سفارش', `
             <div class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
@@ -517,6 +555,14 @@ async function viewOrder(id) {
                         <p class="text-sm text-gray-600">وضعیت</p>
                         <p class="badge ${getStatusBadgeClass(order.status)}">${getStatusText(order.status)}</p>
                     </div>
+                    <div>
+                        <p class="text-sm text-gray-600">تاریخ ثبت</p>
+                        <p class="font-medium">${new Date(order.created_at).toLocaleDateString('fa-IR')}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">روش پرداخت</p>
+                        <p class="font-medium">${order.payment_method === 'cash' ? 'نقدی' : order.payment_method}</p>
+                    </div>
                 </div>
                 <hr>
                 <div>
@@ -524,6 +570,7 @@ async function viewOrder(id) {
                     <p class="font-medium">${order.customer_name}</p>
                     <p class="text-sm">${order.customer_email}</p>
                     <p class="text-sm">${order.customer_phone || '-'}</p>
+                    ${order.customer_address ? `<p class="text-sm mt-1">آدرس: ${order.customer_address}</p>` : ''}
                 </div>
                 <hr>
                 <div>
@@ -538,10 +585,33 @@ async function viewOrder(id) {
                     </div>
                 </div>
                 <hr>
-                <div class="flex justify-between font-bold text-lg">
-                    <span>جمع کل</span>
-                    <span>${formatCurrency(order.total_amount)}</span>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span>جمع محصولات</span>
+                        <span>${formatCurrency(itemsTotal)}</span>
+                    </div>
+                    ${hasDiscount ? `
+                        <div class="flex justify-between text-green-600">
+                            <span>
+                                تخفیف
+                                ${order.coupon_code ? `<span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded mr-2">${order.coupon_code}</span>` : ''}
+                            </span>
+                            <span>- ${formatCurrency(order.discount_amount)}</span>
+                        </div>
+                    ` : ''}
+                    <hr>
+                    <div class="flex justify-between font-bold text-lg">
+                        <span>مبلغ نهایی</span>
+                        <span class="${hasDiscount ? 'text-green-600' : ''}">${formatCurrency(order.total_amount)}</span>
+                    </div>
                 </div>
+                ${order.notes ? `
+                    <hr>
+                    <div>
+                        <p class="text-sm text-gray-600">یادداشت</p>
+                        <p class="text-sm mt-1">${order.notes}</p>
+                    </div>
+                ` : ''}
                 <button onclick="closeModal()" class="w-full px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
                     بستن
                 </button>
@@ -555,6 +625,11 @@ async function viewOrder(id) {
 async function updateOrderStatus(id) {
     const modal = createModal('تغییر وضعیت سفارش', `
         <form id="update-status-form" class="space-y-4">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                <p class="text-sm text-blue-800">
+                    <strong>توجه:</strong> تغییر وضعیت به "در حال پردازش" موجودی انبار را کسر می‌کند.
+                </p>
+            </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">وضعیت جدید</label>
                 <select name="status" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -596,6 +671,10 @@ async function updateOrderStatus(id) {
                 showNotification('وضعیت سفارش با موفقیت به‌روزرسانی شد', 'success');
                 closeModal();
                 loadOrders(currentOrderFilter === 'all' ? null : currentOrderFilter);
+                // Reload dashboard to update low stock alerts
+                if (status === 'processing' || status === 'cancelled') {
+                    loadDashboardAlerts();
+                }
             } else {
                 showNotification(data.message || 'خطا در به‌روزرسانی وضعیت', 'error');
             }

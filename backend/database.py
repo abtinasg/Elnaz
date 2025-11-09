@@ -172,13 +172,32 @@ def init_db():
             customer_phone TEXT,
             customer_address TEXT,
             total_amount REAL NOT NULL,
+            discount_amount REAL DEFAULT 0,
+            coupon_code TEXT,
             payment_method TEXT DEFAULT 'cash',
+            payment_status TEXT DEFAULT 'pending',
             status TEXT DEFAULT 'pending',
             notes TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
+
+    # Add columns to existing orders table if they don't exist (migration)
+    try:
+        cursor.execute("SELECT discount_amount FROM orders LIMIT 1")
+    except:
+        cursor.execute("ALTER TABLE orders ADD COLUMN discount_amount REAL DEFAULT 0")
+
+    try:
+        cursor.execute("SELECT coupon_code FROM orders LIMIT 1")
+    except:
+        cursor.execute("ALTER TABLE orders ADD COLUMN coupon_code TEXT")
+
+    try:
+        cursor.execute("SELECT payment_status FROM orders LIMIT 1")
+    except:
+        cursor.execute("ALTER TABLE orders ADD COLUMN payment_status TEXT DEFAULT 'pending'")
 
     # Order Items Table
     cursor.execute('''
