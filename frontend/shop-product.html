@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جزئیات محصول - فروشگاه الناز اشرفی</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Vazir', sans-serif;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #9333EA 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #9333EA 0%, #D4AF37 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Image Gallery */
+        .thumbnail {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: #D4AF37;
+            transform: scale(1.05);
+        }
+
+        .main-image {
+            transition: transform 0.3s ease;
+        }
+
+        /* Rating Stars */
+        .star {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .star:hover {
+            transform: scale(1.2);
+        }
+
+        .star.filled {
+            color: #D4AF37;
+        }
+
+        /* Tab Navigation */
+        .tab-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: #D4AF37;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #D4AF37 0%, #9333EA 100%);
+        }
+
+        /* Review Card */
+        .review-card {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(45, 27, 78, 0.5));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Zoom Effect */
+        .zoom-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .zoom-container img {
+            transition: transform 0.3s ease;
+        }
+
+        .zoom-container:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Counter Input */
+        .quantity-input {
+            -moz-appearance: textfield;
+        }
+
+        .quantity-input::-webkit-outer-spin-button,
+        .quantity-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Related Products Card */
+        .related-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .related-card:hover {
+            transform: translateY(-8px) scale(1.02);
+        }
+
+        /* Breadcrumb */
+        .breadcrumb a {
+            transition: color 0.2s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: #D4AF37;
+        }
+    </style>
+</head>
+<body class="bg-[#0A0A0A] text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0A]/90 backdrop-blur-md border-b border-white/10">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#9333EA] flex items-center justify-center">
+                        <i class="fas fa-shopping-bag text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-[#D4AF37]">فروشگاه الناز اشرفی</h1>
+                        <p class="text-xs text-gray-400">محصولات دیجیتال و آموزشی</p>
+                    </div>
+                </div>
+
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="shop-home.html" class="hover:text-[#D4AF37] transition">خانه</a>
+                    <a href="shop.html" class="hover:text-[#D4AF37] transition">فروشگاه</a>
+                    <a href="shop-about.html" class="hover:text-[#D4AF37] transition">درباره ما</a>
+                    <a href="shop-contact.html" class="hover:text-[#D4AF37] transition">تماس با ما</a>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <button id="cart-btn" class="relative p-2 btn-gradient rounded-full">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count" class="absolute -top-2 -left-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <section class="pt-24 pb-6 bg-[#121212]">
+        <div class="container mx-auto px-4">
+            <div class="breadcrumb flex items-center gap-2 text-sm text-gray-400">
+                <a href="shop-home.html">خانه</a>
+                <i class="fas fa-chevron-left text-xs"></i>
+                <a href="shop.html">فروشگاه</a>
+                <i class="fas fa-chevron-left text-xs"></i>
+                <span id="breadcrumb-category">دسته‌بندی</span>
+                <i class="fas fa-chevron-left text-xs"></i>
+                <span class="text-white" id="breadcrumb-product">محصول</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Details -->
+    <section class="py-12 bg-[#0A0A0A]">
+        <div class="container mx-auto px-4">
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Image Gallery -->
+                <div>
+                    <!-- Main Image -->
+                    <div class="zoom-container glass-card rounded-2xl overflow-hidden mb-4">
+                        <img id="main-image" src="assets/1.jpg" alt="Product" class="w-full h-[500px] object-cover main-image">
+                    </div>
+
+                    <!-- Thumbnails -->
+                    <div class="grid grid-cols-4 gap-4">
+                        <div class="thumbnail active border-2 border-[#D4AF37] rounded-xl overflow-hidden">
+                            <img src="assets/1.jpg" alt="Thumbnail 1" class="w-full h-24 object-cover" data-image="assets/1.jpg">
+                        </div>
+                        <div class="thumbnail border-2 border-white/10 rounded-xl overflow-hidden">
+                            <img src="assets/1.jpg" alt="Thumbnail 2" class="w-full h-24 object-cover" data-image="assets/1.jpg">
+                        </div>
+                        <div class="thumbnail border-2 border-white/10 rounded-xl overflow-hidden">
+                            <img src="assets/1.jpg" alt="Thumbnail 3" class="w-full h-24 object-cover" data-image="assets/1.jpg">
+                        </div>
+                        <div class="thumbnail border-2 border-white/10 rounded-xl overflow-hidden">
+                            <img src="assets/1.jpg" alt="Thumbnail 4" class="w-full h-24 object-cover" data-image="assets/1.jpg">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Info -->
+                <div>
+                    <div id="product-info">
+                        <!-- Loading State -->
+                        <div class="flex items-center justify-center h-64">
+                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D4AF37]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tabs Section (Description, Reviews, Specifications) -->
+    <section class="py-12 bg-[#121212]">
+        <div class="container mx-auto px-4">
+            <div class="glass-card rounded-2xl p-8">
+                <!-- Tab Navigation -->
+                <div class="flex border-b border-white/10 mb-8">
+                    <button class="tab-btn active px-6 py-3 font-semibold" data-tab="description">
+                        توضیحات
+                    </button>
+                    <button class="tab-btn px-6 py-3 font-semibold" data-tab="specifications">
+                        مشخصات
+                    </button>
+                    <button class="tab-btn px-6 py-3 font-semibold" data-tab="reviews">
+                        نظرات (<span id="reviews-count">0</span>)
+                    </button>
+                </div>
+
+                <!-- Tab Content -->
+                <div id="tab-content">
+                    <!-- Description Tab -->
+                    <div id="description-tab" class="tab-content">
+                        <div class="prose prose-invert max-w-none">
+                            <h3 class="text-2xl font-bold mb-4 text-[#D4AF37]">توضیحات کامل محصول</h3>
+                            <p id="product-description" class="text-gray-300 leading-relaxed">
+                                در حال بارگذاری...
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Specifications Tab -->
+                    <div id="specifications-tab" class="tab-content hidden">
+                        <h3 class="text-2xl font-bold mb-6 text-[#D4AF37]">مشخصات فنی</h3>
+                        <div id="specifications-list" class="space-y-4">
+                            <!-- Specifications will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Reviews Tab -->
+                    <div id="reviews-tab" class="tab-content hidden">
+                        <div class="mb-8">
+                            <h3 class="text-2xl font-bold mb-6 text-[#D4AF37]">نظرات کاربران</h3>
+
+                            <!-- Add Review Form -->
+                            <div class="glass-card rounded-xl p-6 mb-8">
+                                <h4 class="font-bold mb-4">ثبت نظر جدید</h4>
+                                <form id="review-form" class="space-y-4">
+                                    <div>
+                                        <label class="block mb-2 text-sm">امتیاز شما:</label>
+                                        <div class="flex gap-2">
+                                            <i class="fas fa-star star text-2xl text-gray-500" data-rating="1"></i>
+                                            <i class="fas fa-star star text-2xl text-gray-500" data-rating="2"></i>
+                                            <i class="fas fa-star star text-2xl text-gray-500" data-rating="3"></i>
+                                            <i class="fas fa-star star text-2xl text-gray-500" data-rating="4"></i>
+                                            <i class="fas fa-star star text-2xl text-gray-500" data-rating="5"></i>
+                                        </div>
+                                        <input type="hidden" id="rating-input" name="rating" value="0" required>
+                                    </div>
+
+                                    <div>
+                                        <label class="block mb-2 text-sm">نام شما:</label>
+                                        <input type="text" name="name" required class="w-full px-4 py-2 bg-[#1A1A1A] border border-white/10 rounded-lg focus:border-[#D4AF37] focus:outline-none">
+                                    </div>
+
+                                    <div>
+                                        <label class="block mb-2 text-sm">نظر شما:</label>
+                                        <textarea name="comment" rows="4" required class="w-full px-4 py-2 bg-[#1A1A1A] border border-white/10 rounded-lg focus:border-[#D4AF37] focus:outline-none resize-none"></textarea>
+                                    </div>
+
+                                    <button type="submit" class="px-6 py-3 btn-gradient rounded-lg font-semibold">
+                                        ثبت نظر
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Reviews List -->
+                            <div id="reviews-list" class="space-y-4">
+                                <!-- Reviews will be loaded here -->
+                            </div>
+
+                            <!-- No Reviews -->
+                            <div id="no-reviews" class="text-center py-12 text-gray-400">
+                                <i class="fas fa-comment-slash text-5xl mb-4"></i>
+                                <p>هنوز نظری ثبت نشده است. اولین نفر باشید!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Products -->
+    <section class="py-12 bg-[#0A0A0A]">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8 text-center">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#9333EA]">
+                    محصولات مرتبط
+                </span>
+            </h2>
+
+            <div id="related-products" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Related products will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#0A0A0A] border-t border-white/10 py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 text-[#D4AF37]">فروشگاه الناز اشرفی</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        مرجع تخصصی محصولات دیجیتال و آموزشی
+                    </p>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-4">دسترسی سریع</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="shop-home.html" class="hover:text-[#D4AF37] transition">خانه</a></li>
+                        <li><a href="shop.html" class="hover:text-[#D4AF37] transition">فروشگاه</a></li>
+                        <li><a href="shop-about.html" class="hover:text-[#D4AF37] transition">درباره ما</a></li>
+                        <li><a href="shop-contact.html" class="hover:text-[#D4AF37] transition">تماس با ما</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-4">دسته‌بندی‌ها</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="shop.html?category=courses" class="hover:text-[#D4AF37] transition">دوره‌های آموزشی</a></li>
+                        <li><a href="shop.html?category=ebooks" class="hover:text-[#D4AF37] transition">کتاب‌های الکترونیکی</a></li>
+                        <li><a href="shop.html?category=graphics" class="hover:text-[#D4AF37] transition">فایل‌های گرافیکی</a></li>
+                        <li><a href="shop.html?category=plugins" class="hover:text-[#D4AF37] transition">پلاگین و اسکریپت</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-4">تماس با ما</h3>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li class="flex items-center gap-2">
+                            <i class="fas fa-envelope text-[#D4AF37]"></i>
+                            <span>info@elnazashrafi.com</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fas fa-phone text-[#D4AF37]"></i>
+                            <span>021-12345678</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-white/10 pt-8 text-center text-gray-400 text-sm">
+                © 2024 فروشگاه الناز اشرفی. تمامی حقوق محفوظ است.
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        const API_URL = 'http://localhost:5000/api/shop';
+        let currentProduct = null;
+        let reviews = [];
+
+        // Get product ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+
+        // Load product details
+        async function loadProduct() {
+            if (!productId) {
+                window.location.href = 'shop.html';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/products/${productId}`);
+                if (!response.ok) throw new Error('Product not found');
+
+                currentProduct = await response.json();
+                displayProduct(currentProduct);
+                loadRelatedProducts(currentProduct.category);
+            } catch (error) {
+                console.error('Error loading product:', error);
+                alert('خطا در بارگذاری محصول');
+                window.location.href = 'shop.html';
+            }
+        }
+
+        // Display product details
+        function displayProduct(product) {
+            // Update breadcrumb
+            document.getElementById('breadcrumb-category').textContent = product.category || 'دسته‌بندی';
+            document.getElementById('breadcrumb-product').textContent = product.name_fa;
+
+            // Update title
+            document.title = `${product.name_fa} - فروشگاه الناز اشرفی`;
+
+            // Product Info HTML
+            const infoHTML = `
+                <div class="mb-4">
+                    <span class="inline-block px-4 py-1 bg-[#D4AF37]/20 text-[#D4AF37] rounded-full text-sm">
+                        ${product.category || 'محصول دیجیتال'}
+                    </span>
+                </div>
+
+                <h1 class="text-4xl font-bold mb-4">${product.name_fa}</h1>
+
+                ${product.name_en ? `<p class="text-xl text-gray-400 mb-6">${product.name_en}</p>` : ''}
+
+                <!-- Rating -->
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="flex items-center gap-1">
+                        ${Array(5).fill(0).map((_, i) =>
+                            `<i class="fas fa-star ${i < 4 ? 'text-[#D4AF37]' : 'text-gray-600'}"></i>`
+                        ).join('')}
+                    </div>
+                    <span class="text-gray-400">(${Math.floor(Math.random() * 50) + 10} نظر)</span>
+                </div>
+
+                <!-- Price -->
+                <div class="mb-8">
+                    <div class="text-4xl font-bold text-[#D4AF37] mb-2">
+                        ${parseInt(product.price).toLocaleString('fa-IR')} تومان
+                    </div>
+                    ${product.stock_quantity < 10 && product.stock_quantity > 0 ?
+                        `<p class="text-red-400 text-sm">تنها ${product.stock_quantity} عدد در انبار باقی مانده!</p>` :
+                        product.stock_quantity === 0 ?
+                        `<p class="text-red-400 text-sm">موجودی تمام شده</p>` :
+                        `<p class="text-green-400 text-sm"><i class="fas fa-check ml-1"></i> موجود در انبار</p>`
+                    }
+                </div>
+
+                <!-- Short Description -->
+                <div class="mb-8">
+                    <p class="text-gray-300 leading-relaxed">
+                        ${product.description_fa || 'توضیحاتی برای این محصول ثبت نشده است.'}
+                    </p>
+                </div>
+
+                <!-- Quantity & Add to Cart -->
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="flex items-center glass-card rounded-lg">
+                        <button onclick="decreaseQuantity()" class="px-4 py-3 hover:bg-white/10 transition">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="number" id="quantity" value="1" min="1" max="${product.stock_quantity}"
+                               class="w-16 text-center bg-transparent quantity-input">
+                        <button onclick="increaseQuantity()" class="px-4 py-3 hover:bg-white/10 transition">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+
+                    <button onclick="addToCart()" ${product.stock_quantity === 0 ? 'disabled' : ''}
+                            class="flex-1 px-6 py-3 btn-gradient rounded-lg font-bold text-lg ${product.stock_quantity === 0 ? 'opacity-50 cursor-not-allowed' : ''}">
+                        <i class="fas fa-shopping-cart ml-2"></i>
+                        افزودن به سبد خرید
+                    </button>
+                </div>
+
+                <!-- Wishlist -->
+                <button onclick="addToWishlist()" class="w-full px-6 py-3 glass-card rounded-lg font-semibold hover:bg-white/10 transition">
+                    <i class="far fa-heart ml-2"></i>
+                    افزودن به علاقه‌مندی‌ها
+                </button>
+
+                <!-- Product Meta -->
+                <div class="mt-8 pt-8 border-t border-white/10 space-y-3 text-sm">
+                    <div class="flex items-center gap-2 text-gray-400">
+                        <i class="fas fa-tag text-[#D4AF37]"></i>
+                        <span>دسته‌بندی:</span>
+                        <a href="shop.html?category=${product.category}" class="text-white hover:text-[#D4AF37] transition">
+                            ${product.category || 'عمومی'}
+                        </a>
+                    </div>
+                    <div class="flex items-center gap-2 text-gray-400">
+                        <i class="fas fa-barcode text-[#D4AF37]"></i>
+                        <span>کد محصول:</span>
+                        <span class="text-white">#${product.id}</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-gray-400">
+                        <i class="fas fa-share-alt text-[#D4AF37]"></i>
+                        <span>اشتراک‌گذاری:</span>
+                        <div class="flex gap-2">
+                            <a href="#" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#D4AF37] transition">
+                                <i class="fab fa-telegram"></i>
+                            </a>
+                            <a href="#" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#D4AF37] transition">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                            <a href="#" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#D4AF37] transition">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('product-info').innerHTML = infoHTML;
+            document.getElementById('product-description').textContent = product.description_fa || 'توضیحاتی برای این محصول ثبت نشده است.';
+
+            // Load specifications
+            loadSpecifications(product);
+        }
+
+        // Load specifications
+        function loadSpecifications(product) {
+            const specs = [
+                { label: 'نام محصول', value: product.name_fa },
+                { label: 'دسته‌بندی', value: product.category || 'عمومی' },
+                { label: 'موجودی', value: product.stock_quantity > 0 ? 'موجود' : 'ناموجود' },
+                { label: 'قیمت', value: `${parseInt(product.price).toLocaleString('fa-IR')} تومان` },
+            ];
+
+            const specsHTML = specs.map(spec => `
+                <div class="flex items-center justify-between py-3 border-b border-white/10">
+                    <span class="text-gray-400">${spec.label}:</span>
+                    <span class="font-semibold">${spec.value}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('specifications-list').innerHTML = specsHTML;
+        }
+
+        // Load related products
+        async function loadRelatedProducts(category) {
+            try {
+                const response = await fetch(`${API_URL}/products?category=${category || ''}`);
+                const products = await response.json();
+
+                // Filter out current product and limit to 4
+                const related = products
+                    .filter(p => p.id !== parseInt(productId))
+                    .slice(0, 4);
+
+                if (related.length === 0) {
+                    document.getElementById('related-products').innerHTML = `
+                        <div class="col-span-full text-center text-gray-400 py-8">
+                            محصول مرتبطی یافت نشد
+                        </div>
+                    `;
+                    return;
+                }
+
+                const relatedHTML = related.map(product => `
+                    <a href="shop-product.html?id=${product.id}" class="related-card glass-card rounded-2xl overflow-hidden block">
+                        <div class="relative">
+                            <img src="${product.image_url || 'assets/1.jpg'}" alt="${product.name_fa}" class="w-full h-48 object-cover">
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold mb-2">${product.name_fa}</h3>
+                            <div class="text-xl font-bold text-[#D4AF37]">
+                                ${parseInt(product.price).toLocaleString('fa-IR')} تومان
+                            </div>
+                        </div>
+                    </a>
+                `).join('');
+
+                document.getElementById('related-products').innerHTML = relatedHTML;
+            } catch (error) {
+                console.error('Error loading related products:', error);
+            }
+        }
+
+        // Quantity functions
+        function increaseQuantity() {
+            const input = document.getElementById('quantity');
+            const max = parseInt(input.max);
+            if (parseInt(input.value) < max) {
+                input.value = parseInt(input.value) + 1;
+            }
+        }
+
+        function decreaseQuantity() {
+            const input = document.getElementById('quantity');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+
+        // Add to cart
+        function addToCart() {
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+            const existingItem = cart.find(item => item.id === currentProduct.id);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    ...currentProduct,
+                    quantity
+                });
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+
+            alert('محصول به سبد خرید اضافه شد');
+        }
+
+        // Add to wishlist
+        function addToWishlist() {
+            const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+
+            if (!wishlist.find(item => item.id === currentProduct.id)) {
+                wishlist.push(currentProduct);
+                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                alert('محصول به علاقه‌مندی‌ها اضافه شد');
+            } else {
+                alert('این محصول قبلا به علاقه‌مندی‌ها اضافه شده است');
+            }
+        }
+
+        // Update cart count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const badge = document.getElementById('cart-count');
+
+            if (count > 0) {
+                badge.textContent = count;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.getAttribute('data-tab');
+
+                // Update active button
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Show/hide content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                document.getElementById(`${tab}-tab`).classList.remove('hidden');
+            });
+        });
+
+        // Image gallery
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.addEventListener('click', () => {
+                const imageSrc = thumb.querySelector('img').getAttribute('data-image');
+                document.getElementById('main-image').src = imageSrc;
+
+                document.querySelectorAll('.thumbnail').forEach(t => {
+                    t.classList.remove('active', 'border-[#D4AF37]');
+                    t.classList.add('border-white/10');
+                });
+
+                thumb.classList.add('active', 'border-[#D4AF37]');
+                thumb.classList.remove('border-white/10');
+            });
+        });
+
+        // Rating stars
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', () => {
+                const rating = parseInt(star.getAttribute('data-rating'));
+                document.getElementById('rating-input').value = rating;
+
+                document.querySelectorAll('.star').forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.add('filled', 'text-[#D4AF37]');
+                        s.classList.remove('text-gray-500');
+                    } else {
+                        s.classList.remove('filled', 'text-[#D4AF37]');
+                        s.classList.add('text-gray-500');
+                    }
+                });
+            });
+        });
+
+        // Review form
+        document.getElementById('review-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const rating = parseInt(formData.get('rating'));
+
+            if (rating === 0) {
+                alert('لطفا امتیاز خود را انتخاب کنید');
+                return;
+            }
+
+            const review = {
+                id: Date.now(),
+                productId: parseInt(productId),
+                name: formData.get('name'),
+                rating: rating,
+                comment: formData.get('comment'),
+                date: new Date().toLocaleDateString('fa-IR')
+            };
+
+            reviews.push(review);
+            localStorage.setItem('reviews', JSON.stringify(reviews));
+
+            displayReviews();
+            e.target.reset();
+            document.querySelectorAll('.star').forEach(s => {
+                s.classList.remove('filled', 'text-[#D4AF37]');
+                s.classList.add('text-gray-500');
+            });
+            document.getElementById('rating-input').value = 0;
+        });
+
+        // Display reviews
+        function displayReviews() {
+            const productReviews = reviews.filter(r => r.productId === parseInt(productId));
+            document.getElementById('reviews-count').textContent = productReviews.length;
+
+            if (productReviews.length === 0) {
+                document.getElementById('no-reviews').classList.remove('hidden');
+                document.getElementById('reviews-list').classList.add('hidden');
+                return;
+            }
+
+            document.getElementById('no-reviews').classList.add('hidden');
+            document.getElementById('reviews-list').classList.remove('hidden');
+
+            const reviewsHTML = productReviews.map(review => `
+                <div class="review-card rounded-xl p-6">
+                    <div class="flex items-start justify-between mb-3">
+                        <div>
+                            <div class="font-bold mb-1">${review.name}</div>
+                            <div class="text-sm text-gray-400">${review.date}</div>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            ${Array(5).fill(0).map((_, i) =>
+                                `<i class="fas fa-star text-sm ${i < review.rating ? 'text-[#D4AF37]' : 'text-gray-600'}"></i>`
+                            ).join('')}
+                        </div>
+                    </div>
+                    <p class="text-gray-300">${review.comment}</p>
+                </div>
+            `).join('');
+
+            document.getElementById('reviews-list').innerHTML = reviewsHTML;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProduct();
+            updateCartCount();
+
+            // Load reviews from localStorage
+            reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
+            displayReviews();
+        });
+
+        // Cart button
+        document.getElementById('cart-btn').addEventListener('click', () => {
+            window.location.href = 'shop.html#cart';
+        });
+    </script>
+</body>
+</html>

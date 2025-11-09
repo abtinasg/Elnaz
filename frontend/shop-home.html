@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فروشگاه الناز اشرفی - محصولات دیجیتال و آموزشی</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Vazir', sans-serif;
+        }
+
+        /* Hero Background Animation */
+        .hero-gradient {
+            background: linear-gradient(-45deg, #0A0A0A, #1A1A1A, #2D1B4E, #1A1A1A);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Particle Effect */
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, #D4AF37 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: particle-float 6s infinite ease-in-out;
+        }
+
+        @keyframes particle-float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(50px, -50px) scale(1.5);
+                opacity: 0.6;
+            }
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Product Card Hover Effect */
+        .product-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .product-card:hover {
+            transform: translateY(-12px) scale(1.02);
+        }
+
+        /* Category Card Animation */
+        .category-card {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .category-card:hover::before {
+            left: 100%;
+        }
+
+        /* Stats Counter Animation */
+        .stat-number {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Testimonial Cards */
+        .testimonial-card {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(45, 27, 78, 0.5));
+        }
+
+        /* Button Gradient */
+        .btn-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #9333EA 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #9333EA 0%, #D4AF37 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Scroll Animation */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-[#0A0A0A] text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0A]/90 backdrop-blur-md border-b border-white/10">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#9333EA] flex items-center justify-center">
+                        <i class="fas fa-shopping-bag text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-[#D4AF37]">فروشگاه الناز اشرفی</h1>
+                        <p class="text-xs text-gray-400">محصولات دیجیتال و آموزشی</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="shop-home.html" class="text-[#D4AF37] font-semibold">خانه</a>
+                    <a href="shop.html" class="hover:text-[#D4AF37] transition">فروشگاه</a>
+                    <a href="shop-about.html" class="hover:text-[#D4AF37] transition">درباره ما</a>
+                    <a href="shop-contact.html" class="hover:text-[#D4AF37] transition">تماس با ما</a>
+                    <a href="index.html" class="hover:text-[#D4AF37] transition">وبسایت اصلی</a>
+                </div>
+
+                <!-- CTA Buttons -->
+                <div class="flex items-center gap-4">
+                    <a href="shop.html" class="hidden md:block px-6 py-2 btn-gradient rounded-full text-white font-semibold">
+                        مشاهده محصولات
+                    </a>
+                    <button class="md:hidden text-2xl">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative hero-gradient min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <!-- Animated Particles -->
+        <div class="particle" style="width: 100px; height: 100px; top: 20%; left: 10%;"></div>
+        <div class="particle" style="width: 150px; height: 150px; top: 60%; right: 15%; animation-delay: 2s;"></div>
+        <div class="particle" style="width: 80px; height: 80px; bottom: 20%; left: 20%; animation-delay: 4s;"></div>
+
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <!-- Hero Content -->
+                <div class="text-center md:text-right space-y-6">
+                    <div class="inline-block px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-[#D4AF37]/30">
+                        <span class="text-[#D4AF37] text-sm font-semibold">🎉 محصولات جدید اضافه شد</span>
+                    </div>
+
+                    <h1 class="text-5xl md:text-7xl font-bold leading-tight">
+                        مرجع تخصصی
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#9333EA]">
+                            محصولات دیجیتال
+                        </span>
+                    </h1>
+
+                    <p class="text-xl text-gray-300 leading-relaxed">
+                        دسترسی به بهترین دوره‌های آموزشی، کتاب‌های الکترونیکی، و محصولات دیجیتال با کیفیت بالا
+                    </p>
+
+                    <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+                        <a href="shop.html" class="px-8 py-4 btn-gradient rounded-full text-white font-bold text-lg shadow-2xl">
+                            <i class="fas fa-shopping-cart ml-2"></i>
+                            شروع خرید
+                        </a>
+                        <a href="#categories" class="px-8 py-4 bg-white/10 backdrop-blur-md rounded-full font-bold text-lg hover:bg-white/20 transition border border-white/20">
+                            <i class="fas fa-compass ml-2"></i>
+                            دسته‌بندی‌ها
+                        </a>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="grid grid-cols-3 gap-6 pt-8">
+                        <div class="glass-card rounded-2xl p-4 text-center">
+                            <div class="text-3xl font-bold text-[#D4AF37] stat-number" data-target="500">0</div>
+                            <div class="text-sm text-gray-400 mt-1">محصول</div>
+                        </div>
+                        <div class="glass-card rounded-2xl p-4 text-center">
+                            <div class="text-3xl font-bold text-[#D4AF37] stat-number" data-target="10000">0</div>
+                            <div class="text-sm text-gray-400 mt-1">مشتری راضی</div>
+                        </div>
+                        <div class="glass-card rounded-2xl p-4 text-center">
+                            <div class="text-3xl font-bold text-[#D4AF37] stat-number" data-target="98">0</div>
+                            <div class="text-sm text-gray-400 mt-1">رضایت %</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Image -->
+                <div class="relative float-animation">
+                    <div class="relative z-10">
+                        <div class="glass-card rounded-3xl p-8 shadow-2xl">
+                            <img src="assets/1.jpg" alt="Featured Products" class="rounded-2xl w-full h-auto">
+                        </div>
+                    </div>
+
+                    <!-- Floating Cards -->
+                    <div class="absolute -top-6 -right-6 glass-card rounded-2xl p-4 shadow-xl" style="animation-delay: 0.5s;">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#9333EA] flex items-center justify-center">
+                                <i class="fas fa-star text-white"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-400">محبوب‌ترین</div>
+                                <div class="font-bold">دوره‌ها</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="absolute -bottom-6 -left-6 glass-card rounded-2xl p-4 shadow-xl" style="animation-delay: 1s;">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#9333EA] to-[#D4AF37] flex items-center justify-center">
+                                <i class="fas fa-bolt text-white"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-400">دانلود</div>
+                                <div class="font-bold">فوری</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+            <div class="flex flex-col items-center gap-2 animate-bounce">
+                <span class="text-sm text-gray-400">اسکرول کنید</span>
+                <i class="fas fa-chevron-down text-[#D4AF37]"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section id="categories" class="py-20 bg-[#121212]">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#9333EA]">
+                        دسته‌بندی محصولات
+                    </span>
+                </h2>
+                <p class="text-gray-400 text-lg">انتخاب کنید و به دنیای دانش قدم بگذارید</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Category Card 1 -->
+                <div class="category-card glass-card rounded-2xl p-6 text-center cursor-pointer hover:scale-105 transition scroll-reveal">
+                    <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#9333EA] flex items-center justify-center">
+                        <i class="fas fa-graduation-cap text-3xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">دوره‌های آموزشی</h3>
+                    <p class="text-gray-400 text-sm mb-4">آموزش جامع و حرفه‌ای</p>
+                    <a href="shop.html?category=courses" class="text-[#D4AF37] hover:underline">
+                        مشاهده همه <i class="fas fa-arrow-left mr-1"></i>
+                    </a>
+                </div>
+
+                <!-- Category Card 2 -->
+                <div class="category-card glass-card rounded-2xl p-6 text-center cursor-pointer hover:scale-105 transition scroll-reveal" style="animation-delay: 0.1s;">
+                    <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#9333EA] to-[#D4AF37] flex items-center justify-center">
+                        <i class="fas fa-book text-3xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">کتاب‌های الکترونیکی</h3>
+                    <p class="text-gray-400 text-sm mb-4">کتابخانه دیجیتال شما</p>
+                    <a href="shop.html?category=ebooks" class="text-[#D4AF37] hover:underline">
+                        مشاهده همه <i class="fas fa-arrow-left mr-1"></i>
+                    </a>
+                </div>
+
+                <!-- Category Card 3 -->
+                <div class="category-card glass-card rounded-2xl p-6 text-center cursor-pointer hover:scale-105 transition scroll-reveal" style="animation-delay: 0.2s;">
+                    <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#9333EA] flex items-center justify-center">
+                        <i class="fas fa-palette text-3xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">فایل‌های گرافیکی</h3>
+                    <p class="text-gray-400 text-sm mb-4">طراحی‌های آماده و قالب‌ها</p>
+                    <a href="shop.html?category=graphics" class="text-[#D4AF37] hover:underline">
+                        مشاهده همه <i class="fas fa-arrow-left mr-1"></i>
+                    </a>
+                </div>
+
+                <!-- Category Card 4 -->
+                <div class="category-card glass-card rounded-2xl p-6 text-center cursor-pointer hover:scale-105 transition scroll-reveal" style="animation-delay: 0.3s;">
+                    <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#9333EA] to-[#D4AF37] flex items-center justify-center">
+                        <i class="fas fa-code text-3xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">پلاگین و اسکریپت</h3>
+                    <p class="text-gray-400 text-sm mb-4">ابزارهای توسعه وب</p>
+                    <a href="shop.html?category=plugins" class="text-[#D4AF37] hover:underline">
+                        مشاهده همه <i class="fas fa-arrow-left mr-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section class="py-20 bg-[#0A0A0A]">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#9333EA]">
+                        محصولات ویژه
+                    </span>
+                </h2>
+                <p class="text-gray-400 text-lg">برگزیده‌های این هفته</p>
+            </div>
+
+            <div id="featured-products" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Products will be loaded here by JavaScript -->
+            </div>
+
+            <div class="text-center mt-12 scroll-reveal">
+                <a href="shop.html" class="inline-block px-8 py-4 btn-gradient rounded-full text-white font-bold text-lg">
+                    مشاهده همه محصولات
+                    <i class="fas fa-arrow-left mr-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="py-20 bg-[#121212]">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    چرا ما را انتخاب کنید؟
+                </h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Feature 1 -->
+                <div class="text-center scroll-reveal">
+                    <div class="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#D4AF37]/20 to-[#9333EA]/20 flex items-center justify-center">
+                        <i class="fas fa-shield-alt text-4xl text-[#D4AF37]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">پرداخت امن</h3>
+                    <p class="text-gray-400">با درگاه‌های معتبر و ایمن</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="text-center scroll-reveal" style="animation-delay: 0.1s;">
+                    <div class="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#9333EA]/20 to-[#D4AF37]/20 flex items-center justify-center">
+                        <i class="fas fa-download text-4xl text-[#D4AF37]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">دانلود فوری</h3>
+                    <p class="text-gray-400">بلافاصله پس از خرید</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="text-center scroll-reveal" style="animation-delay: 0.2s;">
+                    <div class="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#D4AF37]/20 to-[#9333EA]/20 flex items-center justify-center">
+                        <i class="fas fa-headset text-4xl text-[#D4AF37]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">پشتیبانی 24/7</h3>
+                    <p class="text-gray-400">همیشه در کنار شما هستیم</p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="text-center scroll-reveal" style="animation-delay: 0.3s;">
+                    <div class="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#9333EA]/20 to-[#D4AF37]/20 flex items-center justify-center">
+                        <i class="fas fa-certificate text-4xl text-[#D4AF37]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">کیفیت تضمینی</h3>
+                    <p class="text-gray-400">محصولات با کیفیت برتر</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-20 bg-[#0A0A0A]">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#9333EA]">
+                        نظرات مشتریان
+                    </span>
+                </h2>
+                <p class="text-gray-400 text-lg">آنچه مشتریان ما می‌گویند</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-card rounded-2xl p-6 border border-white/10 scroll-reveal">
+                    <div class="flex items-center gap-1 mb-4">
+                        <i class="fas fa-star text-[#D4AF37]"></i>
+                        <i class="fas fa-star text-[#D4AF37]"></i>
+                        <i class="fas fa-star text-[#D4AF37]"></i>
+                        <i class="fas fa-star text-[#D4AF37]"></i>
+                        <i class="fas fa-star text-[#D4AF37]"></i>
+                    </div>
+                    <p class="text-gray-300 mb-6 leading-relaxed">
+                        "کیفیت محصولات عالی و پشتیبانی فوق‌العاده. دوره آموزشی که خریدم واقعا حرفه‌ای بود."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#9333EA] flex items-center justify-center">
+                            <span class="text-white font-bold">ا.ح</span>
+                        </div>
+                        <div>
+                            <div class="font-semibold">احمد حسینی</div>
+                            <div class="text-sm text-gray-400">توسعه‌دهنده وب</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="testimonial-card rounded-2xl p-6 border border-white/10 scroll-reveal" style="animation-delay: 0.1s;">
+                    <div class="flex items-center gap-1 mb-4">
+                        <i class="fas fa-star text-[#D4AF37]"></i>
+                        <i class="fas fa-star text-[#D4AF37]"></i>
+                        <i class="fas fa-star text-[#D4AF37]"></i>
+                        <i class="fas fa-star text-[#D4AF37]"></i>
+                        <i class="fas fa-star text-[#D4AF37]"></i>
+                    </div>
+                    <p class="text-gray-300 mb-6 leading-relaxed">
+                        "بهترین فروشگاه محصولات دیجیتال که تا حالا باهاش کار کردم. توصیه می‌کنم."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#9333EA] to-[#D4AF37] flex items-center justify-center">
+                            <span class="text-white font-bold">س.م</span>
+                        </div>
+                        <div>
+                            <div class="font-semibold">سارا محمدی</div>
+                            <div class="text-sm text-gray-400">طراح گرافیک</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="testimonial-card rounded-2xl p-6 border border-white/10 scroll-reveal" style="animation-delay: 0.2s;">
+                    <div class="flex items-center gap-1 mb-4">
+                        <i class="fas fa-star text-[#D4AF37]"></i>
+                        <i class="fas fa-star text-[#D4AF37]"></i>
+                        <i class="fas fa-star text-[#D4AF37]"></i>
+                        <i class="fas fa-star text-[#D4AF37]"></i>
+                        <i class="fas fa-star text-[#D4AF37]"></i>
+                    </div>
+                    <p class="text-gray-300 mb-6 leading-relaxed">
+                        "محصولات با کیفیت، قیمت مناسب و دانلود سریع. خیلی راضی هستم."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#9333EA] flex items-center justify-center">
+                            <span class="text-white font-bold">ر.ع</span>
+                        </div>
+                        <div>
+                            <div class="font-semibold">رضا عباسی</div>
+                            <div class="text-sm text-gray-400">بازاریاب دیجیتال</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-20 bg-gradient-to-r from-[#D4AF37] to-[#9333EA]">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center scroll-reveal">
+                <div class="mb-6">
+                    <i class="fas fa-envelope text-6xl text-white/80"></i>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 text-white">
+                    عضویت در خبرنامه
+                </h2>
+                <p class="text-white/90 text-lg mb-8">
+                    از جدیدترین محصولات، تخفیف‌ها و اخبار ویژه با خبر شوید
+                </p>
+
+                <form id="newsletter-form" class="flex flex-col md:flex-row gap-4 max-w-xl mx-auto">
+                    <input
+                        type="email"
+                        placeholder="ایمیل خود را وارد کنید"
+                        class="flex-1 px-6 py-4 rounded-full bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
+                        required
+                    >
+                    <button type="submit" class="px-8 py-4 bg-[#0A0A0A] text-white rounded-full font-bold hover:bg-[#1A1A1A] transition">
+                        عضویت
+                        <i class="fas fa-paper-plane mr-2"></i>
+                    </button>
+                </form>
+
+                <p class="text-white/70 text-sm mt-4">
+                    با عضویت در خبرنامه، شرایط و قوانین را می‌پذیرید
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="py-20 bg-[#121212]">
+        <div class="container mx-auto px-4">
+            <div class="glass-card rounded-3xl p-12 text-center scroll-reveal">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    آماده شروع هستید؟
+                </h2>
+                <p class="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
+                    به جمع هزاران مشتری راضی ما بپیوندید و از بهترین محصولات دیجیتال بهره‌مند شوید
+                </p>
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <a href="shop.html" class="px-8 py-4 btn-gradient rounded-full text-white font-bold text-lg">
+                        <i class="fas fa-shopping-bag ml-2"></i>
+                        شروع خرید کنید
+                    </a>
+                    <a href="shop-contact.html" class="px-8 py-4 bg-white/10 backdrop-blur-md rounded-full font-bold text-lg hover:bg-white/20 transition border border-white/20">
+                        <i class="fas fa-phone ml-2"></i>
+                        تماس با ما
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#0A0A0A] border-t border-white/10 py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <!-- About -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4 text-[#D4AF37]">فروشگاه الناز اشرفی</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        مرجع تخصصی محصولات دیجیتال و آموزشی با بیش از 5 سال تجربه
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">دسترسی سریع</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="shop-home.html" class="hover:text-[#D4AF37] transition">خانه</a></li>
+                        <li><a href="shop.html" class="hover:text-[#D4AF37] transition">فروشگاه</a></li>
+                        <li><a href="shop-about.html" class="hover:text-[#D4AF37] transition">درباره ما</a></li>
+                        <li><a href="shop-contact.html" class="hover:text-[#D4AF37] transition">تماس با ما</a></li>
+                    </ul>
+                </div>
+
+                <!-- Categories -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">دسته‌بندی‌ها</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="shop.html?category=courses" class="hover:text-[#D4AF37] transition">دوره‌های آموزشی</a></li>
+                        <li><a href="shop.html?category=ebooks" class="hover:text-[#D4AF37] transition">کتاب‌های الکترونیکی</a></li>
+                        <li><a href="shop.html?category=graphics" class="hover:text-[#D4AF37] transition">فایل‌های گرافیکی</a></li>
+                        <li><a href="shop.html?category=plugins" class="hover:text-[#D4AF37] transition">پلاگین و اسکریپت</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">تماس با ما</h3>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li class="flex items-center gap-2">
+                            <i class="fas fa-envelope text-[#D4AF37]"></i>
+                            <span>info@elnazashrafi.com</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fas fa-phone text-[#D4AF37]"></i>
+                            <span>021-12345678</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fas fa-map-marker-alt text-[#D4AF37]"></i>
+                            <span>تهران، ایران</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Social & Copyright -->
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-gray-400 text-sm">
+                    © 2024 فروشگاه الناز اشرفی. تمامی حقوق محفوظ است.
+                </p>
+
+                <div class="flex items-center gap-4">
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#D4AF37] transition">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#D4AF37] transition">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#D4AF37] transition">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#D4AF37] transition">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Counter Animation
+        function animateCounter(element) {
+            const target = parseInt(element.getAttribute('data-target'));
+            const duration = 2000;
+            const step = target / (duration / 16);
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    element.textContent = target.toLocaleString('fa-IR');
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString('fa-IR');
+                }
+            }, 16);
+        }
+
+        // Scroll Reveal Animation
+        function handleScrollReveal() {
+            const reveals = document.querySelectorAll('.scroll-reveal');
+
+            reveals.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+
+                if (elementTop < windowHeight - 100) {
+                    element.classList.add('active');
+                }
+            });
+        }
+
+        // Load Featured Products
+        async function loadFeaturedProducts() {
+            try {
+                const response = await fetch('http://localhost:5000/api/shop/products');
+                const products = await response.json();
+
+                const container = document.getElementById('featured-products');
+                const featured = products.slice(0, 4);
+
+                container.innerHTML = featured.map((product, index) => `
+                    <div class="product-card glass-card rounded-2xl overflow-hidden scroll-reveal" style="animation-delay: ${index * 0.1}s;">
+                        <div class="relative">
+                            <img src="${product.image_url || 'assets/1.jpg'}" alt="${product.name_fa}" class="w-full h-64 object-cover">
+                            <div class="absolute top-4 right-4">
+                                <span class="px-3 py-1 bg-[#D4AF37] text-white text-sm font-bold rounded-full">
+                                    ویژه
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-lg mb-2">${product.name_fa}</h3>
+                            <p class="text-gray-400 text-sm mb-4 line-clamp-2">${product.description_fa || ''}</p>
+                            <div class="flex items-center justify-between">
+                                <div class="text-2xl font-bold text-[#D4AF37]">
+                                    ${parseInt(product.price).toLocaleString('fa-IR')} تومان
+                                </div>
+                                <a href="shop.html#product-${product.id}" class="px-4 py-2 btn-gradient rounded-full text-sm font-bold">
+                                    مشاهده
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Re-trigger scroll reveal for new elements
+                handleScrollReveal();
+            } catch (error) {
+                console.error('Error loading products:', error);
+                document.getElementById('featured-products').innerHTML = `
+                    <div class="col-span-full text-center text-gray-400 py-12">
+                        <i class="fas fa-exclamation-circle text-4xl mb-4"></i>
+                        <p>در حال حاضر محصولی موجود نیست</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Newsletter Form
+        document.getElementById('newsletter-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = e.target.querySelector('input[type="email"]').value;
+
+            try {
+                const response = await fetch('http://localhost:5000/api/newsletter/subscribe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email })
+                });
+
+                if (response.ok) {
+                    alert('با موفقیت در خبرنامه عضو شدید!');
+                    e.target.reset();
+                } else {
+                    alert('خطایی رخ داد. لطفا دوباره تلاش کنید.');
+                }
+            } catch (error) {
+                console.error('Newsletter error:', error);
+                alert('خطا در اتصال به سرور');
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animate counters
+            document.querySelectorAll('.stat-number').forEach(animateCounter);
+
+            // Load products
+            loadFeaturedProducts();
+
+            // Scroll reveal
+            handleScrollReveal();
+            window.addEventListener('scroll', handleScrollReveal);
+        });
+    </script>
+</body>
+</html>
