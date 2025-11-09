@@ -5,7 +5,7 @@ Persian language support with complete e-commerce functionality
 """
 
 from flask import Blueprint, request, jsonify
-from ..models import Product, Order, ShopOrder, ShopUser, ShopPage, Coupon, Inventory, ProductAttribute
+from ..models import Product, Order, ShopOrder, ShopUser, ShopPage, Coupon, Inventory, ProductAttribute, ProductReview
 import re
 
 shop_bp = Blueprint('shop', __name__, url_prefix='/api/shop')
@@ -170,6 +170,141 @@ def get_categories():
         return jsonify({
             'success': False,
             'message': 'خطا در دریافت دسته‌بندی‌ها'
+        }), 500
+
+
+# ==================== PRODUCT REVIEWS ====================
+
+@shop_bp.route('/products/<int:product_id>/reviews', methods=['GET'])
+def get_product_reviews(product_id):
+    """Get all reviews for a product"""
+    try:
+        # Check if product exists
+        product = Product.get_by_id(product_id)
+        if not product:
+            return jsonify({
+                'success': False,
+                'message': 'محصول یافت نشد'
+            }), 404
+
+        # Get reviews
+        reviews = ProductReview.get_by_product(product_id, approved_only=True)
+
+        # Get average rating
+        rating_info = ProductReview.get_average_rating(product_id)
+
+        return jsonify({
+            'success': True,
+            'reviews': reviews,
+            'average_rating': rating_info['average_rating'],
+            'review_count': rating_info['review_count']
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در دریافت نظرات'
+        }), 500
+
+
+@shop_bp.route('/products/<int:product_id>/reviews', methods=['POST'])
+def create_product_review(product_id):
+    """Create a new review for a product"""
+    try:
+        data = request.get_json()
+
+        # Validation
+        required_fields = ['customer_name', 'rating']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({
+                    'success': False,
+                    'message': f'فیلد {field} الزامی است'
+                }), 400
+
+        # Validate rating
+        rating = int(data['rating'])
+        if rating < 1 or rating > 5:
+            return jsonify({
+                'success': False,
+                'message': 'امتیاز باید بین ۱ تا ۵ باشد'
+            }), 400
+
+        # Check if product exists
+        product = Product.get_by_id(product_id)
+        if not product:
+            return jsonify({
+                'success': False,
+                'message': 'محصول یافت نشد'
+            }), 404
+
+        # Create review
+        review_id = ProductReview.create(
+            product_id=product_id,
+            customer_name=data['customer_name'],
+            rating=rating,
+            review_text=data.get('review_text'),
+            user_id=data.get('user_id')
+        )
+
+        return jsonify({
+            'success': True,
+            'message': 'نظر شما با موفقیت ثبت شد و پس از تایید نمایش داده خواهد شد',
+            'review_id': review_id
+        }), 201
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در ثبت نظر'
+        }), 500
+
+
+@shop_bp.route('/reviews/<int:review_id>/approve', methods=['PUT'])
+def approve_review(review_id):
+    """Approve a review (admin endpoint)"""
+    try:
+        success = ProductReview.approve(review_id)
+
+        if not success:
+            return jsonify({
+                'success': False,
+                'message': 'نظر یافت نشد'
+            }), 404
+
+        return jsonify({
+            'success': True,
+            'message': 'نظر با موفقیت تایید شد'
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در تایید نظر'
+        }), 500
+
+
+@shop_bp.route('/reviews/<int:review_id>', methods=['DELETE'])
+def delete_review(review_id):
+    """Delete a review (admin endpoint)"""
+    try:
+        success = ProductReview.delete(review_id)
+
+        if not success:
+            return jsonify({
+                'success': False,
+                'message': 'نظر یافت نشد'
+            }), 404
+
+        return jsonify({
+            'success': True,
+            'message': 'نظر با موفقیت حذف شد'
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در حذف نظر'
         }), 500
 
 

@@ -1006,3 +1006,95 @@ class ProductAttribute:
             cursor = conn.cursor()
             cursor.execute('UPDATE product_attributes SET is_available = 0 WHERE id = ?', (attribute_id,))
             return cursor.rowcount > 0
+
+
+class ProductReview:
+    """Product Review Model"""
+
+    @staticmethod
+    def create(product_id, customer_name, rating, review_text=None, user_id=None):
+        """Create a new product review"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO product_reviews
+                (product_id, user_id, customer_name, rating, review_text)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (product_id, user_id, customer_name, rating, review_text))
+            return cursor.lastrowid
+
+    @staticmethod
+    def get_by_product(product_id, approved_only=True):
+        """Get all reviews for a product"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            query = 'SELECT * FROM product_reviews WHERE product_id = ?'
+            params = [product_id]
+
+            if approved_only:
+                query += ' AND is_approved = 1'
+
+            query += ' ORDER BY created_at DESC'
+            cursor.execute(query, params)
+            return [dict_from_row(row) for row in cursor.fetchall()]
+
+    @staticmethod
+    def get_all(limit=100):
+        """Get all reviews"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT r.*, p.name_fa as product_name
+                FROM product_reviews r
+                LEFT JOIN products p ON r.product_id = p.id
+                ORDER BY r.created_at DESC
+                LIMIT ?
+            ''', (limit,))
+            return [dict_from_row(row) for row in cursor.fetchall()]
+
+    @staticmethod
+    def get_by_id(review_id):
+        """Get review by ID"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT * FROM product_reviews WHERE id = ?', (review_id,))
+            row = cursor.fetchone()
+            return dict_from_row(row) if row else None
+
+    @staticmethod
+    def approve(review_id):
+        """Approve a review"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                UPDATE product_reviews
+                SET is_approved = 1
+                WHERE id = ?
+            ''', (review_id,))
+            return cursor.rowcount > 0
+
+    @staticmethod
+    def delete(review_id):
+        """Delete a review"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('DELETE FROM product_reviews WHERE id = ?', (review_id,))
+            return cursor.rowcount > 0
+
+    @staticmethod
+    def get_average_rating(product_id):
+        """Get average rating for a product"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT AVG(rating) as avg_rating, COUNT(*) as review_count
+                FROM product_reviews
+                WHERE product_id = ? AND is_approved = 1
+            ''', (product_id,))
+            row = cursor.fetchone()
+            if row:
+                return {
+                    'average_rating': round(row[0], 1) if row[0] else 0,
+                    'review_count': row[1]
+                }
+            return {'average_rating': 0, 'review_count': 0}
