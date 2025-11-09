@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="پنل کاربری مشتریان فروشگاه">
+    <title>پنل من — Elnaz Ashrafi</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👤</text></svg>">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Persian Font - Vazir -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Vazir', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: {
+                            900: '#0A0A0A',
+                            800: '#121212',
+                            700: '#1A1A1A',
+                            600: '#242424',
+                        },
+                        accent: {
+                            primary: '#E5E5E5',
+                            secondary: '#999999',
+                            gold: '#D4AF37',
+                            purple: '#9333EA',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .tab-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: #D4AF37;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #D4AF37, #9333EA);
+        }
+    </style>
+</head>
+<body class="bg-dark-900 text-white antialiased">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-dark-900/95 backdrop-blur-md border-b border-dark-700">
+        <div class="container mx-auto px-6 lg:px-12 py-6">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="shop.html" class="text-2xl font-semibold tracking-tight hover:opacity-70 transition-opacity">
+                    فروشگاه Elnaz Ashrafi
+                </a>
+
+                <!-- Menu -->
+                <ul class="flex items-center space-x-6 space-x-reverse">
+                    <li><a href="shop.html" class="hover:text-accent-secondary transition-colors">خانه</a></li>
+                    <li><a href="shop-products.html" class="hover:text-accent-secondary transition-colors">محصولات</a></li>
+                    <li><a href="shop-profile.html" class="text-accent-gold" id="nav-profile">پنل من</a></li>
+                    <li><a href="shop-tickets.html" class="hover:text-accent-secondary transition-colors">تیکت‌ها</a></li>
+                    <li><a href="shop-about.html" class="hover:text-accent-secondary transition-colors">درباره</a></li>
+                    <li><a href="shop-contact.html" class="hover:text-accent-secondary transition-colors">تماس</a></li>
+                    <li><a href="index.html" class="hover:text-accent-secondary transition-colors">صفحه اصلی</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="min-h-[30vh] flex items-center justify-center relative overflow-hidden pt-32 pb-8">
+        <div class="absolute inset-0 bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900"></div>
+
+        <div class="container mx-auto px-6 lg:px-12 relative z-10">
+            <div class="max-w-4xl mx-auto">
+                <div class="flex items-center gap-6">
+                    <div class="w-24 h-24 rounded-full bg-gradient-to-br from-accent-gold to-accent-purple flex items-center justify-center text-4xl">
+                        <span id="user-avatar">👤</span>
+                    </div>
+                    <div class="flex-1">
+                        <h1 class="text-4xl font-bold mb-2">
+                            <span id="user-name-display">کاربر</span>
+                        </h1>
+                        <p class="text-accent-secondary" id="user-email-display">user@example.com</p>
+                    </div>
+                    <button id="logout-btn" class="px-6 py-3 bg-dark-700 hover:bg-dark-600 rounded-lg transition-colors">
+                        خروج از حساب
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-8 bg-dark-800">
+        <div class="container mx-auto px-6 lg:px-12">
+            <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                    <div class="text-4xl font-bold text-accent-gold mb-2" id="stat-orders">0</div>
+                    <div class="text-sm text-accent-secondary">سفارش‌های ثبت شده</div>
+                </div>
+                <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                    <div class="text-4xl font-bold text-accent-gold mb-2" id="stat-tickets">0</div>
+                    <div class="text-sm text-accent-secondary">تیکت‌های فعال</div>
+                </div>
+                <div class="stat-card glass-effect rounded-xl p-6 text-center">
+                    <div class="text-4xl font-bold text-accent-gold mb-2" id="stat-spent">۰</div>
+                    <div class="text-sm text-accent-secondary">مجموع خرید (تومان)</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="py-16 bg-dark-900">
+        <div class="container mx-auto px-6 lg:px-12">
+            <div class="max-w-4xl mx-auto">
+                <!-- Tabs -->
+                <div class="flex gap-6 mb-8 border-b border-dark-700 overflow-x-auto">
+                    <button class="tab-btn active px-4 py-3 font-semibold whitespace-nowrap" data-tab="orders">
+                        سفارش‌ها
+                    </button>
+                    <button class="tab-btn px-4 py-3 font-semibold whitespace-nowrap" data-tab="tickets">
+                        تیکت‌ها
+                    </button>
+                    <button class="tab-btn px-4 py-3 font-semibold whitespace-nowrap" data-tab="profile">
+                        اطلاعات حساب
+                    </button>
+                </div>
+
+                <!-- Tab Content -->
+                <div id="tab-content-orders" class="tab-content">
+                    <h2 class="text-2xl font-bold mb-6">سفارش‌های من</h2>
+
+                    <div id="orders-loading" class="text-center py-12">
+                        <div class="inline-block w-8 h-8 border-4 border-accent-gold border-t-transparent rounded-full animate-spin"></div>
+                        <p class="mt-4 text-accent-secondary">در حال بارگذاری سفارش‌ها...</p>
+                    </div>
+
+                    <div id="orders-list" class="space-y-4 hidden">
+                        <!-- Orders will be loaded here -->
+                    </div>
+
+                    <div id="orders-empty" class="text-center py-16 hidden">
+                        <svg class="w-24 h-24 mx-auto text-accent-secondary mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                        <h3 class="text-xl font-bold mb-2">هنوز سفارشی ندارید</h3>
+                        <p class="text-accent-secondary mb-6">از فروشگاه خرید کنید</p>
+                        <a href="shop-products.html" class="inline-block px-6 py-3 bg-gradient-to-r from-accent-gold to-accent-purple rounded-lg font-semibold">
+                            مشاهده محصولات
+                        </a>
+                    </div>
+                </div>
+
+                <div id="tab-content-tickets" class="tab-content hidden">
+                    <h2 class="text-2xl font-bold mb-6">تیکت‌های من</h2>
+
+                    <div id="profile-tickets-loading" class="text-center py-12">
+                        <div class="inline-block w-8 h-8 border-4 border-accent-gold border-t-transparent rounded-full animate-spin"></div>
+                        <p class="mt-4 text-accent-secondary">در حال بارگذاری تیکت‌ها...</p>
+                    </div>
+
+                    <div id="profile-tickets-list" class="space-y-4 hidden">
+                        <!-- Tickets will be loaded here -->
+                    </div>
+
+                    <div id="profile-tickets-empty" class="text-center py-16 hidden">
+                        <svg class="w-24 h-24 mx-auto text-accent-secondary mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                        </svg>
+                        <h3 class="text-xl font-bold mb-2">هنوز تیکتی ندارید</h3>
+                        <p class="text-accent-secondary mb-6">برای ارتباط با پشتیبانی تیکت ایجاد کنید</p>
+                        <a href="shop-tickets.html" class="inline-block px-6 py-3 bg-gradient-to-r from-accent-gold to-accent-purple rounded-lg font-semibold">
+                            ایجاد تیکت
+                        </a>
+                    </div>
+                </div>
+
+                <div id="tab-content-profile" class="tab-content hidden">
+                    <h2 class="text-2xl font-bold mb-6">اطلاعات حساب کاربری</h2>
+
+                    <form id="profile-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold mb-2 text-accent-primary">نام و نام خانوادگی</label>
+                                <input type="text" name="full_name" id="profile-full-name"
+                                       class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2 text-accent-primary">ایمیل</label>
+                                <input type="email" name="email" id="profile-email" disabled
+                                       class="w-full px-4 py-3 bg-dark-800 border border-dark-600 rounded-lg text-accent-secondary cursor-not-allowed">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-accent-primary">شماره تماس</label>
+                            <input type="tel" name="phone" id="profile-phone" dir="ltr"
+                                   class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors text-white">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-2 text-accent-primary">آدرس</label>
+                            <textarea name="address" id="profile-address" rows="3"
+                                      class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors resize-none text-white"></textarea>
+                        </div>
+
+                        <div id="profile-error" class="hidden p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm"></div>
+                        <div id="profile-success" class="hidden p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-green-400 text-sm"></div>
+
+                        <button type="submit" class="px-8 py-3 bg-gradient-to-r from-accent-gold to-accent-purple rounded-lg font-bold hover:shadow-lg transition-all">
+                            ذخیره تغییرات
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JavaScript -->
+    <script src="js/shop-profile.js"></script>
+</body>
+</html>

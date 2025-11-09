@@ -1193,3 +1193,187 @@ class ProductReview:
                     'review_count': row[1]
                 }
             return {'average_rating': 0, 'review_count': 0}
+
+
+
+class SupportTicket:
+    """Support Ticket Model"""
+
+    @staticmethod
+    def generate_ticket_number():
+        """Generate unique ticket number"""
+        timestamp = datetime.now().strftime('%Y%m%d')
+        random_part = ''.join(random.choices(string.digits, k=6))
+        return f"TKT-{timestamp}-{random_part}"
+
+    @staticmethod
+    def create(subject, category, customer_name, customer_email, message, user_id=None):
+        """Create a new support ticket"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+
+            # Generate unique ticket number
+            ticket_number = SupportTicket.generate_ticket_number()
+            while True:
+                cursor.execute('SELECT id FROM support_tickets WHERE ticket_number = ?', (ticket_number,))
+                if not cursor.fetchone():
+                    break
+                ticket_number = SupportTicket.generate_ticket_number()
+
+            # Create ticket
+            cursor.execute('''
+                INSERT INTO support_tickets
+                (user_id, ticket_number, subject, category, customer_name, customer_email)
+                VALUES (?, ?, ?, ?, ?, ?)
+            ''', (user_id, ticket_number, subject, category, customer_name, customer_email))
+
+            ticket_id = cursor.lastrowid
+
+            # Add first message
+            cursor.execute('''
+                INSERT INTO ticket_messages (ticket_id, user_id, is_staff_reply, message)
+                VALUES (?, ?, 0, ?)
+            ''', (ticket_id, user_id, message))
+
+            return {
+                'id': ticket_id,
+                'ticket_number': ticket_number
+            }
+
+    @staticmethod
+    def get_all(limit=50, status=None, user_id=None):
+        """Get all tickets with optional filters"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            query = 'SELECT * FROM support_tickets WHERE 1=1'
+            params = []
+
+            if status:
+                query += ' AND status = ?'
+                params.append(status)
+
+            if user_id:
+                query += ' AND user_id = ?'
+                params.append(user_id)
+
+            query += ' ORDER BY created_at DESC LIMIT ?'
+            params.append(limit)
+
+            cursor.execute(query, params)
+            return [dict_from_row(row) for row in cursor.fetchall()]
+
+    @staticmethod
+    def get_by_id(ticket_id):
+        """Get ticket by ID"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT * FROM support_tickets WHERE id = ?', (ticket_id,))
+            row = cursor.fetchone()
+            return dict_from_row(row) if row else None
+
+    @staticmethod
+    def get_by_number(ticket_number):
+        """Get ticket by ticket number"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT * FROM support_tickets WHERE ticket_number = ?', (ticket_number,))
+            row = cursor.fetchone()
+            return dict_from_row(row) if row else None
+
+    @staticmethod
+    def update_status(ticket_id, status):
+        """Update ticket status"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+
+            # Update status
+            cursor.execute('''
+                UPDATE support_tickets
+                SET status = ?, updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+            ''', (status, ticket_id))
+
+            # If closing ticket, set closed_at
+            if status == 'closed':
+                cursor.execute('''
+                    UPDATE support_tickets
+                    SET closed_at = CURRENT_TIMESTAMP
+                    WHERE id = ?
+                ''', (ticket_id,))
+
+            return cursor.rowcount > 0
+
+    @staticmethod
+    def add_message(ticket_id, message, user_id=None, is_staff_reply=False):
+        """Add message to ticket"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+
+            # Add message
+            cursor.execute('''
+                INSERT INTO ticket_messages (ticket_id, user_id, is_staff_reply, message)
+                VALUES (?, ?, ?, ?)
+            ''', (ticket_id, user_id, 1 if is_staff_reply else 0, message))
+
+            # Update ticket's updated_at
+            cursor.execute('''
+                UPDATE support_tickets
+                SET updated_at = CURRENT_TIMESTAMP,
+                    status = CASE
+                        WHEN ? = 1 THEN 'answered'
+                        ELSE status
+                    END
+                WHERE id = ?
+            ''', (1 if is_staff_reply else 0, ticket_id))
+
+            return cursor.lastrowid
+
+    @staticmethod
+    def get_messages(ticket_id):
+        """Get all messages for a ticket"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT tm.*, su.full_name as user_name
+                FROM ticket_messages tm
+                LEFT JOIN shop_users su ON tm.user_id = su.id
+                WHERE tm.ticket_id = ?
+                ORDER BY tm.created_at ASC
+            ''', (ticket_id,))
+            return [dict_from_row(row) for row in cursor.fetchall()]
+
+    @staticmethod
+    def get_stats(user_id=None):
+        """Get ticket statistics"""
+        with get_db() as conn:
+            cursor = conn.cursor()
+
+            base_query = 'SELECT COUNT(*) FROM support_tickets WHERE 1=1'
+            user_filter = ' AND user_id = ?' if user_id else ''
+
+            # Total tickets
+            cursor.execute(base_query + user_filter, (user_id,) if user_id else ())
+            total = cursor.fetchone()[0]
+
+            # Open tickets
+            cursor.execute(base_query + ' AND status = ?' + user_filter,
+                         ('open', user_id) if user_id else ('open',))
+            open_count = cursor.fetchone()[0]
+
+            # Answered tickets
+            cursor.execute(base_query + ' AND status = ?' + user_filter,
+                         ('answered', user_id) if user_id else ('answered',))
+            answered_count = cursor.fetchone()[0]
+
+            # Closed tickets
+            cursor.execute(base_query + ' AND status = ?' + user_filter,
+                         ('closed', user_id) if user_id else ('closed',))
+            closed_count = cursor.fetchone()[0]
+
+            return {
+                'total': total,
+                'open': open_count,
+                'answered': answered_count,
+                'closed': closed_count
+            }
+

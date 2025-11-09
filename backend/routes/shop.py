@@ -1288,3 +1288,205 @@ def get_customer_report():
             'success': False,
             'message': 'خطا در دریافت گزارش مشتریان'
         }), 500
+
+
+# ==================== SUPPORT TICKETS ====================
+
+@shop_bp.route('/tickets', methods=['POST'])
+def create_ticket():
+    """Create a new support ticket"""
+    try:
+        data = request.get_json()
+
+        # Validation
+        required_fields = ['subject', 'message', 'customer_name', 'customer_email']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({
+                    'success': False,
+                    'message': f'فیلد {field} الزامی است'
+                }), 400
+
+        # Validate email
+        if not validate_email(data['customer_email']):
+            return jsonify({
+                'success': False,
+                'message': 'فرمت ایمیل نامعتبر است'
+            }), 400
+
+        # Create ticket
+        from ..models import SupportTicket
+        result = SupportTicket.create(
+            subject=data['subject'],
+            category=data.get('category', 'support'),
+            customer_name=data['customer_name'],
+            customer_email=data['customer_email'],
+            message=data['message'],
+            user_id=data.get('user_id')
+        )
+
+        return jsonify({
+            'success': True,
+            'message': 'تیکت شما با موفقیت ایجاد شد',
+            'ticket': result
+        }), 201
+
+    except Exception as e:
+        print(f'Error creating ticket: {str(e)}')
+        return jsonify({
+            'success': False,
+            'message': 'خطا در ایجاد تیکت'
+        }), 500
+
+
+@shop_bp.route('/tickets', methods=['GET'])
+def get_tickets():
+    """Get all tickets (with optional user filter)"""
+    try:
+        from ..models import SupportTicket
+
+        user_id = request.args.get('user_id', type=int)
+        status = request.args.get('status')
+        limit = request.args.get('limit', 50, type=int)
+
+        tickets = SupportTicket.get_all(limit=limit, status=status, user_id=user_id)
+
+        return jsonify({
+            'success': True,
+            'count': len(tickets),
+            'tickets': tickets
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در دریافت تیکت‌ها'
+        }), 500
+
+
+@shop_bp.route('/tickets/<int:ticket_id>', methods=['GET'])
+def get_ticket(ticket_id):
+    """Get ticket by ID with messages"""
+    try:
+        from ..models import SupportTicket
+
+        ticket = SupportTicket.get_by_id(ticket_id)
+        if not ticket:
+            return jsonify({
+                'success': False,
+                'message': 'تیکت یافت نشد'
+            }), 404
+
+        messages = SupportTicket.get_messages(ticket_id)
+
+        return jsonify({
+            'success': True,
+            'ticket': ticket,
+            'messages': messages
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در دریافت تیکت'
+        }), 500
+
+
+@shop_bp.route('/tickets/<int:ticket_id>/messages', methods=['POST'])
+def add_ticket_message(ticket_id):
+    """Add message to ticket"""
+    try:
+        from ..models import SupportTicket
+
+        data = request.get_json()
+        if not data.get('message'):
+            return jsonify({
+                'success': False,
+                'message': 'متن پیام الزامی است'
+            }), 400
+
+        # Check if ticket exists
+        ticket = SupportTicket.get_by_id(ticket_id)
+        if not ticket:
+            return jsonify({
+                'success': False,
+                'message': 'تیکت یافت نشد'
+            }), 404
+
+        # Add message
+        message_id = SupportTicket.add_message(
+            ticket_id=ticket_id,
+            message=data['message'],
+            user_id=data.get('user_id'),
+            is_staff_reply=data.get('is_staff_reply', False)
+        )
+
+        return jsonify({
+            'success': True,
+            'message': 'پیام با موفقیت ارسال شد',
+            'message_id': message_id
+        }), 201
+
+    except Exception as e:
+        print(f'Error adding message: {str(e)}')
+        return jsonify({
+            'success': False,
+            'message': 'خطا در ارسال پیام'
+        }), 500
+
+
+@shop_bp.route('/tickets/<int:ticket_id>/status', methods=['PATCH'])
+def update_ticket_status(ticket_id):
+    """Update ticket status (admin endpoint)"""
+    try:
+        from ..models import SupportTicket
+
+        data = request.get_json()
+        status = data.get('status')
+
+        if not status or status not in ['open', 'answered', 'closed']:
+            return jsonify({
+                'success': False,
+                'message': 'وضعیت نامعتبر است'
+            }), 400
+
+        success = SupportTicket.update_status(ticket_id, status)
+
+        if not success:
+            return jsonify({
+                'success': False,
+                'message': 'تیکت یافت نشد'
+            }), 404
+
+        return jsonify({
+            'success': True,
+            'message': 'وضعیت تیکت به‌روزرسانی شد'
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در به‌روزرسانی وضعیت'
+        }), 500
+
+
+@shop_bp.route('/tickets/stats', methods=['GET'])
+def get_ticket_stats():
+    """Get ticket statistics"""
+    try:
+        from ..models import SupportTicket
+
+        user_id = request.args.get('user_id', type=int)
+        stats = SupportTicket.get_stats(user_id=user_id)
+
+        return jsonify({
+            'success': True,
+            'stats': stats
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': 'خطا در دریافت آمار'
+        }), 500
+
