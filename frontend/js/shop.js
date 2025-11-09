@@ -1,22 +1,26 @@
 /**
- * Shop Page JavaScript
- * Persian E-commerce functionality with LocalStorage cart
+ * Enhanced Shop Page JavaScript
+ * Professional E-commerce functionality with advanced features
  */
 
 // API Base URL
 const API_URL = window.location.origin + '/api/shop';
 
-// Shopping Cart State
+// State Management
 let cart = [];
+let wishlist = [];
 let products = [];
+let filteredProducts = [];
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     loadCart();
+    loadWishlist();
     loadProducts();
     loadCategories();
     initEventListeners();
     updateCartUI();
+    updateWishlistUI();
 });
 
 // ==================== CART MANAGEMENT ====================
@@ -115,20 +119,20 @@ function renderCartItems() {
         total += itemTotal;
 
         return `
-            <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl mb-3">
-                <div class="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center text-3xl">
-                    ${item.image_url ? `<img src="${item.image_url}" class="w-full h-full object-cover rounded-lg" />` : '🖼️'}
+            <div class="flex items-center gap-4 p-4 bg-dark-700 rounded-xl mb-3 border border-dark-600">
+                <div class="w-20 h-20 bg-dark-600 rounded-lg flex items-center justify-center text-3xl overflow-hidden">
+                    ${item.image_url ? `<img src="${item.image_url}" class="w-full h-full object-cover" />` : '🖼️'}
                 </div>
                 <div class="flex-1">
                     <h4 class="font-semibold mb-1">${item.name_fa}</h4>
-                    <p class="text-sm text-gray-600">${formatPrice(item.price)} تومان</p>
+                    <p class="text-sm text-accent-secondary">${formatPrice(item.price)} تومان</p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <button onclick="updateQuantity(${item.id}, -1)" class="w-8 h-8 bg-gray-200 rounded-full hover:bg-gray-300 transition">-</button>
+                    <button onclick="updateQuantity(${item.id}, -1)" class="w-8 h-8 bg-dark-600 rounded-full hover:bg-dark-500 transition">-</button>
                     <span class="w-8 text-center font-semibold">${item.quantity}</span>
-                    <button onclick="updateQuantity(${item.id}, 1)" class="w-8 h-8 bg-primary text-white rounded-full hover:bg-secondary transition">+</button>
+                    <button onclick="updateQuantity(${item.id}, 1)" class="w-8 h-8 bg-gradient-to-r from-accent-gold to-accent-purple rounded-full transition">+</button>
                 </div>
-                <button onclick="removeFromCart(${item.id})" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition">
+                <button onclick="removeFromCart(${item.id})" class="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                     </svg>
@@ -138,6 +142,99 @@ function renderCartItems() {
     }).join('');
 
     cartTotal.textContent = formatPrice(total) + ' تومان';
+}
+
+// ==================== WISHLIST MANAGEMENT ====================
+
+function loadWishlist() {
+    const savedWishlist = localStorage.getItem('shop_wishlist');
+    if (savedWishlist) {
+        try {
+            wishlist = JSON.parse(savedWishlist);
+        } catch (e) {
+            wishlist = [];
+        }
+    }
+}
+
+function saveWishlist() {
+    localStorage.setItem('shop_wishlist', JSON.stringify(wishlist));
+    updateWishlistUI();
+}
+
+function toggleWishlist(product) {
+    const index = wishlist.findIndex(item => item.id === product.id);
+
+    if (index > -1) {
+        wishlist.splice(index, 1);
+        showNotification('محصول از علاقه‌مندی‌ها حذف شد', 'info');
+    } else {
+        wishlist.push({
+            id: product.id,
+            name_fa: product.name_fa,
+            price: product.price,
+            image_url: product.image_url,
+            description_fa: product.description_fa,
+            category: product.category
+        });
+        showNotification('محصول به علاقه‌مندی‌ها اضافه شد', 'success');
+    }
+
+    saveWishlist();
+    renderProducts(filteredProducts);
+    renderWishlistItems();
+}
+
+function updateWishlistUI() {
+    const wishlistCount = document.getElementById('wishlist-count');
+
+    if (wishlist.length > 0) {
+        wishlistCount.textContent = wishlist.length;
+        wishlistCount.classList.remove('hidden');
+    } else {
+        wishlistCount.classList.add('hidden');
+    }
+}
+
+function renderWishlistItems() {
+    const wishlistItems = document.getElementById('wishlist-items');
+    const wishlistEmpty = document.getElementById('wishlist-empty');
+
+    if (wishlist.length === 0) {
+        wishlistItems.innerHTML = '';
+        wishlistEmpty.classList.remove('hidden');
+        return;
+    }
+
+    wishlistEmpty.classList.add('hidden');
+
+    wishlistItems.innerHTML = wishlist.map(product => `
+        <div class="bg-dark-700 rounded-xl overflow-hidden border border-dark-600 hover:border-accent-gold transition-all">
+            <div class="aspect-square bg-dark-600 flex items-center justify-center text-6xl overflow-hidden">
+                ${product.image_url ? `<img src="${product.image_url}" class="w-full h-full object-cover" />` : '🖼️'}
+            </div>
+            <div class="p-4">
+                <h4 class="font-semibold mb-2">${product.name_fa}</h4>
+                <div class="flex items-center justify-between">
+                    <span class="text-accent-gold font-bold">${formatPrice(product.price)} تومان</span>
+                    <div class="flex gap-2">
+                        <button onclick='addToCart(${JSON.stringify(product).replace(/'/g, "&apos;")})'
+                                class="p-2 bg-gradient-to-r from-accent-gold to-accent-purple rounded-lg hover:shadow-lg transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </button>
+                        <button onclick='toggleWishlist(${JSON.stringify(product).replace(/'/g, "&apos;")})'
+                                class="p-2 bg-red-500/20 text-red-500 rounded-lg hover:bg-red-500/30 transition">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
 }
 
 // ==================== PRODUCTS ====================
@@ -158,6 +255,7 @@ async function loadProducts(category = '') {
 
         if (data.success && data.products.length > 0) {
             products = data.products;
+            filteredProducts = products;
             renderProducts(data.products);
             gridEl.classList.remove('hidden');
         } else {
@@ -174,22 +272,40 @@ async function loadProducts(category = '') {
 function renderProducts(productsList) {
     const grid = document.getElementById('products-grid');
 
-    grid.innerHTML = productsList.map(product => `
-        <div class="product-card bg-white rounded-2xl overflow-hidden shadow-lg">
-            <div class="aspect-square bg-gray-200 flex items-center justify-center text-6xl">
+    grid.innerHTML = productsList.map(product => {
+        const isInWishlist = wishlist.some(item => item.id === product.id);
+
+        return `
+        <div class="product-card bg-dark-800 rounded-2xl overflow-hidden border border-dark-700 hover:border-accent-gold transition-all">
+            <div class="relative aspect-square bg-dark-700 flex items-center justify-center text-6xl overflow-hidden group">
                 ${product.image_url ? `<img src="${product.image_url}" class="w-full h-full object-cover" />` : '🖼️'}
+
+                <!-- Wishlist Button -->
+                <button onclick='toggleWishlist(${JSON.stringify(product).replace(/'/g, "&apos;")})'
+                        class="absolute top-4 left-4 p-2 glass-effect rounded-full hover:bg-white/20 transition-all z-10">
+                    <svg class="w-6 h-6 ${isInWishlist ? 'fill-accent-gold' : ''}" fill="${isInWishlist ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                </button>
+
+                <!-- Quick View Button -->
+                <button onclick='showQuickView(${JSON.stringify(product).replace(/'/g, "&apos;")})'
+                        class="quick-view-btn absolute bottom-4 right-4 left-4 px-4 py-2 glass-effect rounded-lg hover:bg-white/20 transition-all">
+                    نمایش سریع
+                </button>
             </div>
+
             <div class="p-6">
-                <h3 class="text-xl font-bold mb-2">${product.name_fa}</h3>
-                ${product.description_fa ? `<p class="text-gray-600 text-sm mb-4 line-clamp-2">${product.description_fa}</p>` : ''}
-                ${product.category ? `<span class="inline-block px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full mb-4">${product.category}</span>` : ''}
+                <h3 class="text-xl font-serif font-semibold mb-2">${product.name_fa}</h3>
+                ${product.description_fa ? `<p class="text-accent-secondary text-sm mb-4 line-clamp-2">${product.description_fa}</p>` : ''}
+                ${product.category ? `<span class="inline-block px-3 py-1 glass-effect text-accent-primary text-xs rounded-full mb-4">${product.category}</span>` : ''}
 
                 <div class="flex items-center justify-between mt-4">
                     <div class="price-tag px-4 py-2 rounded-lg">
                         <span class="text-white font-bold text-lg">${formatPrice(product.price)} تومان</span>
                     </div>
                     <button onclick='addToCart(${JSON.stringify(product).replace(/'/g, "&apos;")})'
-                            class="p-3 bg-primary text-white rounded-full hover:bg-secondary transition">
+                            class="p-3 bg-gradient-to-r from-accent-gold to-accent-purple rounded-full hover:shadow-lg hover:shadow-accent-purple/50 transition-all">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                         </svg>
@@ -200,7 +316,8 @@ function renderProducts(productsList) {
                     `<p class="text-red-500 text-xs mt-2">تنها ${product.stock_quantity} عدد موجود</p>` : ''}
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 async function loadCategories() {
@@ -211,21 +328,19 @@ async function loadCategories() {
         if (data.success && data.categories.length > 0) {
             const categoriesList = document.getElementById('categories-list');
             categoriesList.innerHTML = data.categories.map(category => `
-                <button class="category-filter px-6 py-2 rounded-full bg-gray-100 hover:bg-primary hover:text-white transition"
+                <button class="filter-btn px-5 py-2 rounded-full text-sm whitespace-nowrap"
                         data-category="${category}">
                     ${category}
                 </button>
             `).join('');
 
             // Add click handlers
-            document.querySelectorAll('.category-filter').forEach(btn => {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    document.querySelectorAll('.category-filter').forEach(b => {
-                        b.classList.remove('active', 'bg-primary', 'text-white');
-                        b.classList.add('bg-gray-100');
+                    document.querySelectorAll('.filter-btn').forEach(b => {
+                        b.classList.remove('active');
                     });
-                    btn.classList.add('active', 'bg-primary', 'text-white');
-                    btn.classList.remove('bg-gray-100');
+                    btn.classList.add('active');
                     loadProducts(btn.dataset.category);
                 });
             });
@@ -233,6 +348,116 @@ async function loadCategories() {
     } catch (error) {
         console.error('Error loading categories:', error);
     }
+}
+
+// ==================== QUICK VIEW ====================
+
+function showQuickView(product) {
+    const modal = document.getElementById('quickview-modal');
+    const content = document.getElementById('quickview-content');
+    const isInWishlist = wishlist.some(item => item.id === product.id);
+
+    content.innerHTML = `
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="aspect-square bg-dark-700 rounded-xl flex items-center justify-center text-8xl overflow-hidden">
+                ${product.image_url ? `<img src="${product.image_url}" class="w-full h-full object-cover" />` : '🖼️'}
+            </div>
+
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-3xl font-serif font-bold mb-2">${product.name_fa}</h3>
+                    ${product.category ? `<span class="inline-block px-4 py-2 glass-effect text-accent-primary text-sm rounded-full">${product.category}</span>` : ''}
+                </div>
+
+                ${product.description_fa ? `
+                    <div>
+                        <h4 class="font-semibold mb-2 text-accent-primary">توضیحات:</h4>
+                        <p class="text-accent-secondary leading-relaxed">${product.description_fa}</p>
+                    </div>
+                ` : ''}
+
+                <div class="price-tag px-6 py-4 rounded-xl inline-block">
+                    <span class="text-white font-bold text-2xl">${formatPrice(product.price)} تومان</span>
+                </div>
+
+                ${product.stock_quantity !== undefined ? `
+                    <div>
+                        <h4 class="font-semibold mb-2 text-accent-primary">موجودی:</h4>
+                        <p class="text-accent-secondary">${product.stock_quantity} عدد</p>
+                    </div>
+                ` : ''}
+
+                <div class="flex gap-4 pt-4">
+                    <button onclick='addToCart(${JSON.stringify(product).replace(/'/g, "&apos;")}); closeQuickView();'
+                            class="flex-1 px-6 py-4 bg-gradient-to-r from-accent-gold to-accent-purple rounded-xl font-bold hover:shadow-lg hover:shadow-accent-purple/50 transition-all">
+                        افزودن به سبد خرید
+                    </button>
+                    <button onclick='toggleWishlist(${JSON.stringify(product).replace(/'/g, "&apos;")})'
+                            class="px-6 py-4 glass-effect rounded-xl hover:bg-white/10 transition-all">
+                        <svg class="w-6 h-6 ${isInWishlist ? 'fill-accent-gold' : ''}" fill="${isInWishlist ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    modal.classList.remove('hidden');
+}
+
+function closeQuickView() {
+    document.getElementById('quickview-modal').classList.add('hidden');
+}
+
+// ==================== SEARCH & FILTER ====================
+
+function searchProducts(query) {
+    const searchTerm = query.toLowerCase();
+
+    if (!searchTerm) {
+        filteredProducts = products;
+    } else {
+        filteredProducts = products.filter(product =>
+            product.name_fa.toLowerCase().includes(searchTerm) ||
+            (product.description_fa && product.description_fa.toLowerCase().includes(searchTerm)) ||
+            (product.category && product.category.toLowerCase().includes(searchTerm))
+        );
+    }
+
+    renderProducts(filteredProducts);
+
+    const gridEl = document.getElementById('products-grid');
+    const emptyEl = document.getElementById('empty-products');
+
+    if (filteredProducts.length > 0) {
+        gridEl.classList.remove('hidden');
+        emptyEl.classList.add('hidden');
+    } else {
+        gridEl.classList.add('hidden');
+        emptyEl.classList.remove('hidden');
+    }
+}
+
+function sortProducts(sortBy) {
+    let sorted = [...filteredProducts];
+
+    switch(sortBy) {
+        case 'price-asc':
+            sorted.sort((a, b) => a.price - b.price);
+            break;
+        case 'price-desc':
+            sorted.sort((a, b) => b.price - a.price);
+            break;
+        case 'newest':
+            sorted.sort((a, b) => b.id - a.id);
+            break;
+        case 'popular':
+            // Can be implemented based on sales data
+            break;
+    }
+
+    renderProducts(sorted);
 }
 
 // ==================== CHECKOUT ====================
@@ -245,7 +470,6 @@ async function submitOrder(formData) {
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<span class="loading"></span> در حال ثبت...';
 
-        // Prepare order items
         const items = cart.map(item => ({
             product_id: item.id,
             product_name: item.name_fa,
@@ -274,12 +498,10 @@ async function submitOrder(formData) {
         const data = await response.json();
 
         if (data.success) {
-            // Show success modal
             document.getElementById('order-number').textContent = data.order.order_number;
             document.getElementById('checkout-modal').classList.add('hidden');
             document.getElementById('success-modal').classList.remove('hidden');
 
-            // Clear cart
             clearCart();
             document.getElementById('cart-modal').classList.add('hidden');
         } else {
@@ -307,6 +529,20 @@ function initEventListeners() {
     document.getElementById('close-cart').addEventListener('click', () => {
         document.getElementById('cart-modal').classList.add('hidden');
     });
+
+    // Wishlist button
+    document.getElementById('wishlist-btn').addEventListener('click', () => {
+        renderWishlistItems();
+        document.getElementById('wishlist-modal').classList.remove('hidden');
+    });
+
+    // Close wishlist
+    document.getElementById('close-wishlist').addEventListener('click', () => {
+        document.getElementById('wishlist-modal').classList.add('hidden');
+    });
+
+    // Close quick view
+    document.getElementById('close-quickview').addEventListener('click', closeQuickView);
 
     // Checkout button
     document.getElementById('checkout-btn').addEventListener('click', () => {
@@ -336,8 +572,47 @@ function initEventListeners() {
         document.getElementById('checkout-form').reset();
     });
 
+    // Search input
+    const searchInput = document.getElementById('search-input');
+    let searchTimeout;
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            searchProducts(e.target.value);
+        }, 300);
+    });
+
+    // Sort select
+    document.getElementById('sort-select').addEventListener('change', (e) => {
+        sortProducts(e.target.value);
+    });
+
+    // Back to top button
+    const backToTopBtn = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            backToTopBtn.style.opacity = '1';
+            backToTopBtn.style.pointerEvents = 'auto';
+        } else {
+            backToTopBtn.style.opacity = '0';
+            backToTopBtn.style.pointerEvents = 'none';
+        }
+    });
+
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Newsletter form
+    document.getElementById('newsletter-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('newsletter-email').value;
+        showNotification('ایمیل شما با موفقیت ثبت شد', 'success');
+        e.target.reset();
+    });
+
     // Close modals on backdrop click
-    document.querySelectorAll('.modal').forEach(modal => {
+    document.querySelectorAll('.modal-backdrop').forEach(modal => {
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 modal.classList.add('hidden');
@@ -353,21 +628,22 @@ function formatPrice(price) {
 }
 
 function showNotification(message, type = 'success') {
-    // Create notification element
     const notification = document.createElement('div');
-    notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-4 rounded-lg shadow-lg z-50 transition-all ${
-        type === 'success' ? 'bg-green-500' : 'bg-red-500'
-    } text-white`;
+
+    let bgColor = 'bg-gradient-to-r from-accent-gold to-accent-purple';
+    if (type === 'error') bgColor = 'bg-gradient-to-r from-red-500 to-red-600';
+    if (type === 'info') bgColor = 'bg-gradient-to-r from-blue-500 to-blue-600';
+
+    notification.className = `fixed top-24 left-1/2 transform -translate-x-1/2 px-6 py-4 rounded-xl shadow-lg z-50 transition-all ${bgColor} text-white font-semibold`;
+    notification.style.opacity = '0';
     notification.textContent = message;
 
     document.body.appendChild(notification);
 
-    // Animate in
     setTimeout(() => {
-        notification.style.top = '24px';
+        notification.style.opacity = '1';
     }, 10);
 
-    // Remove after 3 seconds
     setTimeout(() => {
         notification.style.opacity = '0';
         setTimeout(() => {

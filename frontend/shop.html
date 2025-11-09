@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="فروشگاه آثار هنری النازاشرفی - خرید آنلاین آثار هنری">
-    <title>فروشگاه - النازاشرفی</title>
+    <meta name="description" content="فروشگاه آثار هنری النازاشرفی - خرید آنلاین آثار هنری اورجینال و چاپ‌های محدود">
+    <meta name="keywords" content="خرید تابلو، آثار هنری، فروشگاه هنر، النازاشرفی">
+    <title>فروشگاه آثار هنری — Elnaz Ashrafi</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>">
@@ -12,12 +13,73 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- Persian Font - Vazir -->
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
 
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Vazir', 'Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        dark: {
+                            900: '#0A0A0A',
+                            800: '#121212',
+                            700: '#1A1A1A',
+                            600: '#242424',
+                        },
+                        accent: {
+                            primary: '#E5E5E5',
+                            secondary: '#999999',
+                            gold: '#D4AF37',
+                            purple: '#9333EA',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                }
+            }
+        }
+    </script>
+
     <style>
-        body {
-            font-family: 'Vazir', sans-serif;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .product-card {
@@ -25,15 +87,14 @@
         }
 
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            transform: translateY(-8px);
         }
 
         .cart-badge {
             position: absolute;
             top: -8px;
-            right: -8px;
-            background: #ef4444;
+            left: -8px;
+            background: linear-gradient(135deg, #D4AF37 0%, #9333EA 100%);
             color: white;
             border-radius: 50%;
             width: 24px;
@@ -59,44 +120,92 @@
             to { transform: rotate(360deg); }
         }
 
-        .modal {
-            backdrop-filter: blur(8px);
+        .modal-backdrop {
+            backdrop-filter: blur(12px);
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: linear-gradient(135deg, #D4AF37 0%, #9333EA 100%);
+            border-color: transparent;
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #D4AF37;
+            outline: none;
+        }
+
+        .wishlist-icon {
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-icon:hover {
+            transform: scale(1.2);
+        }
+
+        .wishlist-icon.active {
+            fill: #D4AF37;
         }
 
         .price-tag {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #D4AF37 0%, #9333EA 100%);
+        }
+
+        .quick-view-btn {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover .quick-view-btn {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#667eea',
-                        secondary: '#764ba2',
-                        accent: '#f093fb',
-                    }
-                }
-            }
-        }
-    </script>
 </head>
-<body class="bg-gray-50">
+<body class="bg-dark-900 text-white antialiased overflow-x-hidden">
 
     <!-- Navigation -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-4">
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-dark-900/95 backdrop-blur-md border-b border-dark-700">
+        <div class="container mx-auto px-6 lg:px-12 py-6">
             <div class="flex items-center justify-between">
-                <a href="index.html" class="text-2xl font-bold text-gray-800">
-                    🎨 النازاشرفی
+                <!-- Logo -->
+                <a href="index.html" class="text-2xl font-serif font-semibold tracking-tight hover:opacity-70 transition-opacity">
+                    Elnaz Ashrafi
                 </a>
 
-                <div class="flex items-center gap-6">
-                    <a href="index.html" class="text-gray-600 hover:text-primary transition">صفحه اصلی</a>
-                    <a href="#products" class="text-gray-600 hover:text-primary transition">محصولات</a>
+                <!-- Desktop Menu -->
+                <ul class="hidden md:flex items-center space-x-8 space-x-reverse">
+                    <li><a href="index.html" class="hover:text-accent-secondary transition-colors">صفحه اصلی</a></li>
+                    <li><a href="index.html#about" class="hover:text-accent-secondary transition-colors">درباره</a></li>
+                    <li><a href="index.html#gallery" class="hover:text-accent-secondary transition-colors">گالری</a></li>
+                    <li><a href="shop.html" class="text-accent-gold">فروشگاه</a></li>
+                    <li><a href="index.html#contact" class="hover:text-accent-secondary transition-colors">تماس</a></li>
+                </ul>
 
-                    <button id="cart-btn" class="relative p-2 bg-primary text-white rounded-full hover:bg-secondary transition">
+                <!-- Cart & Wishlist -->
+                <div class="flex items-center gap-4">
+                    <button id="wishlist-btn" class="relative p-2 glass-effect rounded-full hover:bg-white/10 transition-all">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                        <span id="wishlist-count" class="cart-badge hidden">0</span>
+                    </button>
+
+                    <button id="cart-btn" class="relative p-2 bg-gradient-to-r from-accent-gold to-accent-purple rounded-full hover:shadow-lg hover:shadow-accent-purple/50 transition-all">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                         </svg>
@@ -108,40 +217,90 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="bg-gradient-to-r from-primary to-secondary text-white py-20">
-        <div class="container mx-auto px-6 text-center">
-            <h1 class="text-5xl font-bold mb-4">فروشگاه آثار هنری</h1>
-            <p class="text-xl mb-8">مجموعه‌ای منحصربه‌فرد از آثار هنری اورجینال و چاپ‌های محدود</p>
-            <a href="#products" class="inline-block bg-white text-primary px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition">
-                مشاهده محصولات
-            </a>
+    <section id="hero" class="min-h-[70vh] flex items-center justify-center relative overflow-hidden pt-20">
+        <div class="absolute inset-0 bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900"></div>
+
+        <!-- Animated background gradient -->
+        <div class="absolute inset-0 opacity-30">
+            <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-accent-purple rounded-full mix-blend-multiply filter blur-3xl animate-float"></div>
+            <div class="absolute top-1/3 left-1/4 w-96 h-96 bg-accent-gold rounded-full mix-blend-multiply filter blur-3xl animate-float" style="animation-delay: 2s;"></div>
+        </div>
+
+        <div class="container mx-auto px-6 lg:px-12 relative z-10">
+            <div class="max-w-5xl mx-auto text-center">
+                <div class="mb-8 animate-fade-in">
+                    <span class="inline-block px-6 py-3 glass-effect rounded-full text-sm text-accent-primary mb-6">
+                        فروشگاه آثار هنری
+                    </span>
+                </div>
+
+                <h1 class="text-5xl md:text-7xl font-serif font-bold mb-8 leading-tight animate-slide-up">
+                    مجموعه‌ای منحصر‌به‌فرد از
+                    <span class="block mt-4 bg-gradient-to-r from-white via-accent-gold to-white bg-clip-text text-transparent">آثار هنری اورجینال</span>
+                </h1>
+
+                <p class="text-xl md:text-2xl text-accent-secondary mb-12 max-w-2xl mx-auto leading-relaxed animate-fade-in">
+                    تابلوهای نقاشی، مجسمه‌ها و چاپ‌های محدود با کیفیت گالری
+                </p>
+
+                <div class="flex justify-center animate-slide-up">
+                    <a href="#products" class="px-8 py-4 bg-gradient-to-r from-accent-gold to-accent-purple rounded-xl font-semibold shadow-lg hover:shadow-2xl hover:shadow-accent-purple/50 transition-all">
+                        مشاهده محصولات
+                    </a>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Categories Filter -->
-    <section class="py-8 bg-white border-b">
-        <div class="container mx-auto px-6">
-            <div class="flex gap-4 items-center overflow-x-auto">
-                <span class="text-gray-600 font-semibold ml-4">دسته‌بندی:</span>
-                <button class="category-filter active px-6 py-2 rounded-full bg-primary text-white" data-category="">
-                    همه
-                </button>
-                <div id="categories-list" class="flex gap-4">
-                    <!-- Categories will be loaded here -->
+    <!-- Search & Filter Section -->
+    <section class="py-8 bg-dark-800 sticky top-[88px] z-40 border-b border-dark-700">
+        <div class="container mx-auto px-6 lg:px-12">
+            <div class="flex flex-col md:flex-row gap-6 items-center justify-between">
+                <!-- Search Box -->
+                <div class="w-full md:w-96">
+                    <div class="relative">
+                        <input type="text"
+                               id="search-input"
+                               placeholder="جستجو در محصولات..."
+                               class="w-full px-6 py-3 pr-12 search-box rounded-xl text-white placeholder-accent-secondary">
+                        <svg class="w-5 h-5 absolute right-4 top-1/2 transform -translate-y-1/2 text-accent-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Categories Filter -->
+                <div class="flex gap-3 items-center overflow-x-auto pb-2 md:pb-0 w-full md:w-auto">
+                    <span class="text-accent-secondary text-sm whitespace-nowrap ml-2">دسته‌بندی:</span>
+                    <button class="filter-btn active px-5 py-2 rounded-full text-sm whitespace-nowrap" data-category="">
+                        همه
+                    </button>
+                    <div id="categories-list" class="flex gap-3">
+                        <!-- Categories will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Sort Options -->
+                <div class="flex gap-3 items-center w-full md:w-auto">
+                    <span class="text-accent-secondary text-sm whitespace-nowrap">مرتب‌سازی:</span>
+                    <select id="sort-select" class="px-4 py-2 glass-effect rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent-gold">
+                        <option value="newest">جدیدترین</option>
+                        <option value="price-asc">ارزان‌ترین</option>
+                        <option value="price-desc">گران‌ترین</option>
+                        <option value="popular">محبوب‌ترین</option>
+                    </select>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Products Grid -->
-    <section id="products" class="py-16">
-        <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-center mb-12 text-gray-800">محصولات</h2>
-
+    <section id="products" class="py-24 md:py-32 bg-dark-900">
+        <div class="container mx-auto px-6 lg:px-12">
             <!-- Loading State -->
             <div id="loading-products" class="text-center py-20">
-                <div class="loading mx-auto mb-4" style="border-top-color: #667eea; border-width: 4px; width: 50px; height: 50px;"></div>
-                <p class="text-gray-600">در حال بارگذاری محصولات...</p>
+                <div class="loading mx-auto mb-4" style="border-width: 4px; width: 50px; height: 50px;"></div>
+                <p class="text-accent-secondary">در حال بارگذاری محصولات...</p>
             </div>
 
             <!-- Products Grid -->
@@ -151,21 +310,21 @@
 
             <!-- Empty State -->
             <div id="empty-products" class="text-center py-20 hidden">
-                <svg class="w-24 h-24 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-24 h-24 mx-auto mb-4 text-accent-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
                 </svg>
-                <p class="text-xl text-gray-600">محصولی یافت نشد</p>
+                <p class="text-xl text-accent-secondary">محصولی یافت نشد</p>
             </div>
         </div>
     </section>
 
     <!-- Shopping Cart Modal -->
-    <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 modal hidden z-50 flex items-center justify-center p-6">
-        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div class="p-6 border-b sticky top-0 bg-white">
+    <div id="cart-modal" class="fixed inset-0 bg-black/80 modal-backdrop hidden z-50 flex items-center justify-center p-6">
+        <div class="bg-dark-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-dark-600">
+            <div class="p-6 border-b border-dark-700 sticky top-0 bg-dark-800 z-10">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-2xl font-bold">سبد خرید</h3>
-                    <button id="close-cart" class="p-2 hover:bg-gray-100 rounded-full transition">
+                    <h3 class="text-2xl font-serif font-bold">سبد خرید</h3>
+                    <button id="close-cart" class="p-2 hover:bg-dark-700 rounded-full transition">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
@@ -178,31 +337,78 @@
             </div>
 
             <div id="cart-empty" class="p-12 text-center hidden">
-                <svg class="w-20 h-20 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-20 h-20 mx-auto mb-4 text-accent-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                 </svg>
-                <p class="text-gray-600">سبد خرید شما خالی است</p>
+                <p class="text-accent-secondary">سبد خرید شما خالی است</p>
             </div>
 
-            <div id="cart-footer" class="p-6 border-t bg-gray-50 sticky bottom-0 hidden">
+            <div id="cart-footer" class="p-6 border-t border-dark-700 bg-dark-900 sticky bottom-0 hidden">
                 <div class="flex items-center justify-between mb-4">
                     <span class="text-lg font-semibold">جمع کل:</span>
-                    <span id="cart-total" class="text-2xl font-bold text-primary">0 تومان</span>
+                    <span id="cart-total" class="text-2xl font-bold bg-gradient-to-r from-accent-gold to-accent-purple bg-clip-text text-transparent">0 تومان</span>
                 </div>
-                <button id="checkout-btn" class="w-full bg-primary text-white py-4 rounded-xl font-bold hover:bg-secondary transition">
+                <button id="checkout-btn" class="w-full bg-gradient-to-r from-accent-gold to-accent-purple py-4 rounded-xl font-bold hover:shadow-lg hover:shadow-accent-purple/50 transition-all">
                     ثبت سفارش
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Checkout Modal -->
-    <div id="checkout-modal" class="fixed inset-0 bg-black bg-opacity-50 modal hidden z-50 flex items-center justify-center p-6">
-        <div class="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div class="p-6 border-b">
+    <!-- Wishlist Modal -->
+    <div id="wishlist-modal" class="fixed inset-0 bg-black/80 modal-backdrop hidden z-50 flex items-center justify-center p-6">
+        <div class="bg-dark-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-dark-600">
+            <div class="p-6 border-b border-dark-700 sticky top-0 bg-dark-800 z-10">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-2xl font-bold">اطلاعات سفارش</h3>
-                    <button id="close-checkout" class="p-2 hover:bg-gray-100 rounded-full transition">
+                    <h3 class="text-2xl font-serif font-bold">علاقه‌مندی‌ها</h3>
+                    <button id="close-wishlist" class="p-2 hover:bg-dark-700 rounded-full transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div id="wishlist-items" class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Wishlist items will be loaded here -->
+            </div>
+
+            <div id="wishlist-empty" class="p-12 text-center hidden">
+                <svg class="w-20 h-20 mx-auto mb-4 text-accent-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                </svg>
+                <p class="text-accent-secondary">لیست علاقه‌مندی‌های شما خالی است</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div id="quickview-modal" class="fixed inset-0 bg-black/80 modal-backdrop hidden z-50 flex items-center justify-center p-6">
+        <div class="bg-dark-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-dark-600">
+            <div class="p-6 border-b border-dark-700">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-2xl font-serif font-bold">نمایش سریع</h3>
+                    <button id="close-quickview" class="p-2 hover:bg-dark-700 rounded-full transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div id="quickview-content" class="p-6">
+                <!-- Quick view content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="fixed inset-0 bg-black/80 modal-backdrop hidden z-50 flex items-center justify-center p-6">
+        <div class="bg-dark-800 rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto border border-dark-600">
+            <div class="p-6 border-b border-dark-700">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-2xl font-serif font-bold">اطلاعات سفارش</h3>
+                    <button id="close-checkout" class="p-2 hover:bg-dark-700 rounded-full transition">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
@@ -212,33 +418,33 @@
 
             <form id="checkout-form" class="p-6 space-y-4">
                 <div>
-                    <label class="block text-sm font-semibold mb-2">نام و نام خانوادگی *</label>
+                    <label class="block text-sm font-semibold mb-2 text-accent-primary">نام و نام خانوادگی *</label>
                     <input type="text" name="customer_name" required
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                           class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors text-white">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold mb-2">ایمیل *</label>
+                    <label class="block text-sm font-semibold mb-2 text-accent-primary">ایمیل *</label>
                     <input type="email" name="customer_email" required
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                           class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors text-white">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold mb-2">شماره تماس</label>
+                    <label class="block text-sm font-semibold mb-2 text-accent-primary">شماره تماس</label>
                     <input type="tel" name="customer_phone" dir="ltr"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                           class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors text-white">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold mb-2">آدرس *</label>
+                    <label class="block text-sm font-semibold mb-2 text-accent-primary">آدرس *</label>
                     <textarea name="customer_address" required rows="3"
-                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"></textarea>
+                              class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors resize-none text-white"></textarea>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold mb-2">روش پرداخت</label>
+                    <label class="block text-sm font-semibold mb-2 text-accent-primary">روش پرداخت</label>
                     <select name="payment_method"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                            class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors text-white">
                         <option value="cash">پرداخت نقدی هنگام تحویل</option>
                         <option value="online">پرداخت آنلاین</option>
                         <option value="card">کارت به کارت</option>
@@ -246,13 +452,13 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold mb-2">توضیحات (اختیاری)</label>
+                    <label class="block text-sm font-semibold mb-2 text-accent-primary">توضیحات (اختیاری)</label>
                     <textarea name="notes" rows="2"
-                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"></textarea>
+                              class="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:border-accent-gold focus:outline-none transition-colors resize-none text-white"></textarea>
                 </div>
 
                 <div class="pt-4">
-                    <button type="submit" id="submit-order-btn" class="w-full bg-primary text-white py-4 rounded-xl font-bold hover:bg-secondary transition">
+                    <button type="submit" id="submit-order-btn" class="w-full bg-gradient-to-r from-accent-gold to-accent-purple py-4 rounded-xl font-bold hover:shadow-lg hover:shadow-accent-purple/50 transition-all">
                         ثبت نهایی سفارش
                     </button>
                 </div>
@@ -261,30 +467,76 @@
     </div>
 
     <!-- Success Modal -->
-    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 modal hidden z-50 flex items-center justify-center p-6">
-        <div class="bg-white rounded-2xl max-w-md w-full p-8 text-center">
-            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div id="success-modal" class="fixed inset-0 bg-black/80 modal-backdrop hidden z-50 flex items-center justify-center p-6">
+        <div class="bg-dark-800 rounded-2xl max-w-md w-full p-8 text-center border border-dark-600">
+            <div class="w-20 h-20 bg-gradient-to-br from-accent-gold to-accent-purple rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                 </svg>
             </div>
-            <h3 class="text-2xl font-bold mb-2">سفارش شما ثبت شد!</h3>
-            <p class="text-gray-600 mb-4">کد پیگیری سفارش:</p>
-            <p id="order-number" class="text-2xl font-bold text-primary mb-6">-</p>
-            <p class="text-sm text-gray-500 mb-6">به زودی با شما تماس خواهیم گرفت</p>
-            <button id="close-success" class="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-secondary transition">
+            <h3 class="text-2xl font-serif font-bold mb-2">سفارش شما ثبت شد!</h3>
+            <p class="text-accent-secondary mb-4">کد پیگیری سفارش:</p>
+            <p id="order-number" class="text-2xl font-bold bg-gradient-to-r from-accent-gold to-accent-purple bg-clip-text text-transparent mb-6">-</p>
+            <p class="text-sm text-accent-secondary mb-6">به زودی با شما تماس خواهیم گرفت</p>
+            <button id="close-success" class="w-full bg-gradient-to-r from-accent-gold to-accent-purple py-3 rounded-xl font-bold hover:shadow-lg hover:shadow-accent-purple/50 transition-all">
                 باشه، متوجه شدم
             </button>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8 mt-16">
-        <div class="container mx-auto px-6 text-center">
-            <p>&copy; ۱۴۰۳ النازاشرفی. تمامی حقوق محفوظ است.</p>
+    <footer class="py-12 bg-dark-900 border-t border-dark-700">
+        <div class="container mx-auto px-6 lg:px-12">
+            <div class="grid md:grid-cols-3 gap-12 mb-12">
+                <div>
+                    <h3 class="text-2xl font-serif font-semibold mb-4">Elnaz Ashrafi</h3>
+                    <p class="text-accent-secondary mb-6">
+                        هنرمند معاصر و خالق آثار هنری با معنا
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-4 uppercase text-sm tracking-wider">لینک‌های سریع</h4>
+                    <ul class="space-y-2 text-accent-secondary">
+                        <li><a href="index.html" class="hover:text-white transition-colors">صفحه اصلی</a></li>
+                        <li><a href="index.html#about" class="hover:text-white transition-colors">درباره</a></li>
+                        <li><a href="index.html#gallery" class="hover:text-white transition-colors">گالری</a></li>
+                        <li><a href="shop.html" class="hover:text-white transition-colors">فروشگاه</a></li>
+                        <li><a href="index.html#contact" class="hover:text-white transition-colors">تماس</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-4 uppercase text-sm tracking-wider">خبرنامه</h4>
+                    <form id="newsletter-form" class="flex gap-2">
+                        <input type="email" id="newsletter-email" placeholder="ایمیل شما" required
+                               class="flex-1 px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg focus:outline-none focus:border-accent-gold transition-colors text-sm text-white">
+                        <button type="submit" class="px-6 py-3 bg-gradient-to-r from-accent-gold to-accent-purple rounded-lg hover:shadow-lg transition-all text-sm font-semibold">
+                            ثبت
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-dark-700 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-accent-secondary">
+                <p>&copy; ۱۴۰۳ Elnaz Ashrafi. تمامی حقوق محفوظ است.</p>
+                <div class="flex gap-6">
+                    <a href="#" class="hover:text-white transition-colors">اینستاگرام</a>
+                    <a href="#" class="hover:text-white transition-colors">توییتر</a>
+                    <a href="#" class="hover:text-white transition-colors">لینکدین</a>
+                </div>
+            </div>
         </div>
     </footer>
 
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="fixed bottom-8 left-8 p-4 bg-gradient-to-r from-accent-gold to-accent-purple rounded-full shadow-lg hover:shadow-accent-purple/50 transition-all opacity-0 pointer-events-none z-40">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+        </svg>
+    </button>
+
+    <!-- JavaScript -->
     <script src="js/shop.js"></script>
 </body>
 </html>
