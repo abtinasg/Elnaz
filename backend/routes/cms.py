@@ -5,7 +5,7 @@ Content Management System API endpoints
 
 from flask import Blueprint, request, jsonify
 from backend.database import get_db
-from backend.routes.admin import require_auth
+from backend.auth_utils import require_auth
 from datetime import datetime
 
 cms_bp = Blueprint('cms', __name__, url_prefix='/api/cms')
@@ -88,7 +88,7 @@ def create_content():
         content_key = data.get('key')
         content_value = data.get('value')
         content_type = data.get('type', 'text')
-        admin_id = request.admin_id
+        admin_id = request.admin['id']
 
         if not all([section, content_key, content_value]):
             return jsonify({'error': 'Section, key, and value are required'}), 400
@@ -118,7 +118,7 @@ def update_content(content_id):
         data = request.get_json()
         content_value = data.get('value')
         content_type = data.get('type')
-        admin_id = request.admin_id
+        admin_id = request.admin['id']
 
         if not content_value:
             return jsonify({'error': 'Value is required'}), 400

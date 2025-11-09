@@ -6,7 +6,7 @@ API endpoints for AI-powered features
 from flask import Blueprint, request, jsonify
 from backend.ai_service import ai_service
 from backend.database import get_db
-from backend.routes.admin import require_auth
+from backend.auth_utils import require_auth
 from datetime import datetime
 
 ai_bp = Blueprint('ai', __name__, url_prefix='/api/ai')
@@ -19,7 +19,7 @@ def chat():
         data = request.get_json()
         message = data.get('message')
         conversation_history = data.get('history', [])
-        admin_id = request.admin_id
+        admin_id = request.admin['id']
 
         if not message:
             return jsonify({'error': 'Message is required'}), 400
@@ -139,7 +139,7 @@ def email_response():
 def conversation_history():
     """Get AI conversation history"""
     try:
-        admin_id = request.admin_id
+        admin_id = request.admin['id']
         limit = request.args.get('limit', 50, type=int)
 
         with get_db() as conn:

@@ -10,15 +10,27 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Initialize OpenAI client
-client = OpenAI(api_key=os.getenv('OPENAI_API_KEY', ''))
-
 class AIService:
     """AI Service for OpenAI integration"""
 
     def __init__(self):
         self.model = os.getenv('OPENAI_MODEL', 'gpt-3.5-turbo')
         self.max_tokens = int(os.getenv('OPENAI_MAX_TOKENS', 1000))
+        self._client = None
+
+    @property
+    def client(self):
+        """Lazy initialization of OpenAI client"""
+        if self._client is None:
+            api_key = os.getenv('OPENAI_API_KEY', '')
+            if not api_key or api_key == 'your-openai-api-key-here':
+                return None
+            try:
+                self._client = OpenAI(api_key=api_key)
+            except Exception as e:
+                print(f"Warning: Failed to initialize OpenAI client: {e}")
+                return None
+        return self._client
 
     def chat(self, message, conversation_history=None, system_prompt=None):
         """
@@ -33,6 +45,15 @@ class AIService:
             dict: Response with text, tokens_used, and model
         """
         try:
+            # Check if OpenAI client is available
+            if self.client is None:
+                return {
+                    'error': 'OpenAI API key not configured',
+                    'text': None,
+                    'tokens_used': 0,
+                    'model': self.model
+                }
+
             messages = []
 
             # Add system prompt if provided
@@ -52,7 +73,7 @@ class AIService:
             messages.append({"role": "user", "content": message})
 
             # Call OpenAI API
-            response = client.chat.completions.create(
+            response = self.client.chat.completions.create(
                 model=self.model,
                 messages=messages,
                 max_tokens=self.max_tokens,
