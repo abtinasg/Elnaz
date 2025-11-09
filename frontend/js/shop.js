@@ -11,9 +11,12 @@ let cart = [];
 let wishlist = [];
 let products = [];
 let filteredProducts = [];
+let currentUser = null;
+let authToken = null;
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
+    checkAuth();
     loadCart();
     loadWishlist();
     loadProducts();
@@ -550,6 +553,15 @@ function initEventListeners() {
             showNotification('سبد خرید خالی است', 'error');
             return;
         }
+
+        // Check if user is logged in
+        if (!currentUser || !authToken) {
+            document.getElementById('cart-modal').classList.add('hidden');
+            showNotification('برای خرید ابتدا وارد شوید یا ثبت‌نام کنید', 'info');
+            openModal('login-modal');
+            return;
+        }
+
         document.getElementById('cart-modal').classList.add('hidden');
         document.getElementById('checkout-modal').classList.remove('hidden');
     });
@@ -611,6 +623,87 @@ function initEventListeners() {
         e.target.reset();
     });
 
+    // Authentication Event Listeners
+    // Open Login Modal
+    document.getElementById('login-btn').addEventListener('click', () => {
+        openModal('login-modal');
+    });
+
+    // Open Register Modal
+    document.getElementById('register-btn').addEventListener('click', () => {
+        openModal('register-modal');
+    });
+
+    // Close Login Modal
+    document.getElementById('close-login').addEventListener('click', () => {
+        closeModal('login-modal');
+    });
+
+    // Close Register Modal
+    document.getElementById('close-register').addEventListener('click', () => {
+        closeModal('register-modal');
+    });
+
+    // Switch to Register
+    document.getElementById('switch-to-register').addEventListener('click', () => {
+        closeModal('login-modal');
+        openModal('register-modal');
+    });
+
+    // Switch to Login
+    document.getElementById('switch-to-login').addEventListener('click', () => {
+        closeModal('register-modal');
+        openModal('login-modal');
+    });
+
+    // Login Form Submit
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const email = formData.get('email');
+        const password = formData.get('password');
+
+        const errorDiv = document.getElementById('login-error');
+        errorDiv.classList.add('hidden');
+
+        const result = await handleLogin(email, password);
+
+        if (result !== true) {
+            errorDiv.textContent = result;
+            errorDiv.classList.remove('hidden');
+        }
+    });
+
+    // Register Form Submit
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = {
+            full_name: formData.get('full_name'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            password: formData.get('password')
+        };
+
+        const errorDiv = document.getElementById('register-error');
+        errorDiv.classList.add('hidden');
+
+        const result = await handleRegister(data);
+
+        if (result !== true) {
+            errorDiv.textContent = result;
+            errorDiv.classList.remove('hidden');
+        }
+    });
+
+    // Logout Button
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            logout();
+        });
+    }
+
     // Close modals on backdrop click
     document.querySelectorAll('.modal-backdrop').forEach(modal => {
         modal.addEventListener('click', (e) => {
@@ -619,6 +712,145 @@ function initEventListeners() {
             }
         });
     });
+
+    // Profile dropdown toggle
+    const profileBtn = document.getElementById('profile-btn');
+    const profileDropdown = document.getElementById('profile-dropdown');
+    if (profileBtn) {
+        profileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', () => {
+            profileDropdown.classList.add('hidden');
+        });
+    }
+}
+
+// ==================== AUTHENTICATION ====================
+
+function checkAuth() {
+    authToken = localStorage.getItem('shop_auth_token');
+
+    if (authToken) {
+        verifyAuth();
+    } else {
+        updateAuthUI(false);
+    }
+}
+
+async function verifyAuth() {
+    try {
+        const response = await fetch(`${API_URL}/auth/verify`, {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.data.user) {
+            currentUser = data.data.user;
+            updateAuthUI(true);
+        } else {
+            logout();
+        }
+    } catch (error) {
+        console.error('Error verifying auth:', error);
+        logout();
+    }
+}
+
+function updateAuthUI(isLoggedIn) {
+    const authButtons = document.getElementById('auth-buttons');
+    const userProfile = document.getElementById('user-profile');
+    const userName = document.getElementById('user-name');
+
+    if (isLoggedIn && currentUser) {
+        authButtons.classList.add('hidden');
+        userProfile.classList.remove('hidden');
+        if (userName) {
+            userName.textContent = currentUser.full_name || 'کاربر';
+        }
+    } else {
+        authButtons.classList.remove('hidden');
+        userProfile.classList.add('hidden');
+    }
+}
+
+async function handleLogin(email, password) {
+    try {
+        const response = await fetch(`${API_URL}/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            authToken = data.data.token;
+            currentUser = data.data.user;
+            localStorage.setItem('shop_auth_token', authToken);
+            updateAuthUI(true);
+            closeModal('login-modal');
+            showNotification('خوش آمدید!', 'success');
+            return true;
+        } else {
+            return data.message || 'خطا در ورود';
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        return 'خطا در ارتباط با سرور';
+    }
+}
+
+async function handleRegister(formData) {
+    try {
+        const response = await fetch(`${API_URL}/auth/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            authToken = data.data.token;
+            currentUser = data.data.user;
+            localStorage.setItem('shop_auth_token', authToken);
+            updateAuthUI(true);
+            closeModal('register-modal');
+            showNotification('ثبت‌نام با موفقیت انجام شد!', 'success');
+            return true;
+        } else {
+            return data.message || 'خطا در ثبت‌نام';
+        }
+    } catch (error) {
+        console.error('Register error:', error);
+        return 'خطا در ارتباط با سرور';
+    }
+}
+
+function logout() {
+    authToken = null;
+    currentUser = null;
+    localStorage.removeItem('shop_auth_token');
+    updateAuthUI(false);
+    showNotification('با موفقیت خارج شدید', 'info');
+}
+
+function openModal(modalId) {
+    document.getElementById(modalId).classList.remove('hidden');
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
 }
 
 // ==================== UTILITY FUNCTIONS ====================

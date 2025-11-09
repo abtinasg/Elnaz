@@ -194,6 +194,48 @@ def init_db():
         )
     ''')
 
+    # Shop Users Table (for customer authentication)
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS shop_users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            full_name TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            phone TEXT,
+            password_hash TEXT NOT NULL,
+            address TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            last_login TIMESTAMP,
+            is_active INTEGER DEFAULT 1
+        )
+    ''')
+
+    # Shop User Sessions Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS shop_user_sessions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            session_token TEXT NOT NULL UNIQUE,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            expires_at TIMESTAMP NOT NULL,
+            is_active INTEGER DEFAULT 1,
+            FOREIGN KEY (user_id) REFERENCES shop_users (id)
+        )
+    ''')
+
+    # Shop Pages Table (for Contact and About pages content)
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS shop_pages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            page_key TEXT NOT NULL UNIQUE,
+            title_fa TEXT NOT NULL,
+            content_fa TEXT NOT NULL,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_by INTEGER,
+            is_active INTEGER DEFAULT 1,
+            FOREIGN KEY (updated_by) REFERENCES admin_users(id)
+        )
+    ''')
+
     # Create indexes for performance
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_contacts_status ON contacts(status)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_contacts_created ON contacts(created_at DESC)')
@@ -209,6 +251,9 @@ def init_db():
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_orders_number ON orders(order_number)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_orders_new_status ON orders(status)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(order_id)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_shop_users_email ON shop_users(email)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_shop_user_sessions_token ON shop_user_sessions(session_token)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_shop_pages_key ON shop_pages(page_key)')
 
     conn.commit()
     conn.close()

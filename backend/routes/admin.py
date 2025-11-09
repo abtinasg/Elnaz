@@ -4,7 +4,7 @@ Authentication and dashboard management endpoints
 """
 
 from flask import Blueprint, request, jsonify
-from ..models import Admin, Contact, ShopOrder, Newsletter
+from ..models import Admin, Contact, ShopOrder, Newsletter, ShopPage, ShopUser
 from ..auth_utils import require_auth
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/api/admin')
@@ -277,6 +277,108 @@ def get_subscribers():
         return jsonify({
             'success': True,
             'data': subscribers
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': str(e)
+        }), 500
+
+
+# Shop Pages Management
+@admin_bp.route('/shop-pages', methods=['GET'])
+@require_auth
+def get_shop_pages():
+    """Get all shop pages"""
+    try:
+        pages = ShopPage.get_all()
+        return jsonify({
+            'success': True,
+            'data': pages
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': str(e)
+        }), 500
+
+
+@admin_bp.route('/shop-pages/<page_key>', methods=['GET'])
+@require_auth
+def get_shop_page(page_key):
+    """Get shop page by key"""
+    try:
+        page = ShopPage.get_by_key(page_key)
+        if not page:
+            return jsonify({
+                'success': False,
+                'message': 'Page not found'
+            }), 404
+
+        return jsonify({
+            'success': True,
+            'data': page
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': str(e)
+        }), 500
+
+
+@admin_bp.route('/shop-pages', methods=['POST'])
+@require_auth
+def create_or_update_shop_page():
+    """Create or update shop page"""
+    try:
+        data = request.get_json()
+
+        if not data.get('page_key') or not data.get('title_fa') or not data.get('content_fa'):
+            return jsonify({
+                'success': False,
+                'message': 'page_key, title_fa, and content_fa are required'
+            }), 400
+
+        admin_id = request.admin['id']
+        page_id = ShopPage.create_or_update(
+            page_key=data['page_key'],
+            title_fa=data['title_fa'],
+            content_fa=data['content_fa'],
+            updated_by=admin_id
+        )
+
+        return jsonify({
+            'success': True,
+            'message': 'Page updated successfully',
+            'page_id': page_id
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': str(e)
+        }), 500
+
+
+@admin_bp.route('/shop-pages/<page_key>', methods=['DELETE'])
+@require_auth
+def delete_shop_page(page_key):
+    """Delete shop page"""
+    try:
+        success = ShopPage.delete(page_key)
+
+        if not success:
+            return jsonify({
+                'success': False,
+                'message': 'Page not found'
+            }), 404
+
+        return jsonify({
+            'success': True,
+            'message': 'Page deleted successfully'
         }), 200
 
     except Exception as e:

@@ -508,6 +508,74 @@ window.getAISEOSuggestions = async function(page) {
     }
 };
 
+// Shop Pages Management
+window.loadShopPage = async function(pageKey) {
+    try {
+        const token = localStorage.getItem('admin_token');
+        const response = await fetch(`${ENHANCED_API_BASE}/admin/shop-pages/${pageKey}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.data) {
+            document.getElementById(`${pageKey}-title`).value = data.data.title_fa || '';
+            document.getElementById(`${pageKey}-content`).value = data.data.content_fa || '';
+            alert(`صفحه ${pageKey === 'contact' ? 'تماس با ما' : 'درباره'} بارگذاری شد`);
+        } else {
+            alert('خطا در بارگذاری صفحه: ' + (data.message || 'Not found'));
+        }
+    } catch (error) {
+        console.error('Error loading shop page:', error);
+        alert('خطا در بارگذاری صفحه');
+    }
+};
+
+window.saveShopPage = async function(pageKey) {
+    try {
+        const title = document.getElementById(`${pageKey}-title`).value;
+        const content = document.getElementById(`${pageKey}-content`).value;
+
+        if (!title || !content) {
+            alert('لطفا عنوان و محتوا را وارد کنید');
+            return;
+        }
+
+        const token = localStorage.getItem('admin_token');
+        const response = await fetch(`${ENHANCED_API_BASE}/admin/shop-pages`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                page_key: pageKey,
+                title_fa: title,
+                content_fa: content
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert(`صفحه ${pageKey === 'contact' ? 'تماس با ما' : 'درباره'} با موفقیت ذخیره شد`);
+        } else {
+            alert('خطا در ذخیره: ' + (data.message || 'Unknown error'));
+        }
+    } catch (error) {
+        console.error('Error saving shop page:', error);
+        alert('خطا در ذخیره صفحه');
+    }
+};
+
+// Load shop pages when section is switched to
+window.loadShopPagesSection = function() {
+    loadShopPage('contact');
+    loadShopPage('about');
+};
+
 // Initialize enhanced features when dashboard loads
 document.addEventListener('DOMContentLoaded', () => {
     // Wait for main admin.js to initialize
@@ -542,6 +610,9 @@ window.switchSection = function(sectionName) {
             break;
         case 'analytics':
             Analytics.init();
+            break;
+        case 'shop-pages':
+            loadShopPagesSection();
             break;
     }
 };
