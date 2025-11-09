@@ -5,7 +5,7 @@ Persian language support with complete e-commerce functionality
 """
 
 from flask import Blueprint, request, jsonify
-from backend.models import Product, Order, ShopOrder
+from ..models import Product, Order, ShopOrder
 import re
 
 shop_bp = Blueprint('shop', __name__, url_prefix='/api/shop')

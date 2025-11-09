@@ -4,9 +4,9 @@ API endpoints for AI-powered features
 """
 
 from flask import Blueprint, request, jsonify
-from backend.ai_service import ai_service
-from backend.database import get_db
-from backend.auth_utils import require_auth
+from ..ai_service import ai_service
+from ..database import get_db
+from ..auth_utils import require_auth
 from datetime import datetime
 
 ai_bp = Blueprint('ai', __name__, url_prefix='/api/ai')

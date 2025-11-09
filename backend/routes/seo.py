@@ -4,8 +4,8 @@ SEO management API endpoints
 """
 
 from flask import Blueprint, request, jsonify
-from backend.database import get_db
-from backend.auth_utils import require_auth
+from ..database import get_db
+from ..auth_utils import require_auth
 
 seo_bp = Blueprint('seo', __name__, url_prefix='/api/seo')
 

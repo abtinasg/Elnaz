@@ -3,7 +3,7 @@ Database Models
 CRUD operations for Contact Forms, Shop Orders, Newsletter, Admin, Products, and Orders
 """
 
-from backend.database import get_db, dict_from_row
+from .database import get_db, dict_from_row
 from datetime import datetime, timedelta
 import hashlib
 import secrets

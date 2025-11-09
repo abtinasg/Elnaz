@@ -5,7 +5,7 @@ Shared authentication decorators and functions
 
 from flask import request, jsonify
 from functools import wraps
-from backend.models import Admin
+from .models import Admin
 
 
 def require_auth(f):
