@@ -4,7 +4,7 @@ API endpoints for contact form submissions
 """
 
 from flask import Blueprint, request, jsonify
-from models import Contact
+from backend.models import Contact
 import re
 
 contact_bp = Blueprint('contact', __name__, url_prefix='/api/contact')

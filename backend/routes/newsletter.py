@@ -4,7 +4,7 @@ API endpoints for newsletter subscriptions
 """
 
 from flask import Blueprint, request, jsonify
-from models import Newsletter
+from backend.models import Newsletter
 import re
 
 newsletter_bp = Blueprint('newsletter', __name__, url_prefix='/api/newsletter')
