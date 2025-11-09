@@ -369,29 +369,62 @@ class Order:
 
     @staticmethod
     def create(customer_name, customer_email, items, customer_phone=None,
-               customer_address=None, payment_method='cash', notes=None):
-        """Create a new order with items"""
+               customer_address=None, payment_method='cash', notes=None, coupon_code=None):
+        """Create a new order with items, inventory checking, and coupon support"""
         with get_db() as conn:
             cursor = conn.cursor()
 
-            # Calculate total
+            # 1. CHECK INVENTORY FOR ALL ITEMS
+            for item in items:
+                cursor.execute('SELECT stock_quantity, name_fa FROM products WHERE id = ?',
+                             (item['product_id'],))
+                product = cursor.fetchone()
+
+                if not product:
+                    raise ValueError(f"محصول با شناسه {item['product_id']} یافت نشد")
+
+                stock_quantity = product[0]
+                product_name = product[1]
+
+                if stock_quantity < item['quantity']:
+                    if stock_quantity == 0:
+                        raise ValueError(f"محصول '{product_name}' موجود نیست")
+                    else:
+                        raise ValueError(f"موجودی محصول '{product_name}' کافی نیست. موجودی فعلی: {stock_quantity}")
+
+            # 2. CALCULATE TOTAL AMOUNT
             total_amount = sum(item['price'] * item['quantity'] for item in items)
+            discount_amount = 0
+
+            # 3. APPLY COUPON IF PROVIDED
+            if coupon_code:
+                # Import Coupon class to validate
+                from models import Coupon
+                validation = Coupon.validate(coupon_code, total_amount)
+
+                if not validation['valid']:
+                    raise ValueError(validation['error'])
+
+                discount_amount = validation['discount_amount']
+                total_amount = validation['final_amount']
 
             # Generate order number
             order_number = Order.generate_order_number()
 
-            # Create order
+            # 4. CREATE ORDER WITH DISCOUNT INFO
             cursor.execute('''
                 INSERT INTO orders
                 (order_number, customer_name, customer_email, customer_phone,
-                 customer_address, total_amount, payment_method, notes)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                 customer_address, total_amount, discount_amount, coupon_code,
+                 payment_method, notes)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (order_number, customer_name, customer_email, customer_phone,
-                  customer_address, total_amount, payment_method, notes))
+                  customer_address, total_amount, discount_amount, coupon_code,
+                  payment_method, notes))
 
             order_id = cursor.lastrowid
 
-            # Create order items
+            # 5. CREATE ORDER ITEMS
             for item in items:
                 cursor.execute('''
                     INSERT INTO order_items
@@ -400,10 +433,17 @@ class Order:
                 ''', (order_id, item['product_id'], item['product_name'],
                       item['quantity'], item['price']))
 
+            # 6. INCREMENT COUPON USAGE IF USED
+            if coupon_code:
+                from models import Coupon
+                Coupon.use_coupon(coupon_code)
+
             return {
                 'order_id': order_id,
                 'order_number': order_number,
-                'total_amount': total_amount
+                'total_amount': total_amount,
+                'discount_amount': discount_amount,
+                'final_amount': total_amount
             }
 
     @staticmethod
@@ -464,19 +504,74 @@ class Order:
             return order
 
     @staticmethod
-    def update_status(order_id, status):
-        """Update order status"""
+    def update_status(order_id, status, admin_user='system'):
+        """Update order status and manage inventory"""
         valid_statuses = ['pending', 'processing', 'completed', 'cancelled']
         if status not in valid_statuses:
             return False
 
         with get_db() as conn:
             cursor = conn.cursor()
+
+            # Get current order status and items
+            cursor.execute('SELECT status FROM orders WHERE id = ?', (order_id,))
+            current_row = cursor.fetchone()
+            if not current_row:
+                return False
+
+            current_status = current_row[0]
+
+            # Get order items
+            cursor.execute('SELECT product_id, quantity, product_name FROM order_items WHERE order_id = ?', (order_id,))
+            order_items = cursor.fetchall()
+
+            # INVENTORY MANAGEMENT LOGIC:
+            # When status changes from 'pending' to 'processing' -> DEDUCT inventory
+            # When status changes to 'cancelled' from any status -> RESTORE inventory (if it was deducted)
+
+            if current_status == 'pending' and status == 'processing':
+                # Deduct inventory when order is confirmed
+                from models import Inventory
+                for item in order_items:
+                    product_id, quantity, product_name = item
+                    try:
+                        Inventory.adjust_stock(
+                            product_id=product_id,
+                            quantity_change=-quantity,
+                            change_type='sale',
+                            notes=f'کسر موجودی برای سفارش #{order_id}',
+                            created_by=admin_user
+                        )
+                    except ValueError as e:
+                        # If inventory adjustment fails, rollback the status change
+                        raise ValueError(f"خطا در کسر موجودی: {str(e)}")
+
+            elif status == 'cancelled' and current_status in ['processing', 'completed']:
+                # Restore inventory when order is cancelled (only if it was already processed)
+                from models import Inventory
+                for item in order_items:
+                    product_id, quantity, product_name = item
+                    Inventory.adjust_stock(
+                        product_id=product_id,
+                        quantity_change=quantity,
+                        change_type='return',
+                        notes=f'بازگشت موجودی از سفارش لغو شده #{order_id}',
+                        created_by=admin_user
+                    )
+
+            # Update order status
             cursor.execute('''
                 UPDATE orders
                 SET status = ?, updated_at = CURRENT_TIMESTAMP
                 WHERE id = ?
             ''', (status, order_id))
+
+            # Record status change in history
+            cursor.execute('''
+                INSERT INTO order_status_history (order_id, status, changed_by)
+                VALUES (?, ?, ?)
+            ''', (order_id, status, admin_user))
+
             return cursor.rowcount > 0
 
 
