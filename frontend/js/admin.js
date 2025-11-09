@@ -427,9 +427,13 @@ function switchSection(section) {
         overview: 'Overview',
         contacts: 'Contacts',
         orders: 'Orders',
-        subscribers: 'Subscribers'
+        subscribers: 'Subscribers',
+        'ai-assistant': 'AI Assistant',
+        cms: 'Content Manager',
+        seo: 'SEO Settings',
+        analytics: 'Analytics'
     };
-    sectionTitle.textContent = titles[section];
+    sectionTitle.textContent = titles[section] || 'Dashboard';
 
     // Load data for the section
     loadSectionData(section);
@@ -445,6 +449,18 @@ async function loadSectionData(section) {
             break;
         case 'subscribers':
             await loadSubscribers();
+            break;
+        case 'ai-assistant':
+            // Enhanced feature - initialized separately
+            break;
+        case 'cms':
+            // Enhanced feature - initialized separately
+            break;
+        case 'seo':
+            // Enhanced feature - initialized separately
+            break;
+        case 'analytics':
+            // Enhanced feature - initialized separately
             break;
     }
 }
