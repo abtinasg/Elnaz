@@ -195,6 +195,9 @@
                 <button onclick="switchTab('reports')" id="tab-reports" class="px-6 py-2 rounded-lg tab-inactive">
                     گزارشات
                 </button>
+                <button onclick="switchTab('tickets')" id="tab-tickets" class="px-6 py-2 rounded-lg tab-inactive">
+                    تیکت‌ها
+                </button>
             </div>
         </div>
 
@@ -509,6 +512,83 @@
                         <div class="text-center text-gray-500 py-4">در حال بارگذاری...</div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Tickets Tab -->
+        <div id="content-tickets" class="tab-content" style="display:none;">
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">مدیریت تیکت‌های پشتیبانی</h2>
+
+                <!-- Status Filter -->
+                <div class="flex gap-2 mb-6">
+                    <button onclick="filterTickets('all')" id="ticket-filter-all" class="px-4 py-2 bg-blue-500 text-white rounded-lg">همه</button>
+                    <button onclick="filterTickets('open')" id="ticket-filter-open" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">باز</button>
+                    <button onclick="filterTickets('answered')" id="ticket-filter-answered" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">پاسخ داده شده</button>
+                    <button onclick="filterTickets('closed')" id="ticket-filter-closed" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">بسته شده</button>
+                </div>
+
+                <!-- Tickets Table -->
+                <div class="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>شماره تیکت</th>
+                                <th>موضوع</th>
+                                <th>دسته‌بندی</th>
+                                <th>نام مشتری</th>
+                                <th>ایمیل</th>
+                                <th>تاریخ</th>
+                                <th>وضعیت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tickets-table-body">
+                            <tr>
+                                <td colspan="8" class="text-center py-8 text-gray-500">
+                                    در حال بارگذاری...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ticket Detail Modal -->
+    <div id="ticket-detail-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-gray-800" id="ticket-modal-title">جزئیات تیکت</h3>
+                <button onclick="closeTicketModal()" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div id="ticket-modal-content" class="space-y-4">
+                <!-- Content will be loaded dynamically -->
+            </div>
+
+            <div class="mt-6 pt-6 border-t border-gray-200">
+                <h4 class="font-bold text-gray-800 mb-4">پاسخ ادمین</h4>
+                <form id="ticket-reply-form" onsubmit="replyToTicket(event)">
+                    <textarea id="ticket-reply-message" rows="4"
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="پاسخ خود را بنویسید..." required></textarea>
+                    <div class="flex gap-3 mt-4">
+                        <button type="submit" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                            ارسال پاسخ
+                        </button>
+                        <select id="ticket-status-select" class="px-4 py-2 border border-gray-300 rounded-lg">
+                            <option value="open">باز</option>
+                            <option value="answered">پاسخ داده شده</option>
+                            <option value="closed">بسته شده</option>
+                        </select>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

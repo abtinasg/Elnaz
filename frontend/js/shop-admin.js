@@ -97,6 +97,9 @@ function loadTabData(tabName) {
         case 'reports':
             loadReports();
             break;
+        case 'tickets':
+            loadTickets();
+            break;
     }
 }
 
@@ -1133,4 +1136,228 @@ function closeModal() {
     if (modal) {
         modal.remove();
     }
+}
+
+// ==================== SUPPORT TICKETS ====================
+
+let currentTicketFilter = 'all';
+let currentTicketId = null;
+
+async function loadTickets() {
+    try {
+        const status = currentTicketFilter === 'all' ? '' : currentTicketFilter;
+        const url = `${API_BASE}/shop/tickets${status ? `?status=${status}` : ''}`;
+
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${adminToken}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            renderTicketsTable(data.tickets);
+        } else {
+            showNotification('خطا در بارگذاری تیکت‌ها', 'error');
+        }
+    } catch (error) {
+        console.error('Error loading tickets:', error);
+        showNotification('خطا در بارگذاری تیکت‌ها', 'error');
+    }
+}
+
+function renderTicketsTable(tickets) {
+    const tbody = document.getElementById('tickets-table-body');
+
+    if (tickets.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center py-8 text-gray-500">تیکتی یافت نشد</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = tickets.map(ticket => `
+        <tr>
+            <td>${ticket.ticket_number}</td>
+            <td>${ticket.subject}</td>
+            <td>${getCategoryLabel(ticket.category)}</td>
+            <td>${ticket.customer_name}</td>
+            <td>${ticket.customer_email}</td>
+            <td>${formatDate(ticket.created_at)}</td>
+            <td>
+                <span class="badge ${getStatusBadgeClass(ticket.status)}">
+                    ${getStatusLabel(ticket.status)}
+                </span>
+            </td>
+            <td>
+                <button onclick="viewTicket(${ticket.id})"
+                        class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+                    مشاهده
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function filterTickets(status) {
+    currentTicketFilter = status;
+
+    // Update filter buttons
+    document.querySelectorAll('[id^="ticket-filter-"]').forEach(btn => {
+        btn.classList.remove('bg-blue-500', 'text-white');
+        btn.classList.add('bg-gray-200', 'text-gray-700');
+    });
+
+    document.getElementById(`ticket-filter-${status}`).classList.remove('bg-gray-200', 'text-gray-700');
+    document.getElementById(`ticket-filter-${status}`).classList.add('bg-blue-500', 'text-white');
+
+    loadTickets();
+}
+
+async function viewTicket(ticketId) {
+    try {
+        currentTicketId = ticketId;
+        const response = await fetch(`${API_BASE}/shop/tickets/${ticketId}`, {
+            headers: {
+                'Authorization': `Bearer ${adminToken}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            displayTicketModal(data.ticket, data.messages);
+        } else {
+            showNotification('خطا در بارگذاری تیکت', 'error');
+        }
+    } catch (error) {
+        console.error('Error loading ticket:', error);
+        showNotification('خطا در بارگذاری تیکت', 'error');
+    }
+}
+
+function displayTicketModal(ticket, messages) {
+    document.getElementById('ticket-modal-title').textContent =
+        `تیکت #${ticket.ticket_number} - ${ticket.subject}`;
+
+    const content = document.getElementById('ticket-modal-content');
+    content.innerHTML = `
+        <div class="bg-gray-50 rounded-lg p-4 space-y-2">
+            <div><strong>نام مشتری:</strong> ${ticket.customer_name}</div>
+            <div><strong>ایمیل:</strong> ${ticket.customer_email}</div>
+            <div><strong>دسته‌بندی:</strong> ${getCategoryLabel(ticket.category)}</div>
+            <div><strong>تاریخ ایجاد:</strong> ${formatDateTime(ticket.created_at)}</div>
+            <div><strong>وضعیت:</strong>
+                <span class="badge ${getStatusBadgeClass(ticket.status)}">
+                    ${getStatusLabel(ticket.status)}
+                </span>
+            </div>
+        </div>
+
+        <div class="space-y-4 mt-6">
+            <h4 class="font-bold text-gray-800">پیام‌ها:</h4>
+            ${messages.map(msg => `
+                <div class="p-4 rounded-lg ${msg.is_staff_reply ? 'bg-blue-50 border-r-4 border-blue-500' : 'bg-gray-50'}">
+                    <div class="flex items-center justify-between mb-2">
+                        <strong>${msg.is_staff_reply ? 'پشتیبانی' : ticket.customer_name}</strong>
+                        <span class="text-sm text-gray-500">${formatDateTime(msg.created_at)}</span>
+                    </div>
+                    <p class="text-gray-700 whitespace-pre-wrap">${msg.message}</p>
+                </div>
+            `).join('')}
+        </div>
+    `;
+
+    // Set current status
+    document.getElementById('ticket-status-select').value = ticket.status;
+
+    // Clear reply form
+    document.getElementById('ticket-reply-message').value = '';
+
+    // Show modal
+    document.getElementById('ticket-detail-modal').classList.add('active');
+}
+
+function closeTicketModal() {
+    document.getElementById('ticket-detail-modal').classList.remove('active');
+    currentTicketId = null;
+}
+
+async function replyToTicket(event) {
+    event.preventDefault();
+
+    if (!currentTicketId) return;
+
+    const message = document.getElementById('ticket-reply-message').value;
+    const status = document.getElementById('ticket-status-select').value;
+
+    try {
+        // Send reply
+        const replyResponse = await fetch(`${API_BASE}/shop/tickets/${currentTicketId}/messages`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${adminToken}`
+            },
+            body: JSON.stringify({
+                message: message,
+                is_staff_reply: true
+            })
+        });
+
+        const replyData = await replyResponse.json();
+
+        if (!replyData.success) {
+            throw new Error(replyData.message);
+        }
+
+        // Update status if changed
+        const statusResponse = await fetch(`${API_BASE}/shop/tickets/${currentTicketId}/status`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${adminToken}`
+            },
+            body: JSON.stringify({ status })
+        });
+
+        const statusData = await statusResponse.json();
+
+        if (statusData.success) {
+            showNotification('پاسخ با موفقیت ارسال شد', 'success');
+            closeTicketModal();
+            loadTickets();
+        }
+    } catch (error) {
+        console.error('Error replying to ticket:', error);
+        showNotification('خطا در ارسال پاسخ', 'error');
+    }
+}
+
+function getCategoryLabel(category) {
+    const categories = {
+        'support': 'پشتیبانی عمومی',
+        'order': 'پیگیری سفارش',
+        'product': 'سوال درباره محصول',
+        'payment': 'مشکل پرداخت',
+        'other': 'سایر موارد'
+    };
+    return categories[category] || category;
+}
+
+function getStatusLabel(status) {
+    const labels = {
+        'open': 'باز',
+        'answered': 'پاسخ داده شده',
+        'closed': 'بسته شده'
+    };
+    return labels[status] || status;
+}
+
+function getStatusBadgeClass(status) {
+    const classes = {
+        'open': 'badge-info',
+        'answered': 'badge-warning',
+        'closed': 'badge-success'
+    };
+    return classes[status] || 'badge-info';
 }
