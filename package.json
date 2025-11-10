@@ -1,0 +1,30 @@
+{
+  "name": "elnaz-ashrafi-shop",
+  "version": "1.0.0",
+  "description": "QA Testing suite for Elnaz Ashrafi Art Shop",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "test:mobile": "playwright test --project='Mobile Chrome' --project='Mobile Safari'",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "lighthouse": "lhci autorun --config=.lighthouserc.json"
+  },
+  "keywords": [
+    "qa",
+    "testing",
+    "e2e",
+    "playwright",
+    "lighthouse"
+  ],
+  "author": "Elnaz Ashrafi",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@lhci/cli": "^0.12.0"
+  }
+}
