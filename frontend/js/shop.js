@@ -291,11 +291,22 @@ function renderProducts(productsList) {
                     </svg>
                 </button>
 
-                <!-- Quick View Button -->
-                <button onclick='showQuickView(${JSON.stringify(product).replace(/'/g, "&apos;")})'
-                        class="quick-view-btn absolute bottom-4 right-4 left-4 px-4 py-2 glass-effect rounded-lg hover:bg-white/20 transition-all">
-                    نمایش سریع
-                </button>
+                <!-- Action Buttons -->
+                <div class="quick-view-btn absolute bottom-4 right-4 left-4 flex gap-2">
+                    <button onclick='addToCart(${JSON.stringify(product).replace(/'/g, "&apos;")}); event.stopPropagation();'
+                            class="flex-1 px-3 py-2 bg-gradient-to-r from-accent-gold to-accent-purple rounded-lg text-sm font-semibold hover:shadow-lg transition-all">
+                        <svg class="w-4 h-4 inline-block ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                        خرید
+                    </button>
+                    <button onclick='toggleWishlist(${JSON.stringify(product).replace(/'/g, "&apos;")}); event.stopPropagation();'
+                            class="px-3 py-2 glass-effect rounded-lg hover:bg-white/20 transition-all">
+                        <svg class="w-5 h-5 ${wishlist.some(item => item.id === product.id) ? 'fill-accent-gold' : ''}" fill="${wishlist.some(item => item.id === product.id) ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <div class="p-6">
@@ -465,6 +476,85 @@ function sortProducts(sortBy) {
 
 // ==================== CHECKOUT ====================
 
+let appliedCoupon = null;
+
+async function validateCoupon() {
+    const couponInput = document.getElementById('coupon-input');
+    const couponCode = couponInput.value.trim();
+    const couponMessage = document.getElementById('coupon-message');
+    const couponDiscount = document.getElementById('coupon-discount');
+    const validateBtn = document.getElementById('validate-coupon-btn');
+
+    if (!couponCode) {
+        showCouponError('لطفا کد تخفیف را وارد کنید');
+        return;
+    }
+
+    try {
+        validateBtn.disabled = true;
+        validateBtn.textContent = 'در حال بررسی...';
+
+        const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+        const response = await fetch(`${API_URL}/coupons/validate`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                code: couponCode,
+                amount: cartTotal
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.data.valid) {
+            appliedCoupon = data.data;
+            showCouponSuccess(`کد تخفیف با موفقیت اعمال شد! تخفیف: ${data.data.discount_amount.toLocaleString('fa-IR')} تومان`);
+            couponInput.disabled = true;
+            validateBtn.textContent = 'اعمال شد';
+            showNotification('کد تخفیف اعمال شد', 'success');
+        } else {
+            showCouponError(data.data?.message || 'کد تخفیف نامعتبر است');
+            appliedCoupon = null;
+        }
+    } catch (error) {
+        console.error('Error validating coupon:', error);
+        showCouponError('خطا در بررسی کد تخفیف');
+        appliedCoupon = null;
+    } finally {
+        validateBtn.disabled = false;
+        if (!appliedCoupon) {
+            validateBtn.textContent = 'اعمال';
+        }
+    }
+}
+
+function showCouponSuccess(message) {
+    const couponMessage = document.getElementById('coupon-message');
+    const couponDiscount = document.getElementById('coupon-discount');
+
+    couponMessage.classList.remove('hidden', 'text-red-400');
+    couponMessage.classList.add('text-green-400');
+    couponMessage.textContent = message;
+
+    if (appliedCoupon) {
+        couponDiscount.classList.remove('hidden');
+        couponDiscount.textContent = `مبلغ پس از تخفیف: ${appliedCoupon.final_amount.toLocaleString('fa-IR')} تومان`;
+    }
+}
+
+function showCouponError(message) {
+    const couponMessage = document.getElementById('coupon-message');
+    const couponDiscount = document.getElementById('coupon-discount');
+
+    couponMessage.classList.remove('hidden', 'text-green-400');
+    couponMessage.classList.add('text-red-400');
+    couponMessage.textContent = message;
+    couponDiscount.classList.add('hidden');
+}
+
 async function submitOrder(formData) {
     const submitBtn = document.getElementById('submit-order-btn');
     const originalText = submitBtn.innerHTML;
@@ -489,6 +579,12 @@ async function submitOrder(formData) {
             notes: formData.get('notes'),
             items: items
         };
+
+        // Add coupon code if provided
+        const couponCode = formData.get('coupon_code');
+        if (couponCode && couponCode.trim()) {
+            orderData.coupon_code = couponCode.trim();
+        }
 
         const response = await fetch(`${API_URL}/orders`, {
             method: 'POST',
@@ -583,6 +679,19 @@ function initEventListeners() {
         document.getElementById('success-modal').classList.add('hidden');
         document.getElementById('checkout-form').reset();
     });
+
+    // Tracking modal
+    const trackingModal = document.getElementById('tracking-modal');
+    if (trackingModal) {
+        document.getElementById('close-tracking').addEventListener('click', closeTrackingModal);
+        document.getElementById('tracking-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const orderNumber = document.getElementById('order-number-input').value.trim();
+            if (orderNumber) {
+                trackOrder(orderNumber);
+            }
+        });
+    }
 
     // Search input
     const searchInput = document.getElementById('search-input');
@@ -882,4 +991,106 @@ function showNotification(message, type = 'success') {
             document.body.removeChild(notification);
         }, 300);
     }, 3000);
+}
+
+// ==================== ORDER TRACKING ====================
+
+function openTrackingModal() {
+    const modal = document.getElementById('tracking-modal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        document.getElementById('tracking-form').reset();
+        document.getElementById('tracking-result').classList.add('hidden');
+        document.getElementById('tracking-error').classList.add('hidden');
+    }
+}
+
+function closeTrackingModal() {
+    const modal = document.getElementById('tracking-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+}
+
+async function trackOrder(orderNumber) {
+    const trackBtn = document.getElementById('track-order-btn');
+    const originalText = trackBtn.innerHTML;
+    const errorDiv = document.getElementById('tracking-error');
+    const resultDiv = document.getElementById('tracking-result');
+
+    try {
+        trackBtn.disabled = true;
+        trackBtn.innerHTML = '<span class="loading"></span> در حال جستجو...';
+        errorDiv.classList.add('hidden');
+        resultDiv.classList.add('hidden');
+
+        const response = await fetch(`${API_URL}/orders/track/${orderNumber}`);
+        const data = await response.json();
+
+        if (data.success) {
+            displayTrackingResult(data.order);
+        } else {
+            errorDiv.textContent = data.message || 'سفارش یافت نشد';
+            errorDiv.classList.remove('hidden');
+        }
+    } catch (error) {
+        console.error('Error tracking order:', error);
+        errorDiv.textContent = 'خطا در پیگیری سفارش. لطفا دوباره تلاش کنید';
+        errorDiv.classList.remove('hidden');
+    } finally {
+        trackBtn.disabled = false;
+        trackBtn.innerHTML = originalText;
+    }
+}
+
+function displayTrackingResult(order) {
+    const resultDiv = document.getElementById('tracking-result');
+
+    // Set order info
+    document.getElementById('result-order-number').textContent = order.order_number;
+    document.getElementById('result-date').textContent = new Date(order.created_at).toLocaleDateString('fa-IR');
+    document.getElementById('result-amount').textContent = `${formatPrice(order.total_amount)} تومان`;
+
+    // Set status badge
+    const statusBadge = document.getElementById('result-status');
+    const statusText = getOrderStatusLabel(order.status);
+    const statusClass = getOrderStatusClass(order.status);
+
+    statusBadge.textContent = statusText;
+    statusBadge.className = `px-3 py-1 rounded-full text-xs font-semibold ${statusClass}`;
+
+    // Set items
+    const itemsDiv = document.getElementById('result-items');
+    if (order.items && order.items.length > 0) {
+        itemsDiv.innerHTML = order.items.map(item => `
+            <div class="flex justify-between items-center text-sm">
+                <span>${item.product_name}</span>
+                <span class="text-accent-secondary">${item.quantity} × ${formatPrice(item.price)} تومان</span>
+            </div>
+        `).join('');
+    } else {
+        itemsDiv.innerHTML = '<p class="text-sm text-accent-secondary">اطلاعات اقلام در دسترس نیست</p>';
+    }
+
+    resultDiv.classList.remove('hidden');
+}
+
+function getOrderStatusLabel(status) {
+    const labels = {
+        'pending': 'در انتظار تایید',
+        'processing': 'در حال پردازش',
+        'completed': 'تکمیل شده',
+        'cancelled': 'لغو شده'
+    };
+    return labels[status] || status;
+}
+
+function getOrderStatusClass(status) {
+    const classes = {
+        'pending': 'bg-yellow-500/20 text-yellow-400',
+        'processing': 'bg-blue-500/20 text-blue-400',
+        'completed': 'bg-green-500/20 text-green-400',
+        'cancelled': 'bg-red-500/20 text-red-400'
+    };
+    return classes[status] || 'bg-gray-500/20 text-gray-400';
 }
