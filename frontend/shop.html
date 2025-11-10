@@ -22,47 +22,9 @@
             font-family: 'Vazir', sans-serif;
         }
 
-        /* Hero Background Animation */
+        /* Hero Background - Simplified */
         .hero-gradient {
-            background: linear-gradient(-45deg, #0A0A0A, #1A1A1A, #2D1B4E, #1A1A1A);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-        }
-
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Floating Animation */
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .float-animation {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        /* Particle Effect */
-        .particle {
-            position: absolute;
-            background: radial-gradient(circle, #D4AF37 0%, transparent 70%);
-            border-radius: 50%;
-            opacity: 0.3;
-            animation: particle-float 6s infinite ease-in-out;
-        }
-
-        @keyframes particle-float {
-            0%, 100% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0.3;
-            }
-            50% {
-                transform: translate(50px, -50px) scale(1.5);
-                opacity: 0.6;
-            }
+            background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0A0A0A 100%);
         }
 
         /* Glassmorphism Cards */
@@ -72,64 +34,52 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Product Card Hover Effect */
+        /* Product Card Hover Effect - Subtle */
         .product-card {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .product-card:hover {
-            transform: translateY(-12px) scale(1.02);
-        }
-
-        /* Category Card Animation */
-        .category-card {
-            position: relative;
-            overflow: hidden;
             transition: all 0.3s ease;
         }
 
-        .category-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
-            transition: left 0.5s ease;
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(212, 175, 55, 0.15);
         }
 
-        .category-card:hover::before {
-            left: 100%;
+        /* Category Card - Simplified */
+        .category-card {
+            transition: all 0.3s ease;
         }
 
-        /* Stats Counter Animation */
+        .category-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        /* Stats Counter */
         .stat-number {
             font-variant-numeric: tabular-nums;
         }
 
         /* Testimonial Cards */
         .testimonial-card {
-            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(45, 27, 78, 0.5));
+            background: rgba(26, 26, 26, 0.6);
         }
 
-        /* Button Gradient */
+        /* Button Gradient - Simplified */
         .btn-gradient {
             background: linear-gradient(135deg, #D4AF37 0%, #9333EA 100%);
             transition: all 0.3s ease;
         }
 
         .btn-gradient:hover {
-            background: linear-gradient(135deg, #9333EA 0%, #D4AF37 100%);
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
         }
 
-        /* Scroll Animation */
+        /* Scroll Animation - Subtle */
         .scroll-reveal {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
         }
 
         .scroll-reveal.active {
@@ -211,186 +161,110 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="relative hero-gradient min-h-screen flex items-center justify-center overflow-hidden pt-20">
-        <!-- Animated Particles -->
-        <div class="particle" style="width: 100px; height: 100px; top: 20%; left: 10%;"></div>
-        <div class="particle" style="width: 150px; height: 150px; top: 60%; right: 15%; animation-delay: 2s;"></div>
-        <div class="particle" style="width: 80px; height: 80px; bottom: 20%; left: 20%; animation-delay: 4s;"></div>
-
-        <div class="container mx-auto px-4 relative z-10">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
+    <section class="relative hero-gradient min-h-[85vh] flex items-center justify-center overflow-hidden pt-20">
+        <div class="container mx-auto px-6 lg:px-12 relative z-10">
+            <div class="grid md:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
                 <!-- Hero Content -->
-                <div class="text-center md:text-right space-y-6">
-                    <div class="inline-block px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-[#D4AF37]/30">
-                        <span class="text-[#D4AF37] text-sm font-semibold">🎉 محصولات جدید اضافه شد</span>
-                    </div>
-
-                    <h1 class="text-5xl md:text-7xl font-bold leading-tight">
+                <div class="text-center md:text-right space-y-8">
+                    <h1 class="text-4xl md:text-6xl font-bold leading-tight">
                         فروشگاه آنلاین
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#9333EA]">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#9333EA] block mt-2">
                             تابلوهای هنری
                         </span>
                     </h1>
 
-                    <p class="text-xl text-gray-300 leading-relaxed">
+                    <p class="text-lg md:text-xl text-gray-300 leading-relaxed max-w-xl">
                         مجموعه‌ای منحصر به فرد از تابلوهای نقاشی اورجینال و چاپ‌های محدود با کیفیت گالری
                     </p>
 
-                    <div class="flex flex-wrap gap-4 justify-center md:justify-start">
-                        <a href="shop-products.html" class="px-8 py-4 btn-gradient rounded-full text-white font-bold text-lg shadow-2xl">
+                    <div class="flex flex-wrap gap-4 justify-center md:justify-start pt-4">
+                        <a href="shop-products.html" class="px-8 py-4 btn-gradient rounded-full text-white font-bold text-lg">
                             <i class="fas fa-shopping-cart ml-2"></i>
                             شروع خرید
                         </a>
-                        <a href="#categories" class="px-8 py-4 bg-white/10 backdrop-blur-md rounded-full font-bold text-lg hover:bg-white/20 transition border border-white/20">
+                        <a href="#categories" class="px-8 py-4 glass-card rounded-full font-bold text-lg hover:bg-white/10 transition">
                             <i class="fas fa-compass ml-2"></i>
                             دسته‌بندی‌ها
                         </a>
                     </div>
-
-                    <!-- Stats -->
-                    <div class="grid grid-cols-3 gap-6 pt-8">
-                        <div class="glass-card rounded-2xl p-4 text-center">
-                            <div class="text-3xl font-bold text-[#D4AF37] stat-number" data-target="500">0</div>
-                            <div class="text-sm text-gray-400 mt-1">محصول</div>
-                        </div>
-                        <div class="glass-card rounded-2xl p-4 text-center">
-                            <div class="text-3xl font-bold text-[#D4AF37] stat-number" data-target="10000">0</div>
-                            <div class="text-sm text-gray-400 mt-1">مشتری راضی</div>
-                        </div>
-                        <div class="glass-card rounded-2xl p-4 text-center">
-                            <div class="text-3xl font-bold text-[#D4AF37] stat-number" data-target="98">0</div>
-                            <div class="text-sm text-gray-400 mt-1">رضایت %</div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Hero Image -->
-                <div class="relative float-animation">
-                    <div class="relative z-10">
-                        <div class="glass-card rounded-3xl p-8 shadow-2xl">
-                            <img src="assets/1.jpg" alt="Featured Products" class="rounded-2xl w-full h-auto">
-                        </div>
-                    </div>
-
-                    <!-- Floating Cards -->
-                    <div class="absolute -top-6 -right-6 glass-card rounded-2xl p-4 shadow-xl" style="animation-delay: 0.5s;">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#9333EA] flex items-center justify-center">
-                                <i class="fas fa-star text-white"></i>
-                            </div>
-                            <div>
-                                <div class="text-sm text-gray-400">محبوب‌ترین</div>
-                                <div class="font-bold">دوره‌ها</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="absolute -bottom-6 -left-6 glass-card rounded-2xl p-4 shadow-xl" style="animation-delay: 1s;">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#9333EA] to-[#D4AF37] flex items-center justify-center">
-                                <i class="fas fa-bolt text-white"></i>
-                            </div>
-                            <div>
-                                <div class="text-sm text-gray-400">دانلود</div>
-                                <div class="font-bold">فوری</div>
-                            </div>
-                        </div>
+                <div class="relative">
+                    <div class="glass-card rounded-3xl p-6 md:p-8">
+                        <img src="assets/1.jpg" alt="تابلوهای هنری" class="rounded-2xl w-full h-auto">
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-            <div class="flex flex-col items-center gap-2 animate-bounce">
-                <span class="text-sm text-gray-400">اسکرول کنید</span>
-                <i class="fas fa-chevron-down text-[#D4AF37]"></i>
             </div>
         </div>
     </section>
 
     <!-- Categories Section -->
-    <section id="categories" class="py-20 bg-[#121212]">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16 scroll-reveal">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#9333EA]">
-                        دسته‌بندی محصولات
-                    </span>
+    <section id="categories" class="py-24 bg-[#121212]">
+        <div class="container mx-auto px-6 lg:px-12">
+            <div class="text-center mb-16 scroll-reveal max-w-2xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                    دسته‌بندی محصولات
                 </h2>
-                <p class="text-gray-400 text-lg">انتخاب کنید و به دنیای دانش قدم بگذارید</p>
+                <p class="text-gray-400 text-base">انتخاب کنید و به دنیای هنر قدم بگذارید</p>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
                 <!-- Category Card 1 -->
-                <div class="category-card glass-card rounded-2xl p-6 text-center cursor-pointer hover:scale-105 transition scroll-reveal">
-                    <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#9333EA] flex items-center justify-center">
-                        <i class="fas fa-paint-brush text-3xl text-white"></i>
+                <a href="shop-products.html?category=abstract" class="category-card glass-card rounded-2xl p-8 text-center cursor-pointer scroll-reveal group">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#D4AF37] to-[#9333EA] flex items-center justify-center">
+                        <i class="fas fa-paint-brush text-2xl text-white"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">نقاشی آبستره</h3>
-                    <p class="text-gray-400 text-sm mb-4">آثار آبستره و مدرن</p>
-                    <a href="shop-products.html?category=abstract" class="text-[#D4AF37] hover:underline">
-                        مشاهده همه <i class="fas fa-arrow-left mr-1"></i>
-                    </a>
-                </div>
+                    <h3 class="text-lg font-bold mb-2">نقاشی آبستره</h3>
+                    <p class="text-gray-400 text-sm">آثار آبستره و مدرن</p>
+                </a>
 
                 <!-- Category Card 2 -->
-                <div class="category-card glass-card rounded-2xl p-6 text-center cursor-pointer hover:scale-105 transition scroll-reveal" style="animation-delay: 0.1s;">
-                    <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#9333EA] to-[#D4AF37] flex items-center justify-center">
-                        <i class="fas fa-mountain text-3xl text-white"></i>
+                <a href="shop-products.html?category=landscape" class="category-card glass-card rounded-2xl p-8 text-center cursor-pointer scroll-reveal group">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#9333EA] to-[#D4AF37] flex items-center justify-center">
+                        <i class="fas fa-mountain text-2xl text-white"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">منظره</h3>
-                    <p class="text-gray-400 text-sm mb-4">طبیعت و چشم‌اندازهای زیبا</p>
-                    <a href="shop-products.html?category=landscape" class="text-[#D4AF37] hover:underline">
-                        مشاهده همه <i class="fas fa-arrow-left mr-1"></i>
-                    </a>
-                </div>
+                    <h3 class="text-lg font-bold mb-2">منظره</h3>
+                    <p class="text-gray-400 text-sm">طبیعت و چشم‌اندازهای زیبا</p>
+                </a>
 
                 <!-- Category Card 3 -->
-                <div class="category-card glass-card rounded-2xl p-6 text-center cursor-pointer hover:scale-105 transition scroll-reveal" style="animation-delay: 0.2s;">
-                    <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#9333EA] flex items-center justify-center">
-                        <i class="fas fa-user text-3xl text-white"></i>
+                <a href="shop-products.html?category=portrait" class="category-card glass-card rounded-2xl p-8 text-center cursor-pointer scroll-reveal group">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#D4AF37] to-[#9333EA] flex items-center justify-center">
+                        <i class="fas fa-user text-2xl text-white"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">پرتره</h3>
-                    <p class="text-gray-400 text-sm mb-4">چهره‌ها و شخصیت‌ها</p>
-                    <a href="shop-products.html?category=portrait" class="text-[#D4AF37] hover:underline">
-                        مشاهده همه <i class="fas fa-arrow-left mr-1"></i>
-                    </a>
-                </div>
+                    <h3 class="text-lg font-bold mb-2">پرتره</h3>
+                    <p class="text-gray-400 text-sm">چهره‌ها و شخصیت‌ها</p>
+                </a>
 
                 <!-- Category Card 4 -->
-                <div class="category-card glass-card rounded-2xl p-6 text-center cursor-pointer hover:scale-105 transition scroll-reveal" style="animation-delay: 0.3s;">
-                    <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#9333EA] to-[#D4AF37] flex items-center justify-center">
-                        <i class="fas fa-print text-3xl text-white"></i>
+                <a href="shop-products.html?category=limited" class="category-card glass-card rounded-2xl p-8 text-center cursor-pointer scroll-reveal group">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#9333EA] to-[#D4AF37] flex items-center justify-center">
+                        <i class="fas fa-print text-2xl text-white"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">چاپ محدود</h3>
-                    <p class="text-gray-400 text-sm mb-4">نسخه‌های محدود و امضا شده</p>
-                    <a href="shop-products.html?category=limited" class="text-[#D4AF37] hover:underline">
-                        مشاهده همه <i class="fas fa-arrow-left mr-1"></i>
-                    </a>
-                </div>
+                    <h3 class="text-lg font-bold mb-2">چاپ محدود</h3>
+                    <p class="text-gray-400 text-sm">نسخه‌های محدود و امضا شده</p>
+                </a>
             </div>
         </div>
     </section>
 
     <!-- Featured Products Section -->
-    <section class="py-20 bg-[#0A0A0A]">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16 scroll-reveal">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#9333EA]">
-                        محصولات ویژه
-                    </span>
+    <section class="py-24 bg-[#0A0A0A]">
+        <div class="container mx-auto px-6 lg:px-12">
+            <div class="text-center mb-16 scroll-reveal max-w-2xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                    محصولات ویژه
                 </h2>
-                <p class="text-gray-400 text-lg">برگزیده‌های این هفته</p>
+                <p class="text-gray-400 text-base">برگزیده‌های این هفته</p>
             </div>
 
-            <div id="featured-products" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div id="featured-products" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
                 <!-- Products will be loaded here by JavaScript -->
             </div>
 
-            <div class="text-center mt-12 scroll-reveal">
-                <a href="shop-products.html" class="inline-block px-8 py-4 btn-gradient rounded-full text-white font-bold text-lg">
+            <div class="text-center mt-16 scroll-reveal">
+                <a href="shop-products.html" class="inline-block px-8 py-4 btn-gradient rounded-full text-white font-bold">
                     مشاهده همه محصولات
                     <i class="fas fa-arrow-left mr-2"></i>
                 </a>
@@ -399,132 +273,130 @@
     </section>
 
     <!-- Why Choose Us Section -->
-    <section class="py-20 bg-[#121212]">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16 scroll-reveal">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+    <section class="py-24 bg-[#121212]">
+        <div class="container mx-auto px-6 lg:px-12">
+            <div class="text-center mb-16 scroll-reveal max-w-2xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">
                     چرا ما را انتخاب کنید؟
                 </h2>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10 max-w-6xl mx-auto">
                 <!-- Feature 1 -->
                 <div class="text-center scroll-reveal">
-                    <div class="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#D4AF37]/20 to-[#9333EA]/20 flex items-center justify-center">
-                        <i class="fas fa-shield-alt text-4xl text-[#D4AF37]"></i>
+                    <div class="w-20 h-20 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-[#D4AF37]/20 to-[#9333EA]/20 flex items-center justify-center">
+                        <i class="fas fa-shield-alt text-3xl text-[#D4AF37]"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">پرداخت امن</h3>
-                    <p class="text-gray-400">با درگاه‌های معتبر و ایمن</p>
+                    <h3 class="text-lg font-bold mb-2">پرداخت امن</h3>
+                    <p class="text-gray-400 text-sm">با درگاه‌های معتبر و ایمن</p>
                 </div>
 
                 <!-- Feature 2 -->
-                <div class="text-center scroll-reveal" style="animation-delay: 0.1s;">
-                    <div class="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#9333EA]/20 to-[#D4AF37]/20 flex items-center justify-center">
-                        <i class="fas fa-download text-4xl text-[#D4AF37]"></i>
+                <div class="text-center scroll-reveal">
+                    <div class="w-20 h-20 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-[#9333EA]/20 to-[#D4AF37]/20 flex items-center justify-center">
+                        <i class="fas fa-shipping-fast text-3xl text-[#D4AF37]"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">دانلود فوری</h3>
-                    <p class="text-gray-400">بلافاصله پس از خرید</p>
+                    <h3 class="text-lg font-bold mb-2">ارسال سریع</h3>
+                    <p class="text-gray-400 text-sm">با بهترین خدمات پستی</p>
                 </div>
 
                 <!-- Feature 3 -->
-                <div class="text-center scroll-reveal" style="animation-delay: 0.2s;">
-                    <div class="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#D4AF37]/20 to-[#9333EA]/20 flex items-center justify-center">
-                        <i class="fas fa-headset text-4xl text-[#D4AF37]"></i>
+                <div class="text-center scroll-reveal">
+                    <div class="w-20 h-20 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-[#D4AF37]/20 to-[#9333EA]/20 flex items-center justify-center">
+                        <i class="fas fa-headset text-3xl text-[#D4AF37]"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">پشتیبانی 24/7</h3>
-                    <p class="text-gray-400">همیشه در کنار شما هستیم</p>
+                    <h3 class="text-lg font-bold mb-2">پشتیبانی 24/7</h3>
+                    <p class="text-gray-400 text-sm">همیشه در کنار شما هستیم</p>
                 </div>
 
                 <!-- Feature 4 -->
-                <div class="text-center scroll-reveal" style="animation-delay: 0.3s;">
-                    <div class="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#9333EA]/20 to-[#D4AF37]/20 flex items-center justify-center">
-                        <i class="fas fa-certificate text-4xl text-[#D4AF37]"></i>
+                <div class="text-center scroll-reveal">
+                    <div class="w-20 h-20 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-[#9333EA]/20 to-[#D4AF37]/20 flex items-center justify-center">
+                        <i class="fas fa-certificate text-3xl text-[#D4AF37]"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">کیفیت تضمینی</h3>
-                    <p class="text-gray-400">محصولات با کیفیت برتر</p>
+                    <h3 class="text-lg font-bold mb-2">کیفیت تضمینی</h3>
+                    <p class="text-gray-400 text-sm">محصولات با کیفیت برتر</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Testimonials Section -->
-    <section class="py-20 bg-[#0A0A0A]">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16 scroll-reveal">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#9333EA]">
-                        نظرات مشتریان
-                    </span>
+    <section class="py-24 bg-[#0A0A0A]">
+        <div class="container mx-auto px-6 lg:px-12">
+            <div class="text-center mb-16 scroll-reveal max-w-2xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                    نظرات مشتریان
                 </h2>
-                <p class="text-gray-400 text-lg">آنچه مشتریان ما می‌گویند</p>
+                <p class="text-gray-400 text-base">آنچه مشتریان ما می‌گویند</p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 <!-- Testimonial 1 -->
                 <div class="testimonial-card rounded-2xl p-6 border border-white/10 scroll-reveal">
                     <div class="flex items-center gap-1 mb-4">
-                        <i class="fas fa-star text-[#D4AF37]"></i>
-                        <i class="fas fa-star text-[#D4AF37]"></i>
-                        <i class="fas fa-star text-[#D4AF37]"></i>
-                        <i class="fas fa-star text-[#D4AF37]"></i>
-                        <i class="fas fa-star text-[#D4AF37]"></i>
+                        <i class="fas fa-star text-[#D4AF37] text-sm"></i>
+                        <i class="fas fa-star text-[#D4AF37] text-sm"></i>
+                        <i class="fas fa-star text-[#D4AF37] text-sm"></i>
+                        <i class="fas fa-star text-[#D4AF37] text-sm"></i>
+                        <i class="fas fa-star text-[#D4AF37] text-sm"></i>
                     </div>
-                    <p class="text-gray-300 mb-6 leading-relaxed">
-                        "کیفیت محصولات عالی و پشتیبانی فوق‌العاده. دوره آموزشی که خریدم واقعا حرفه‌ای بود."
+                    <p class="text-gray-300 mb-5 leading-relaxed text-sm">
+                        کیفیت محصولات عالی و پشتیبانی فوق‌العاده. تابلویی که خریدم واقعاً حرفه‌ای بود.
                     </p>
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#9333EA] flex items-center justify-center">
-                            <span class="text-white font-bold">ا.ح</span>
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#9333EA] flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">ا.ح</span>
                         </div>
                         <div>
-                            <div class="font-semibold">احمد حسینی</div>
-                            <div class="text-sm text-gray-400">توسعه‌دهنده وب</div>
+                            <div class="font-semibold text-sm">احمد حسینی</div>
+                            <div class="text-xs text-gray-400">مشتری</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Testimonial 2 -->
-                <div class="testimonial-card rounded-2xl p-6 border border-white/10 scroll-reveal" style="animation-delay: 0.1s;">
+                <div class="testimonial-card rounded-2xl p-6 border border-white/10 scroll-reveal">
                     <div class="flex items-center gap-1 mb-4">
-                        <i class="fas fa-star text-[#D4AF37]"></i>
-                        <i class="fas fa-star text-[#D4AF37]"></i>
-                        <i class="fas fa-star text-[#D4AF37]"></i>
-                        <i class="fas fa-star text-[#D4AF37]"></i>
-                        <i class="fas fa-star text-[#D4AF37]"></i>
+                        <i class="fas fa-star text-[#D4AF37] text-sm"></i>
+                        <i class="fas fa-star text-[#D4AF37] text-sm"></i>
+                        <i class="fas fa-star text-[#D4AF37] text-sm"></i>
+                        <i class="fas fa-star text-[#D4AF37] text-sm"></i>
+                        <i class="fas fa-star text-[#D4AF37] text-sm"></i>
                     </div>
-                    <p class="text-gray-300 mb-6 leading-relaxed">
-                        "بهترین فروشگاه محصولات دیجیتال که تا حالا باهاش کار کردم. توصیه می‌کنم."
+                    <p class="text-gray-300 mb-5 leading-relaxed text-sm">
+                        بهترین فروشگاه تابلوهای هنری که تا حالا باهاش کار کردم. توصیه می‌کنم.
                     </p>
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#9333EA] to-[#D4AF37] flex items-center justify-center">
-                            <span class="text-white font-bold">س.م</span>
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#9333EA] to-[#D4AF37] flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">س.م</span>
                         </div>
                         <div>
-                            <div class="font-semibold">سارا محمدی</div>
-                            <div class="text-sm text-gray-400">طراح گرافیک</div>
+                            <div class="font-semibold text-sm">سارا محمدی</div>
+                            <div class="text-xs text-gray-400">طراح گرافیک</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Testimonial 3 -->
-                <div class="testimonial-card rounded-2xl p-6 border border-white/10 scroll-reveal" style="animation-delay: 0.2s;">
+                <div class="testimonial-card rounded-2xl p-6 border border-white/10 scroll-reveal">
                     <div class="flex items-center gap-1 mb-4">
-                        <i class="fas fa-star text-[#D4AF37]"></i>
-                        <i class="fas fa-star text-[#D4AF37]"></i>
-                        <i class="fas fa-star text-[#D4AF37]"></i>
-                        <i class="fas fa-star text-[#D4AF37]"></i>
-                        <i class="fas fa-star text-[#D4AF37]"></i>
+                        <i class="fas fa-star text-[#D4AF37] text-sm"></i>
+                        <i class="fas fa-star text-[#D4AF37] text-sm"></i>
+                        <i class="fas fa-star text-[#D4AF37] text-sm"></i>
+                        <i class="fas fa-star text-[#D4AF37] text-sm"></i>
+                        <i class="fas fa-star text-[#D4AF37] text-sm"></i>
                     </div>
-                    <p class="text-gray-300 mb-6 leading-relaxed">
-                        "محصولات با کیفیت، قیمت مناسب و دانلود سریع. خیلی راضی هستم."
+                    <p class="text-gray-300 mb-5 leading-relaxed text-sm">
+                        محصولات با کیفیت، قیمت مناسب و خدمات عالی. خیلی راضی هستم.
                     </p>
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#9333EA] flex items-center justify-center">
-                            <span class="text-white font-bold">ر.ع</span>
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#9333EA] flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">ر.ع</span>
                         </div>
                         <div>
-                            <div class="font-semibold">رضا عباسی</div>
-                            <div class="text-sm text-gray-400">بازاریاب دیجیتال</div>
+                            <div class="font-semibold text-sm">رضا عباسی</div>
+                            <div class="text-xs text-gray-400">مشتری</div>
                         </div>
                     </div>
                 </div>
@@ -534,15 +406,12 @@
 
     <!-- Newsletter Section -->
     <section class="py-20 bg-gradient-to-r from-[#D4AF37] to-[#9333EA]">
-        <div class="container mx-auto px-4">
-            <div class="max-w-3xl mx-auto text-center scroll-reveal">
-                <div class="mb-6">
-                    <i class="fas fa-envelope text-6xl text-white/80"></i>
-                </div>
-                <h2 class="text-4xl md:text-5xl font-bold mb-4 text-white">
+        <div class="container mx-auto px-6 lg:px-12">
+            <div class="max-w-2xl mx-auto text-center scroll-reveal">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-white">
                     عضویت در خبرنامه
                 </h2>
-                <p class="text-white/90 text-lg mb-8">
+                <p class="text-white/90 mb-8">
                     از جدیدترین محصولات، تخفیف‌ها و اخبار ویژه با خبر شوید
                 </p>
 
@@ -558,30 +427,26 @@
                         <i class="fas fa-paper-plane mr-2"></i>
                     </button>
                 </form>
-
-                <p class="text-white/70 text-sm mt-4">
-                    با عضویت در خبرنامه، شرایط و قوانین را می‌پذیرید
-                </p>
             </div>
         </div>
     </section>
 
     <!-- Call to Action Section -->
-    <section class="py-20 bg-[#121212]">
-        <div class="container mx-auto px-4">
-            <div class="glass-card rounded-3xl p-12 text-center scroll-reveal">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+    <section class="py-24 bg-[#121212]">
+        <div class="container mx-auto px-6 lg:px-12">
+            <div class="glass-card rounded-3xl p-12 text-center scroll-reveal max-w-4xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">
                     آماده شروع هستید؟
                 </h2>
-                <p class="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
-                    به جمع هزاران مشتری راضی ما بپیوندید و از بهترین محصولات دیجیتال بهره‌مند شوید
+                <p class="text-gray-400 mb-8 max-w-2xl mx-auto">
+                    به جمع مشتریان راضی ما بپیوندید و از بهترین تابلوهای هنری بهره‌مند شوید
                 </p>
                 <div class="flex flex-wrap gap-4 justify-center">
-                    <a href="shop-products.html" class="px-8 py-4 btn-gradient rounded-full text-white font-bold text-lg">
+                    <a href="shop-products.html" class="px-8 py-4 btn-gradient rounded-full text-white font-bold">
                         <i class="fas fa-shopping-bag ml-2"></i>
                         شروع خرید کنید
                     </a>
-                    <a href="shop-contact.html" class="px-8 py-4 bg-white/10 backdrop-blur-md rounded-full font-bold text-lg hover:bg-white/20 transition border border-white/20">
+                    <a href="shop-contact.html" class="px-8 py-4 glass-card rounded-full font-bold hover:bg-white/10 transition">
                         <i class="fas fa-phone ml-2"></i>
                         تماس با ما
                     </a>
@@ -670,24 +535,6 @@
 
     <!-- JavaScript -->
     <script>
-        // Counter Animation
-        function animateCounter(element) {
-            const target = parseInt(element.getAttribute('data-target'));
-            const duration = 2000;
-            const step = target / (duration / 16);
-            let current = 0;
-
-            const timer = setInterval(() => {
-                current += step;
-                if (current >= target) {
-                    element.textContent = target.toLocaleString('fa-IR');
-                    clearInterval(timer);
-                } else {
-                    element.textContent = Math.floor(current).toLocaleString('fa-IR');
-                }
-            }, 16);
-        }
-
         // Scroll Reveal Animation
         function handleScrollReveal() {
             const reveals = document.querySelectorAll('.scroll-reveal');
@@ -712,20 +559,20 @@
                 const featured = products.slice(0, 4);
 
                 container.innerHTML = featured.map((product, index) => `
-                    <div class="product-card glass-card rounded-2xl overflow-hidden scroll-reveal" style="animation-delay: ${index * 0.1}s;">
+                    <div class="product-card glass-card rounded-2xl overflow-hidden scroll-reveal">
                         <div class="relative">
                             <img src="${product.image_url || 'assets/1.jpg'}" alt="${product.name_fa}" class="w-full h-64 object-cover">
                             <div class="absolute top-4 right-4">
-                                <span class="px-3 py-1 bg-[#D4AF37] text-white text-sm font-bold rounded-full">
+                                <span class="px-3 py-1 bg-[#D4AF37] text-white text-xs font-bold rounded-full">
                                     ویژه
                                 </span>
                             </div>
                         </div>
                         <div class="p-6">
-                            <h3 class="font-bold text-lg mb-2">${product.name_fa}</h3>
+                            <h3 class="font-bold mb-2">${product.name_fa}</h3>
                             <p class="text-gray-400 text-sm mb-4 line-clamp-2">${product.description_fa || ''}</p>
                             <div class="flex items-center justify-between">
-                                <div class="text-2xl font-bold text-[#D4AF37]">
+                                <div class="text-xl font-bold text-[#D4AF37]">
                                     ${parseInt(product.price).toLocaleString('fa-IR')} تومان
                                 </div>
                                 <a href="shop-products.html#product-${product.id}" class="px-4 py-2 btn-gradient rounded-full text-sm font-bold">
@@ -742,7 +589,7 @@
                 console.error('Error loading products:', error);
                 document.getElementById('featured-products').innerHTML = `
                     <div class="col-span-full text-center text-gray-400 py-12">
-                        <i class="fas fa-exclamation-circle text-4xl mb-4"></i>
+                        <i class="fas fa-exclamation-circle text-3xl mb-4"></i>
                         <p>در حال حاضر محصولی موجود نیست</p>
                     </div>
                 `;
@@ -777,9 +624,6 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            // Animate counters
-            document.querySelectorAll('.stat-number').forEach(animateCounter);
-
             // Load products
             loadFeaturedProducts();
 
